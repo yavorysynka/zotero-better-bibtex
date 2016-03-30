@@ -1,6 +1,7 @@
 ---
 title: "Going hardcore; Zotero as a BibTeX manager"
 nav: Going hardcore
+redirect: https://github.com/retorquere/zotero-better-bibtex/wiki/Going-hardcore
 ---
 
 If you'd really just rather hand-code your LaTeX constructs, BBT makes that possible:

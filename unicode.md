@@ -1,5 +1,6 @@
 ---
 title: Unicode and Markup
+redirect: https://github.com/retorquere/zotero-better-bibtex/wiki/Unicode-and-Markup
 ---
 
 Zotero does all its work in UTF-8 Unicode, which is absolutely the right thing to do. Unfortunately, for those shackled

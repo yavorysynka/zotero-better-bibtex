@@ -1,5 +1,6 @@
 ---
 title: Customized Exports
+redirect: https://github.com/retorquere/zotero-better-bibtex/wiki/Customized-Exports
 ---
 
 The Better BibTeX configuration pane can be found under the regular Zotero preferences pane, tab 'Better Bib(La)TeX'.

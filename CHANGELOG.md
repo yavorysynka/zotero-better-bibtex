@@ -1,5 +1,6 @@
 ---
 title: "Change Log"
+redirect: https://github.com/retorquere/zotero-better-bibtex/wiki
 ---
 ## [1.6.36](https://github.com/ZotPlus/zotero-better-bibtex/tree/1.6.36) (2016-02-03)
 [Full Changelog](https://github.com/ZotPlus/zotero-better-bibtex/compare/1.6.35...1.6.36)

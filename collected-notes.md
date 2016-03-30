@@ -1,5 +1,6 @@
 ---
 title: Collected Notes
+redirect: https://github.com/retorquere/zotero-better-bibtex/wiki/Collected-Notes
 ---
 
 Better BibTeX includes an exporter called "Collected notes". This exporter will export just notes -- standalone notes

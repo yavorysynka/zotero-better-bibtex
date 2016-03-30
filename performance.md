@@ -1,5 +1,6 @@
 ---
 title: Performance
+redirect: https://github.com/retorquere/zotero-better-bibtex/wiki/Performance
 ---
 
 The Better BibTeX exporters are a lot slower than the standard Zotero Bib(La)TeX exporters. If you have a small library,

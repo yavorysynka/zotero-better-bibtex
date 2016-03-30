@@ -1,5 +1,6 @@
 ---
 title: Other Niceties
+redirect: https://github.com/retorquere/zotero-better-bibtex/wiki/Niceties
 ---
 
 * [Cite as you Write](cayw.html) for text-based editors such as Vi (or emacs, if you swing that way), and several others

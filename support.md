@@ -1,5 +1,6 @@
 ---
 title: Support
+redirect: https://github.com/retorquere/zotero-better-bibtex/blob/master/CONTRIBUTING.md
 ---
 
 # Getting support for Better BibTeX

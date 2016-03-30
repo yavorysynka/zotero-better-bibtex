@@ -1,5 +1,6 @@
 ---
 title: Push/Pull Export
+redirect: https://github.com/retorquere/zotero-better-bibtex/wiki/Push-and-Pull-Export
 ---
 
 # Push Export

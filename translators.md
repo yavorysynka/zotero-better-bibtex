@@ -1,5 +1,6 @@
 ---
 title: Bundled translators
+redirect: https://github.com/retorquere/zotero-better-bibtex/wiki/Bundled-translators
 ---
 
 Better BibTeX bundles 8 translators:

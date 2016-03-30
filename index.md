@@ -2,6 +2,7 @@
 title: Better BibTeX (BBT) for Zotero
 nav: Home
 layout: default
+redirect: https://github.com/retorquere/zotero-better-bibtex/wiki
 ---
 
 This extension aims to make Zotero effective for us text-based authoring holdouts; currently, that translates to the

@@ -1,5 +1,6 @@
 ---
 title: Configuration
+redirect: https://github.com/retorquere/zotero-better-bibtex/wiki/Better-BibTeX-Configuration
 ---
 
 The configuration of Better BibTeX is a little baroque compared to the standard Zotero Bib(La)TeX exporters (which only
