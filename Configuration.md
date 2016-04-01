@@ -1,7 +1,9 @@
 ---
-title: Configuration
-redirect: https://github.com/retorquere/zotero-better-bibtex/wiki/Better-BibTeX-Configuration
+title: Configuration.md
+redirect_from:
+- configuration.html
 ---
+The Better BibTeX [[Configuration]] can be found under the regular Zotero preferences pane, tab 'Better Bib(La)TeX'.
 
 The configuration of Better BibTeX is a little baroque compared to the standard Zotero Bib(La)TeX exporters (which only
 have hidden preferences). The defaults should just work, but here's an attempt to describe what they do.

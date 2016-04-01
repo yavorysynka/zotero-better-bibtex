@@ -1,11 +1,9 @@
 ---
-title: Cite as you Write for text-based editors
-nav: Cite As You Write
-redirect: https://github.com/retorquere/zotero-better-bibtex/wiki/Cite-as-you-Write-for-text-based-editors
+title: Cite as you Write.md
+redirect_from:
+- cayw.html
 ---
-
-Good news for TeXnicians and those down with Mark (aka Markdown, RST, whatnot): this is the time to go pester the author
-of your favorite editor for Zotero integration! This is hot off the press, so there *will* be bugs. 
+Good news for TeXnicians and those down with Mark (aka Markdown, RST, whatnot): this is the time to go pester the author of your favorite editor for Zotero integration! 
 
 ## Editor integration
 
@@ -37,7 +35,7 @@ BBT now exposes (if you have HTTP export on in the preferences) an URL at http:/
 the following URL parameters:
 
 | parameter |   |
-| --------- | - |
+| --------- | --- |
 | `probe`   | If set to any non-empty value, returns `ready`. You can use this to test whether BBT CAYW picking is live; it will not pop up the picker |
 | `format`  | Set the output format. Possible values are `translate` (invoke a Zotero translator), `mmd` (MultiMarkdown), `pandoc`, `scannable-cite` (for [RTF/ODF-Scan for Zotero](http://zotero-odf-scan.github.io/zotero-odf-scan/)), and `latex`. By default `latex` will use the `cite` command; you can override this by adding a `command` parameter; alternately, you can use a format starting with `cite` for the same effect |
 | `clipboard` | Any non-empty value will copy the results to the clipboard |
@@ -54,6 +52,7 @@ If you picked the `translate` format, you can pass the following extra parameter
 
 The picker passes the following data along with your picked references if you filled them out:
 
+| field    |   |
 | -------- | --------- |
 | `locator` | the place within the work (e.g. page number) |
 | `prefix` | for stuff like "see ..." |

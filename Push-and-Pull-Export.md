@@ -1,8 +1,8 @@
 ---
-title: Push/Pull Export
-redirect: https://github.com/retorquere/zotero-better-bibtex/wiki/Push-and-Pull-Export
+title: Push and Pull Export.md
+redirect_from:
+- pull-export.html
 ---
-
 # Push Export
 
 When exporting using Better Bib(La)Tex you will be offered a new export option: Keep Updated. Checking this option

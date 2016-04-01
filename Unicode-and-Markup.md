@@ -1,8 +1,8 @@
 ---
-title: Unicode and Markup
-redirect: https://github.com/retorquere/zotero-better-bibtex/wiki/Unicode-and-Markup
+title: Unicode and Markup.md
+redirect_from:
+- unicode.html
 ---
-
 Zotero does all its work in UTF-8 Unicode, which is absolutely the right thing to do. Unfortunately, for those shackled
 to BibTeX and who cannot (yet) move to BibLaTeX, unicode is a major PITA. Also, Zotero supports some simple HTML markup
 in your references that Bib(La)TeX won't understand; BBT will

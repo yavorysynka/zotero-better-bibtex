@@ -1,9 +1,9 @@
 ---
-title: Other Niceties
-redirect: https://github.com/retorquere/zotero-better-bibtex/wiki/Niceties
+title: Niceties.md
+redirect_from:
+- niceties.html
 ---
-
-* [Cite as you Write](cayw.html) for text-based editors such as Vi (or emacs, if you swing that way), and several others
+* [Cite as you Write] for text-based editors such as Vi (or emacs, if you swing that way), and several others
 * Integration with **[Report Customizer](citation-keys.html)**
 * Integration with **[Zotfile](citation-keys.html)**
 * **[Customized exports](export.html)**
