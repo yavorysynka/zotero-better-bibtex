@@ -60,7 +60,7 @@ if (this.item.arXiv) {
   this.add({ name: 'pages', value: this.item.arXiv });
 }
 ```
-        <script type = 'text/javascript'>
+
+<script type = 'text/javascript'>
           window.setTimeout(function(){ window.location.href = 'https://github.com/retorquere/zotero-better-bibtex/wiki/Scripting-examples'; },3000)
         </script>
-      

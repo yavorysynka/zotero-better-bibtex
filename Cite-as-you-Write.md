@@ -90,7 +90,7 @@ For testing for other markdown formatters, you can construct simple references y
 
 but if you need an extra format, just ask.
 
-        <script type = 'text/javascript'>
+
+<script type = 'text/javascript'>
           window.setTimeout(function(){ window.location.href = 'https://github.com/retorquere/zotero-better-bibtex/wiki/Cite-as-you-Write'; },3000)
         </script>
-      

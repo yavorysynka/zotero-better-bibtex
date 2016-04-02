@@ -21,7 +21,7 @@ in your references that Bib(La)TeX won't understand; BBT will
 * In names, you can force first names like `Philippe` to be exported to `{\relax Ph}ilippe` by adding a [end of guarded
   area](http://www.fileformat.info/info/unicode/char/0097/index.htm) character between `Ph` and `ilippe`
 
-        <script type = 'text/javascript'>
+
+<script type = 'text/javascript'>
           window.setTimeout(function(){ window.location.href = 'https://github.com/retorquere/zotero-better-bibtex/wiki/Unicode-and-Markup'; },3000)
         </script>
-      

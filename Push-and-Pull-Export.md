@@ -41,7 +41,7 @@ Zotero needs to be running and the [embedded server needs to be enabled](export.
 
 The pull export will export child collections when the [recursive option](export.html) is enabled.
 
-        <script type = 'text/javascript'>
+
+<script type = 'text/javascript'>
           window.setTimeout(function(){ window.location.href = 'https://github.com/retorquere/zotero-better-bibtex/wiki/Push-and-Pull-Export'; },3000)
         </script>
-      

@@ -68,7 +68,7 @@ back if you wish after), or go into the Better BibTeX debug settings and click "
 If you have chosen to retain your cache and you are experiencing problems, please first clear your cache and try to
 reproduce your problem before lodging an issue.
 
-        <script type = 'text/javascript'>
+
+<script type = 'text/javascript'>
           window.setTimeout(function(){ window.location.href = 'https://github.com/retorquere/zotero-better-bibtex/wiki/Performance'; },3000)
         </script>
-      

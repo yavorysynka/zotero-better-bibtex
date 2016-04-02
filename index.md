@@ -32,7 +32,7 @@ guidelines are very detailed, perhaps to the point of being off-putting, but ple
 simply express my ideal bug submission. I of course prefer very clearly documented issue reports over fuzzy ones, but I
 prefer fuzzy ones over missed ones.
 
-        <script type = 'text/javascript'>
+
+<script type = 'text/javascript'>
           window.setTimeout(function(){ window.location.href = 'https://github.com/retorquere/zotero-better-bibtex/wiki/Home'; },3000)
         </script>
-      

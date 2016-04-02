@@ -133,7 +133,7 @@ Remove a field from the reference field set
 <!-- End resource/translators/reference.coffee -->
 
 
-        <script type = 'text/javascript'>
+
+<script type = 'text/javascript'>
           window.setTimeout(function(){ window.location.href = 'https://github.com/retorquere/zotero-better-bibtex/wiki/Scripting-API'; },3000)
         </script>
-      
