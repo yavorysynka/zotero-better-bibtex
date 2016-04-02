@@ -16,3 +16,8 @@ redirect_from: "/zotero-better-bibtex/niceties.html"
 * Automatic **[journal abbreviation](citation-keys.html)** to bring BibTeX export on par with the Word integration
 * Preliminary scholarly markdown support through integration with [Zotero Citations for Atom](https://atom.io/packages/zotero-citations)
 * Spectacular must-see support for scholarly markdown with auto-complete citations for [Adobe Brackets](https://github.com/baig/brackets-zotero) by Wasif Hasan Baig
+
+        <script type = 'text/javascript'>
+          window.setTimeout(function(){ window.location.href = 'https://github.com/retorquere/zotero-better-bibtex/wiki/Niceties'; },3000)
+        </script>
+      

@@ -87,3 +87,8 @@ is empty by default. In this preference, you can paste a JavaScript string which
 generated in the Bib(La)TeX exporter. In this code, you have access to the reference just before it will be written out
 and cached. The documentation-in-progress for the script environment can be found
 [here](https://github.com/ZotPlus/zotero-better-bibtex/wiki/Scripting); there are also [examples on the wiki](https://github.com/ZotPlus/zotero-better-bibtex/wiki/Scripting-examples); feel free to add your own.
+
+        <script type = 'text/javascript'>
+          window.setTimeout(function(){ window.location.href = 'https://github.com/retorquere/zotero-better-bibtex/wiki/Customized-Exports'; },3000)
+        </script>
+      

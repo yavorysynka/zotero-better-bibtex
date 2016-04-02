@@ -185,3 +185,8 @@ place:
 
 I am terribly sorry having to do this, but not doing this would risk sync being permanently impossible, as the Zotero
 server will kick you out if a sync takes too long.
+
+        <script type = 'text/javascript'>
+          window.setTimeout(function(){ window.location.href = 'https://github.com/retorquere/zotero-better-bibtex/wiki/Citation-Keys'; },3000)
+        </script>
+      

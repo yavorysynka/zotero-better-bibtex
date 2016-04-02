@@ -31,3 +31,8 @@ make sure I get your problem fixed as quick as possible. Clear bug reports commo
 guidelines are very detailed, perhaps to the point of being off-putting, but please do not fret; these guidelines
 simply express my ideal bug submission. I of course prefer very clearly documented issue reports over fuzzy ones, but I
 prefer fuzzy ones over missed ones.
+
+        <script type = 'text/javascript'>
+          window.setTimeout(function(){ window.location.href = 'https://github.com/retorquere/zotero-better-bibtex/wiki/Home'; },3000)
+        </script>
+      

@@ -13,3 +13,8 @@ For standalone Zotero, do the following:
 3. Click on the gear in the top-right corner and choose 'Install Add-on From File...'
 4. Choose .xpi that you've just downloaded, click 'Install'
 5. Restart Zotero
+
+        <script type = 'text/javascript'>
+          window.setTimeout(function(){ window.location.href = 'https://github.com/retorquere/zotero-better-bibtex/wiki/Installation'; },3000)
+        </script>
+      

@@ -29,3 +29,7 @@ I would hide these if I could. They're used for Zotero's drag-and-drop citation 
 * **BetterBibTeX JSON** exports and imports references in BetterBibTeX debug format. The error reporter uses this format
 * **LaTeX Citation** exports citations to be copy-pasted into your LaTeX document in the form `\cite{< key >}`
 * **Pandoc Citation** exports citations to be copy-pasted into your Markdown document in the form `[@key]`
+        <script type = 'text/javascript'>
+          window.setTimeout(function(){ window.location.href = 'https://github.com/retorquere/zotero-better-bibtex/wiki/Bundled-translators'; },3000)
+        </script>
+      

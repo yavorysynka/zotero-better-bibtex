@@ -59,3 +59,8 @@ issue; you cannot call it up later (although you can just so it again). Still, i
 * **If your problem pertains to BBT interfering with other plugins** (which wouldn't be the first time), and this interference
   has something to do with importing, you ***must*** include a sample file that triggers the issue. I know it may seem
   that "any file triggers it" -- I need a *specific* file that does so I know we're looking at the same problem.
+
+        <script type = 'text/javascript'>
+          window.setTimeout(function(){ window.location.href = 'https://github.com/retorquere/zotero-better-bibtex/wiki/Support'; },3000)
+        </script>
+      

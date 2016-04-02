@@ -292,3 +292,8 @@ List of words to keep lowercase when applying title casing
 <!-- extensions.zotero.translators.better-bibtex.titleCaseUpperCase -->
 
 List of words to keep uppercase when applying title casing
+
+        <script type = 'text/javascript'>
+          window.setTimeout(function(){ window.location.href = 'https://github.com/retorquere/zotero-better-bibtex/wiki/Configuration'; },3000)
+        </script>
+      
