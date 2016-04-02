@@ -1,9 +1,11 @@
 ---
-title: Bundled translators.md
+title: Bundled translators
 redirect_from:
-- collected-notes.html
-- translators.html
+- "/zotero-better-bibtex/collected-notes.html"
+- "/zotero-better-bibtex/translators.html"
 ---
+# Bundled translators
+
 Better BibTeX bundles 6 translators you might care about:
 
 ## Export

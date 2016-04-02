@@ -1,6 +1,8 @@
 ---
-title: Scripting API.md
+title: Scripting API
 ---
+# Scripting API
+
 
 
 <!-- Start resource/translators/reference.coffee -->

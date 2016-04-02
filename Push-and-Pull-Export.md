@@ -1,8 +1,9 @@
 ---
-title: Push and Pull Export.md
-redirect_from:
-- pull-export.html
+title: Push and Pull Export
+redirect_from: "/zotero-better-bibtex/pull-export.html"
 ---
+# Push and Pull Export
+
 # Push Export
 
 When exporting using Better Bib(La)Tex you will be offered a new export option: Keep Updated. Checking this option

@@ -1,6 +1,8 @@
 ---
-title: Installation.md
+title: Installation
 ---
+# Installation
+
 After installation, the plugin will auto-update to newer releases. Install by downloading the [latest version](https://github.com/retorquere/zotero-better-bibtex/releases/latest). If you are not prompted with a Firefox installation dialog then double-click the
 downloaded xpi; Firefox ought to start and present you with the installation dialog.
 

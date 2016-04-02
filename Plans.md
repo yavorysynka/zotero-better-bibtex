@@ -1,6 +1,8 @@
 ---
-title: Plans.md
+title: Plans
 ---
+# Plans
+
 * add "citekey" columns to reference list view
 * add "citeley" field to reference editor
 * sync citekey cleanly without abusing the "extra" field

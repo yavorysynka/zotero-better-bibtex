@@ -1,8 +1,9 @@
 ---
-title: Citation Keys.md
-redirect_from:
-- citation-keys.html
+title: Citation Keys
+redirect_from: "/zotero-better-bibtex/citation-keys.html"
 ---
+# Citation Keys
+
 Standard Zotero BibTeX citations keys are fully auto-generated, using an algorithm that usually generates unique keys. For serious LaTeX
 users, "usually" presents the following problems:
 

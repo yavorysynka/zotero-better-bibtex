@@ -1,5 +1,6 @@
 ---
-title: Changelog.md
-redirect_from:
-- CHANGELOG.html
+title: Changelog
+redirect_from: "/zotero-better-bibtex/CHANGELOG.html"
 ---
+# Changelog
+
