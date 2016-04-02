@@ -10,7 +10,7 @@ The configuration of Better BibTeX is a little baroque compared to the standard 
 have hidden preferences). The defaults should just work, but here's an attempt to describe what they do.
 
 **Making any change here will drop your entire export cache.** This is usually not a problem unless you have a really large
-library, but you can read about what is involved [here](performance.html).
+library, but you can read about what is involved [here](Performance).
 
 ## Citation
 
@@ -24,12 +24,12 @@ yield `\citep{key1,key2,...}`
 ### Citation key format
 <!-- extensions.zotero.translators.better-bibtex.citekeyFormat -->
 
-Set the pattern used to generate citation keys. The format of the keys is documented [here](citation-keys.html).
+Set the pattern used to generate citation keys. The format of the keys is documented [here](Citation-Keys).
 
 ### Force citation key to ASCII
 <!-- extensions.zotero.translators.better-bibtex.citekeyFold -->
 
-If you have deviated from the default citation key format pattern by [specifycing your own](citation-keys.html), you may
+If you have deviated from the default citation key format pattern by [specifycing your own](|Citation-Keys), you may
 wind up with non-ASCII characters in your citation keys. You can prevent that using the `fold` function at the
 appropriate place in your pattern, but checking this checkbox will just apply `fold` to all your keys.
 
@@ -147,12 +147,12 @@ this setting controls both what Zotero shows and what is exported for nested col
 <!-- extensions.zotero.httpServer.enabled -->
 
 Enables the Zotero-embedded web server. If you have Zotero standalone, it is always on, and this preference will not be
-shown. This option enables [cite as you write](cayw.html) and [pull export](pull-export.html).
+shown. This option enables [Cite as you write](Cite-as-you-write) and [pull export](|Push-and-Pull-Export).
 
 ### Retain LaTeX markup on BibTeX import
 <!-- extensions.zotero.translators.better-bibtex.rawImports -->
 
-Enables [hardcore](hardcore.html) mode. You like Zotero in some ways, but really just want it to be a BibTeX manager. If
+Enables [hardcore](|Going-Hardcore) mode. You like Zotero in some ways, but really just want it to be a BibTeX manager. If
 you enable this, any BibTeX files you import will retain all the LaTeX commands they have, and marks the entry to be
 exported without any translation.
 
@@ -174,7 +174,7 @@ Select the style for auto-abbreviation.
 ### Automatic Export
 <!-- extensions.zotero.translators.better-bibtex.autoExport -->
 
-Determines when [automatic exports](pull-export.html) are kicked off:
+Determines when [automatic exports](Push-and-Pull-Export) are kicked off:
 
 * **Disabled**: disable automatic exports (but still marks them when changes occur)
 * **On Change**: export whenever a reference in the export changes/is added/is removed.
@@ -242,7 +242,7 @@ mechanism makes sure it doesn't happen any more frequently than necessary.
 ### csquotes
 <!-- extensions.zotero.translators.better-bibtex.csquotes -->
 
-Enables [csquotes](unicode.html) support.
+Enables [csquotes](|Unicode) support.
 
 ### langID
 <!-- extensions.zotero.translators.better-bibtex.langID -->
@@ -262,7 +262,7 @@ Unit tests to run
 ### postscript
 <!-- extensions.zotero.translators.better-bibtex.postscript -->
 
-Snippet of javascript to run [after each BibTeX generation](export.html).
+Snippet of javascript to run [after each BibTeX generation](Push-and-Pull-Export).
 
 ### jabrefGroups
 <!-- extensions.zotero.translators.better-bibtex.jabrefGroups -->
