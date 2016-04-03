@@ -43,10 +43,10 @@ Citation". If you want Markdown citations, choose "Pandoc Citations".
 If you want even more convenience (and you're on Windows), install [AutoHotKey](http://www.autohotkey.com/), modify the
 [Zotero sample macro](https://raw.github.com/ZotPlus/zotero-better-bibtex/master/FastCite.ahk), and add it to your AutoHotKey.ahk. If you use this macro unmodified, when you select one or more entries in Zotero, it will copy them, bring TeXMaker to the forground, and paste your citation at the cursor. Caution: this macro does *not* check that you are in Zotero when you activate it, nor that TeXMaker is actually running.
 
-## Find duplicate keys through integration with [Report Customizer](/report-customizer/)
+## Find duplicate keys through integration with [Report Customizer](https://github.com/retorquere/zotero-report-customizer)
 
 The plugin will generate BibTeX comments to show whether a key conflicts and with which entry. BBT integrates with
-[Zotero: Report Customizer](/report-customizer/) to display the BibTeX key plus any
+[Zotero: Report Customizer](https://github.com/retorquere/zotero-report-customizer) to display the BibTeX key plus any
 conflicts between them in the zotero report.
 
 ## Configurable citekey generator

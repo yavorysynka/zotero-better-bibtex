@@ -29,7 +29,7 @@ Set the pattern used to generate citation keys. The format of the keys is docume
 ### Force citation key to ASCII
 <!-- extensions.zotero.translators.better-bibtex.citekeyFold -->
 
-If you have deviated from the default citation key format pattern by [specifycing your own](|Citation-Keys), you may
+If you have deviated from the default citation key format pattern by [specifycing your own](Citation-Keys), you may
 wind up with non-ASCII characters in your citation keys. You can prevent that using the `fold` function at the
 appropriate place in your pattern, but checking this checkbox will just apply `fold` to all your keys.
 
@@ -147,12 +147,12 @@ this setting controls both what Zotero shows and what is exported for nested col
 <!-- extensions.zotero.httpServer.enabled -->
 
 Enables the Zotero-embedded web server. If you have Zotero standalone, it is always on, and this preference will not be
-shown. This option enables [Cite as you write](Cite-as-you-write) and [pull export](|Push-and-Pull-Export).
+shown. This option enables [Cite as you Write](Cite-as-you-Write) and [pull export](Push-and-Pull-Export).
 
 ### Retain LaTeX markup on BibTeX import
 <!-- extensions.zotero.translators.better-bibtex.rawImports -->
 
-Enables [hardcore](|Going-Hardcore) mode. You like Zotero in some ways, but really just want it to be a BibTeX manager. If
+Enables [hardcore](Going-hardcore) mode. You like Zotero in some ways, but really just want it to be a BibTeX manager. If
 you enable this, any BibTeX files you import will retain all the LaTeX commands they have, and marks the entry to be
 exported without any translation.
 
@@ -242,7 +242,7 @@ mechanism makes sure it doesn't happen any more frequently than necessary.
 ### csquotes
 <!-- extensions.zotero.translators.better-bibtex.csquotes -->
 
-Enables [csquotes](|Unicode) support.
+Enables [csquotes](Unicode-and-Markup) support.
 
 ### langID
 <!-- extensions.zotero.translators.better-bibtex.langID -->

@@ -16,7 +16,7 @@ Through the configuration pane of BBT you can customize the BibTeX file that wil
 * **Omit fields from export**: Should you so wish, you can prevent fields of your choosing from being exported. In the
   configuration screen, add a comma-separated list of BibTeX fields you do not want to see in your export. The fields
   are case-sensitive, separated by a comma *only*, no spaces.
-* **[Configurable citekey generator](|Citation-Keys)**
+* **[Configurable citekey generator](Citation-Keys)**
 * **[Push-and-Pull-Export](Push-and-Pull-Export)**: You can fetch your library as part of your build, using curl (for example by using the included
   zoterobib.yaml arara rule), or with a BiblaTeX remote statement like
   \addbibresource[location=remote]{http://localhost:23119/better-bibtex/collection?/0/8CV58ZVD.biblatex}.  For Zotero
@@ -86,7 +86,7 @@ If you go into `about:config` you will find a preference `extensions.zotero.tran
 is empty by default. In this preference, you can paste a JavaScript string which will be executed for each reference
 generated in the Bib(La)TeX exporter. In this code, you have access to the reference just before it will be written out
 and cached. The documentation-in-progress for the script environment can be found
-[here](https://github.com/ZotPlus/zotero-better-bibtex/wiki/Scripting); there are also [examples on the wiki](https://github.com/ZotPlus/zotero-better-bibtex/wiki/Scripting-examples); feel free to add your own.
+[here](Scripting-API); there are also [examples on the wiki](Scripting-examples); feel free to add your own.
 
 
 <script type = 'text/javascript'>
