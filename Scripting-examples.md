@@ -8,8 +8,7 @@ title: Scripting examples
 You got customized. It doesn't yet have a GUI, but as this really is a bit on the technical side, I feel warranted to go
 without for now.
 
-If you go into `about:config` you will find a preference `extensions.zotero.translators.better-bibtex.postscript`, which
-is empty by default. In this, preference, you can paste a javascript string which will be executed for each reference
+If you go into the Advanced tab of the Better BibTeX preferences you will find a text box (empty by default) where you can edit a javascript snippet which will be executed for each reference
 generated in the Bib(La)TeX exporter. In this code, you have access to the reference just before it will be written out
 and cached. You can have a look at the [Scripting API](Scripting-API) documentation(ish) for the API(ish), but usually you can just open a new issue and ask me to write it, and I'll add it here (it's how the examples got here).
 

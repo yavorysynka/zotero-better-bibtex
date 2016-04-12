@@ -111,10 +111,8 @@ BBT adds a few fields, flags and filter functions that JabRef (perhaps wisely) d
   capitalized versions (so `Auth`, `AuthIni`, `Edtr`, ...) which follow the same algorithm but do not have any cleaning
   (diacritic folding, space removal, stripping of invalid citekey characters) applied. These can be used to pass through
   the filters specified below much like the fields from the table above. See also "usage note" below.
-- `journal`: returns the journal *abbreviation* (I know, counterintuitive, but best mimics JabRef). If you want the
-  full journal title, use `PublicationTitle`. `journal` returns the same as `JournalAbbreviation`, if set; if not
-  set, and 'automatic journal abbreviation' is enabled in the BBT settings, will use the same abbreviation filter Zotero
-  uses in the wordprocessor integration. You might want to use the `nopunct` filter (see below) on this.
+- `journal`: returns the journal abbreviation, or, if not found, the journal title, If 'automatic journal abbreviation' is enabled in the BBT settings, it will use the same abbreviation filter Zotero
+  uses in the wordprocessor integration. You might want to use the `abbr` filter (see below) on this.
 - `0`: a pseudo-function that sets the citekey disambiguation postfix to numeric (-1, -2, etc, like the standard Zotero
   Bib(La)TeX translators do) rather than alphabetic (a, b, c). Does not add any text to the citekey otherwise.
 
