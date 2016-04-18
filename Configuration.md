@@ -17,9 +17,12 @@ library, but you can read about what is involved [here](Performance).
 ### Citation command
 <!-- extensions.zotero.translators.better-bibtex.citeCommand -->
 
-Used for drag-and-drop citations. In the Zotero "Export" pane, choose, "LaTeX Citation" as the default export format for
-quick copy, then set the desired LaTeX citation command here. If you set this to `citep`, drag-and-drop citations will
-yield `\citep{key1,key2,...}`
+Used for drag-and-drop/quick copy citations. In the Zotero "Export" pane, choose, "Better BibTeX Quick Copy" as the default export format for quick copy, then set the desired LaTeX citation command here. If you set this to `citep`, drag-and-drop citations will yield `\citep{key1,key2,...}`
+
+### Quick Copy format
+<!-- extensions.zotero.translators.better-bibtex.citeCommandMode -->
+
+Used for drag-and-drop/quick copy citations. You can select the output format here: LaTeX (in combination with the Citation command preference), Pandoc, or Org-mode
 
 ### Citation key format
 <!-- extensions.zotero.translators.better-bibtex.citekeyFormat -->
@@ -181,7 +184,7 @@ Determines when [automatic exports](Push-and-Pull-Export) are kicked off:
 * **When Idle**: export marked collections when your computer is idle. You mostly want this if your computer is
   performance-constrained (aka slow)
 
-## Debug
+## Advanced
 
 ### Extended debug logging
 <!-- extensions.zotero.translators.better-bibtex.debug -->
@@ -292,7 +295,6 @@ List of words to keep lowercase when applying title casing
 <!-- extensions.zotero.translators.better-bibtex.titleCaseUpperCase -->
 
 List of words to keep uppercase when applying title casing
-
 
 <script type = 'text/javascript'>
           window.setTimeout(function(){ window.location.href = 'https://github.com/retorquere/zotero-better-bibtex/wiki/Configuration'; },3000)

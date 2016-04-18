@@ -1,8 +1,12 @@
 ---
-title: Unicode and Markup
-redirect_from: "/zotero-better-bibtex/unicode.html"
+title: From Unicode to LaTeX and Back Again
+redirect_from:
+- "/zotero-better-bibtex/Unicode-and-Markup.html"
+- "/zotero-better-bibtex/unicode.html"
+- "/zotero-better-bibtex/Going-hardcore.html"
+- "/zotero-better-bibtex/hardcore.html"
 ---
-# Unicode and Markup
+# From Unicode to LaTeX and Back Again
 
 Zotero does all its work in UTF-8 Unicode, which is absolutely the right thing to do. Unfortunately, for those shackled
 to BibTeX and who cannot (yet) move to BibLaTeX, unicode is a major PITA. Also, Zotero supports some simple HTML markup
@@ -20,8 +24,17 @@ in your references that Bib(La)TeX won't understand; BBT will
   class="nocase">...</span>`. Text between these will not have their capitalization changed in any way.
 * In names, you can force first names like `Philippe` to be exported to `{\relax Ph}ilippe` by adding a [end of guarded
   area](http://www.fileformat.info/info/unicode/char/0097/index.htm) character between `Ph` and `ilippe`
+If you'd really just rather hand-code your LaTeX constructs, BBT makes that possible:
+
+## But you are a hardcore LaTeX user!
+
+* You can add literal LaTeX anywhere in your reference by surrounding it with &lt;pre&gt;....&lt;/pre&gt; tags. BBT will
+  convert to/from unicode and (un)escape where required but will pass whatever is enclosed in the pre tags unchanged.
+* An entry tagged with "#LaTeX" (case-sensitive!) will have all fields exported as-is, so you can include
+  LaTeX markup in your references. If you enable "Raw BibTeX import" in the preferences, BibTeX imports will not be
+  escaped on import, and will automatically be tagged for raw export.
 
 
 <script type = 'text/javascript'>
-          window.setTimeout(function(){ window.location.href = 'https://github.com/retorquere/zotero-better-bibtex/wiki/Unicode-and-Markup'; },3000)
+          window.setTimeout(function(){ window.location.href = 'https://github.com/retorquere/zotero-better-bibtex/wiki/From-Unicode-to-LaTeX-and-Back-Again'; },3000)
         </script>

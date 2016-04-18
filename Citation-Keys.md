@@ -35,13 +35,8 @@ selecting references, right-clicking, and selecting "Generate BibTeX key".
 
 ## Drag and drop/hotkey citations
 
-You can drag and drop citations into your LaTeX editor, and it will add a proper \cite{citekey}. The actual command is
-configurable by setting the config option in the BBT preferences (see below). Do not include the leading backslash. This
-feature requires a one-time setup: go to zotero preferences, tab Export, under Default Output Format, select "LaTeX
-Citation". If you want Markdown citations, choose "Pandoc Citations".
-
-If you want even more convenience (and you're on Windows), install [AutoHotKey](http://www.autohotkey.com/), modify the
-[Zotero sample macro](https://raw.github.com/ZotPlus/zotero-better-bibtex/master/FastCite.ahk), and add it to your AutoHotKey.ahk. If you use this macro unmodified, when you select one or more entries in Zotero, it will copy them, bring TeXMaker to the forground, and paste your citation at the cursor. Caution: this macro does *not* check that you are in Zotero when you activate it, nor that TeXMaker is actually running.
+You can drag and drop citations into your LaTeX/Markdown/Orgmode editor, and it will add a proper `\cite{citekey}`/`[@citekey]`/`[[zotero://select...][@citekey]`. The `cite` command is
+configurable for LaTeX by setting the config option in the [Preferences](Configuration). Do not include the leading backslash. This feature requires a one-time setup: go to Zotero preferences, tab Export, under Default Output Format, select "Better BibTeX Quick Copy", and choose the Quick Copy format under the `Citation keys` preferences for BBT.
 
 ## Find duplicate keys through integration with [Report Customizer](https://github.com/retorquere/zotero-report-customizer)
 
