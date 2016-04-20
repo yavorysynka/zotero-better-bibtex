@@ -20,7 +20,7 @@ library, but you can read about what is involved [here](Performance).
 Used for drag-and-drop/quick copy citations. In the Zotero "Export" pane, choose, "Better BibTeX Quick Copy" as the default export format for quick copy, then set the desired LaTeX citation command here. If you set this to `citep`, drag-and-drop citations will yield `\citep{key1,key2,...}`
 
 ### Quick Copy format
-<!-- extensions.zotero.translators.better-bibtex.citeCommandMode -->
+<!-- extensions.zotero.translators.better-bibtex.quickCopyMode -->
 
 Used for drag-and-drop/quick copy citations. You can select the output format here: LaTeX (in combination with the Citation command preference), Pandoc, or Org-mode
 
@@ -35,14 +35,6 @@ Set the pattern used to generate citation keys. The format of the keys is docume
 If you have deviated from the default citation key format pattern by [specifycing your own](Citation-Keys), you may
 wind up with non-ASCII characters in your citation keys. You can prevent that using the `fold` function at the
 appropriate place in your pattern, but checking this checkbox will just apply `fold` to all your keys.
-
-### Add URLs to BibTeX export
-<!-- extensions.zotero.translators.better-bibtex.bibtexURLs -->
-
-BibLaTeX supports urls in your references natively; BibTeX does not. For this reason, URLs are omitted from BibTeX
-exports by default. Using this setting you can have them added to your exports either in a note field (not as clean, but
-compatible with BibTeX out of the box), or in an `url` field (requires extra packages to be loaded, or bibtex will error
-out).
 
 ### Auto-pin citation keys
 <!-- extensions.zotero.translators.better-bibtex.pinCitekeys -->
@@ -85,6 +77,8 @@ Pick your poison.
 If you enable this, the `extra` column in the Zotero reference list (if you have selected it to be shown) will display
 the citation key instead of the extra field.
 
+## Export
+
 ### Move name-particles (de, von, ...) to the family name
 <!-- extensions.zotero.translators.better-bibtex.parseParticles -->
 
@@ -93,14 +87,13 @@ two-part names (that is, names specified in separate `last name` and `first name
 `Gogh`, `Rembrandt van` will be exported (roughly) to `author = {van Gogh, Rembrandt}`. This is not always desirable, so
 you can disable this, in which case you will get (roughly) `author = {Gogh, Rembrandt van}`
 
-### Warn when changing citation keys in bulk
-<!-- extensions.zotero.translators.better-bibtex.warnBulkModify -->
+### Add URLs to BibTeX export
+<!-- extensions.zotero.translators.better-bibtex.bibtexURL -->
 
-For those who are curious about what the "Clear/Generate BibTeX key" right-click options do, this will warn you if you
-are doing this on more than 10 (default) at the same time, to prevent your curiosity from changing all your citation
-keys at once.
-
-## Import/Export
+BibLaTeX supports urls in your references natively; BibTeX does not. For this reason, URLs are omitted from BibTeX
+exports by default. Using this setting you can have them added to your exports either in a note field (not as clean, but
+compatible with BibTeX out of the box), or in an `url` field (requires extra packages to be loaded, or bibtex will error
+out).
 
 ### Fields to omit from export
 <!-- extensions.zotero.translators.better-bibtex.skipFields -->
@@ -152,13 +145,6 @@ this setting controls both what Zotero shows and what is exported for nested col
 Enables the Zotero-embedded web server. If you have Zotero standalone, it is always on, and this preference will not be
 shown. This option enables [Cite as you Write](Cite-as-you-Write) and [pull export](Push-and-Pull-Export).
 
-### Retain LaTeX markup on BibTeX import
-<!-- extensions.zotero.translators.better-bibtex.rawImports -->
-
-Enables [hardcore](Going-hardcore) mode. You like Zotero in some ways, but really just want it to be a BibTeX manager. If
-you enable this, any BibTeX files you import will retain all the LaTeX commands they have, and marks the entry to be
-exported without any translation.
-
 ## Journal abbreviations
 
 ### Automatically abbreviate journal titles
@@ -185,6 +171,20 @@ Determines when [automatic exports](Push-and-Pull-Export) are kicked off:
   performance-constrained (aka slow)
 
 ## Advanced
+
+### Retain LaTeX markup on BibTeX import
+<!-- extensions.zotero.translators.better-bibtex.rawImports -->
+
+Enables [hardcore](Going-hardcore) mode. You like Zotero in some ways, but really just want it to be a BibTeX manager. If
+you enable this, any BibTeX files you import will retain all the LaTeX commands they have, and marks the entry to be
+exported without any translation.
+
+### Warn when changing citation keys in bulk
+<!-- extensions.zotero.translators.better-bibtex.warnBulkModify -->
+
+For those who are curious about what the "Clear/Generate BibTeX key" right-click options do, this will warn you if you
+are doing this on more than 10 (default) at the same time, to prevent your curiosity from changing all your citation
+keys at once.
 
 ### Extended debug logging
 <!-- extensions.zotero.translators.better-bibtex.debug -->
@@ -295,6 +295,7 @@ List of words to keep lowercase when applying title casing
 <!-- extensions.zotero.translators.better-bibtex.titleCaseUpperCase -->
 
 List of words to keep uppercase when applying title casing
+
 
 <script type = 'text/javascript'>
           window.setTimeout(function(){ window.location.href = 'https://github.com/retorquere/zotero-better-bibtex/wiki/Configuration'; },3000)
