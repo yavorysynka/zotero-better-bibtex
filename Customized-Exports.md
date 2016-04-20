@@ -79,11 +79,7 @@ and
 
 # You wanted customized...
 
-You got customized. It doesn't yet have a GUI, but as this really is a bit on the technical side, I feel warranted to go
-without for now.
-
-If you go into `about:config` you will find a preference `extensions.zotero.translators.better-bibtex.postscript`, which
-is empty by default. In this preference, you can paste a JavaScript string which will be executed for each reference
+You got customized. If you go into the Advanced preferences of BBT, find an edit field labeled `Postscript`, empty by default. In this, you can paste a JavaScript snippet which will be executed for each reference
 generated in the Bib(La)TeX exporter. In this code, you have access to the reference just before it will be written out
 and cached. The documentation-in-progress for the script environment can be found
 [here](Scripting-API); there are also [examples on the wiki](Scripting-examples); feel free to add your own.

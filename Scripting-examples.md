@@ -5,10 +5,7 @@ title: Scripting examples
 
 # You wanted customized...
 
-You got customized. It doesn't yet have a GUI, but as this really is a bit on the technical side, I feel warranted to go
-without for now.
-
-If you go into the Advanced tab of the Better BibTeX preferences you will find a text box (empty by default) where you can edit a javascript snippet which will be executed for each reference
+You got customized. If you go into the Advanced tab of the Better BibTeX preferences you will find a text box (empty by default) where you can edit a javascript snippet which will be executed for each reference
 generated in the Bib(La)TeX exporter. In this code, you have access to the reference just before it will be written out
 and cached. You can have a look at the [Scripting API](Scripting-API) documentation(ish) for the API(ish), but usually you can just open a new issue and ask me to write it, and I'll add it here (it's how the examples got here).
 
@@ -54,9 +51,9 @@ arXiv is a bit of an odd duck. It really isn't a journal, so it shouldn't be the
 But for arguments' sake, let's say you get the desired output by including an empty `journaltitle` field (ugh) and stuff the `arXiv:...` ID in the `pages` field (*ugh*). You could do that with the following postscript:
 
 ```
-if (this.item.arXiv) {
-  this.add({ name: 'journaltitle', bibtex: '{}' });
-  this.add({ name: 'pages', value: this.item.arXiv });
+if (this.item.arXiv.id) {
+  this.add({ name: 'pages', value: this.item.arXiv.id });
+  if (!this.has.journaltitle) { this.add({ name: 'journaltitle', bibtex: '{}' }); }
 }
 ```
 

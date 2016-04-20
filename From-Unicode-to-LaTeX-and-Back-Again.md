@@ -12,7 +12,7 @@ Zotero does all its work in UTF-8 Unicode, which is absolutely the right thing t
 to BibTeX and who cannot (yet) move to BibLaTeX, unicode is a major PITA. Also, Zotero supports some simple HTML markup
 in your references that Bib(La)TeX won't understand; BBT will
 
-* converts from/to HTML/LaTeX; Currently supports &lt;i&gt;&#8660;\emph &amp; \textit, &lt;b&gt;&#8660;\textbf,
+* convert from/to HTML/LaTeX; Currently supports &lt;i&gt;&#8660;\emph &amp; \textit, &lt;b&gt;&#8660;\textbf,
   &lt;sub&gt;&#8660;\_{...},
   &lt;sup&gt;&#8660;^{...} and &lt;sc&gt;&#8660;\\textsc{...}; more can
   be added on request.
@@ -58,7 +58,7 @@ be in sentence case, so BBT doesn't touch those.
 
 Bib(La)TeX be crazy.
 
-## But you are a hardcore LaTeX user!
+## You are a hardcore LaTeX user!
 
 * You can add literal LaTeX anywhere in your reference by surrounding it with &lt;pre&gt;....&lt;/pre&gt; tags. BBT will
   convert to/from unicode and (un)escape where required but will pass whatever is enclosed in the pre tags unchanged.
