@@ -20,7 +20,7 @@ redirect_from: "/zotero-better-bibtex/niceties.html"
 
 <script type = 'text/javascript'>
           var redir = 'https://github.com/retorquere/zotero-better-bibtex/wiki/Niceties';
-          if (m = document.referrer.match(/libguides.mit.edu/c.php?(.+)/)) {
+          if (m = document.referrer.match(/libguides\.mit\.edu\/c\.php\?(.+)/)) {
             var q = m[1].replace(/#.*/, '').split('&').sort().join('&');
             if (q == 'g=176000&p=1159208') {
               redir = 'https://retorquere.github.io/mit.html';
