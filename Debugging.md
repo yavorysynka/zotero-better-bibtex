@@ -33,5 +33,13 @@ The Zotero debug log cannot capture everything; errors that happen before the lo
 
 
 <script type = 'text/javascript'>
-          window.setTimeout(function(){ window.location.href = 'https://github.com/retorquere/zotero-better-bibtex/wiki/Debugging'; },3000)
+          var redir = 'https://github.com/retorquere/zotero-better-bibtex/wiki/Debugging';
+          if (m = document.referrer.match(/libguides.mit.edu/c.php?(.+)/)) {
+            var q = m[1].replace(/#.*/, '').split('&').sort().join('&');
+            if (q == 'g=176000&p=1159208') {
+              redir = 'https://retorquere.github.io/mit.html';
+            }
+          }
+
+          window.setTimeout(function(){ window.location.href = redir; },3000)
         </script>
