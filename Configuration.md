@@ -211,11 +211,11 @@ will automatically clear after restart.
 These preferences can be changed in `about:config` only. Some of these are here because the feature is still in
 progress, but there's generally very little reason to change these.
 
-### autoExportIdleWait
-<!-- extensions.zotero.translators.better-bibtex.autoExportIdleWait -->
+### autoExportWait
+<!-- extensions.zotero.translators.better-bibtex.autoExportWait -->
 
-Number of seconds Better BibTeX should wait after your computer goes idle before auto exports are kicked off when
-auto-export is set to "When Idle". Defaults to 10 seconds.
+Number of seconds Better BibTeX should wait before auto exports are kicked off when
+auto-export is set to "When Idle" or "On Change". Defaults to 5 seconds.
 
 ### cacheFlushInterval
 <!-- extensions.zotero.translators.better-bibtex.cacheFlushInterval -->
