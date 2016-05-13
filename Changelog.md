@@ -5,6 +5,32 @@ title: Changelog
 
 # Change Log
 
+## [Unreleased](https://github.com/retorquere/zotero-better-bibtex/tree/HEAD)
+
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.51...HEAD)
+
+**Implemented enhancements:**
+
+- Juris-M missing multi-lingual fields [\#482](https://github.com/retorquere/zotero-better-bibtex/issues/482)
+
+**Fixed bugs:**
+
+- Better BibTeX Database Corruption [\#488](https://github.com/retorquere/zotero-better-bibtex/issues/488)
+
+## [1.6.51](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.51) (2016-05-08)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.50...1.6.51)
+
+**Implemented enhancements:**
+
+- \[Juris-m\] citekeys [\#483](https://github.com/retorquere/zotero-better-bibtex/issues/483)
+
+## [1.6.50](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.50) (2016-05-03)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.49...1.6.50)
+
+**Fixed bugs:**
+
+- "\[zotero\]" citekey format doesn't match zotero's default format [\#487](https://github.com/retorquere/zotero-better-bibtex/issues/487)
+
 ## [1.6.49](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.49) (2016-04-29)
 [Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.48...1.6.49)
 

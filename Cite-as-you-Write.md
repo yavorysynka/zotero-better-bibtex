@@ -43,6 +43,11 @@ the following URL parameters:
 | `minimize` | Any non-empty value minimize all Firefox windows after a pick |
 
 
+If you picked the `pandoc` format, you can pass the following extra parameters:
+| parameter |   |
+| -------- | --------- |
+| `brackets` | any non-empty value surrounds the citation with brackets |
+
 If you picked the `translate` format, you can pass the following extra parameters:
 
 | parameter |   |

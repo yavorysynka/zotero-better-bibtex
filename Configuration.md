@@ -175,7 +175,7 @@ Determines when [automatic exports](Push-and-Pull-Export) are kicked off:
 ### Retain LaTeX markup on BibTeX import
 <!-- extensions.zotero.translators.better-bibtex.rawImports -->
 
-Enables [hardcore](Going-hardcore) mode. You like Zotero in some ways, but really just want it to be a BibTeX manager. If
+Enables [hardcore](From-Unicode-to-LaTeX-and-Back-Again#you-are-a-hardcore-latex-user) mode. You like Zotero in some ways, but really just want it to be a BibTeX manager. If
 you enable this, any BibTeX files you import will retain all the LaTeX commands they have, and marks the entry to be
 exported without any translation.
 
@@ -245,7 +245,7 @@ mechanism makes sure it doesn't happen any more frequently than necessary.
 ### csquotes
 <!-- extensions.zotero.translators.better-bibtex.csquotes -->
 
-Enables [csquotes](Unicode-and-Markup) support.
+Enables [csquotes](From-Unicode-to-LaTeX-and-Back-Again) support.
 
 ### langID
 <!-- extensions.zotero.translators.better-bibtex.langID -->
