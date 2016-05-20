@@ -14,8 +14,8 @@ These translators are supported by the auto-export functionality built into Bett
 
 * **Better BibLaTeX** exports references in BibLaTeX format (but better, natch)
 * **Better BibTeX** exports and imports references in BibTeX format
-* **Pandoc JSON** exports references in pandoc-compatible CSL-JSON format, with added citation keys and parsing of metadata
-* **Pandoc YAML** exports the same as the **Pandoc JSON** exporter, but in YAML format
+* **Better CSL JSON** exports references in pandoc-compatible CSL-JSON format, with added citation keys and parsing of metadata
+* **Better CSL YAML** exports the same as the **Better CSL JSON** exporter, but in YAML format
 * **Collected Notes** exports just notes -- standalone notes and notes attached to references, not the extra field -- to HTML. This way, Zotero can serve as a (very) simple research notebook.
 
 ## Import
@@ -27,8 +27,8 @@ These translators are supported by the auto-export functionality built into Bett
 I would hide these if I could. They're used for Zotero's drag-and-drop citation facility, and for Better BibTeX debugging.
 
 * **BetterBibTeX JSON** exports and imports references in BetterBibTeX debug format. The error reporter uses this format
-* **LaTeX Citation** exports citations to be copy-pasted into your LaTeX document in the form `\cite{< key >}`
-* **Pandoc Citation** exports citations to be copy-pasted into your Markdown document in the form `[@key]`
+* **Better BibTeX Quick Copy** exports citations to be copy-pasted into your LaTeX/Markdown document in the form `\cite{< key >}`/`[@key]`
+
 
 <script type = 'text/javascript'>
           var redir = 'https://github.com/retorquere/zotero-better-bibtex/wiki/Bundled-translators';
