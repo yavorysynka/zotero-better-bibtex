@@ -108,6 +108,7 @@ BBT adds a few fields, flags and filter functions that JabRef (perhaps wisely) d
   the filters specified below much like the fields from the table above. See also "usage note" below.
 - `journal`: returns the journal abbreviation, or, if not found, the journal title, If 'automatic journal abbreviation' is enabled in the BBT settings, it will use the same abbreviation filter Zotero
   uses in the wordprocessor integration. You might want to use the `abbr` filter (see below) on this.
+- `library`: returns the name of the shared group library, or nothing if the reference is in your personal library
 - `0`: a pseudo-function that sets the citekey disambiguation postfix to numeric (-1, -2, etc, like the standard Zotero
   Bib(La)TeX translators do) rather than alphabetic (a, b, c). Does not add any text to the citekey otherwise.
 
