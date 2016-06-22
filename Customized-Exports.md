@@ -30,6 +30,10 @@ facilities in Zotero -- including the non-Firefox plugins provided by Zotero.
 
 # Add your own BibLaTeX fields
 
+There are three alternative methods: 
+
+## Square brackets []
+
 You can add any field you like by using something like
 
 ```
@@ -37,7 +41,11 @@ bibtex[origdate=1856;origtitle=An Old Title]
 ```
 
 in the `extra` field of your reference. This format is very rigid, it has no quoting syntax, so you can't have `=`, `[`,
-`]` or `;` in your key names or values. If you need more flexibility, you can use the [JSON5](http://json5.org/) format
+`]` or `;` in your key names or values. 
+
+## JSON5
+
+If you need more flexibility, you can use the [JSON5](http://json5.org/) format
 instead:
 
 ```
@@ -49,7 +57,9 @@ bibtex{
 
 The marker for these fields can be either `bibtex`, `biblatex` or `biblatexdata`, but when importing BibTeX files with
 fields not supported by Zotero, the `bibtex` marker will be used. These fields are assumed to be valid LaTeX, and will
-be exported exactly as entered. If you want to have them LaTeX encoded, add an asterisk (`*`) after the marker, so
+be exported exactly as entered. 
+
+If you want to have them LaTeX encoded, add an asterisk (`*`) after the marker, so
 something like
 
 ```
@@ -59,10 +69,14 @@ bibtex*{
 }
 ```
 
+## CSL fields
+
 The final way to add fields is by using CSL fields in the format `{:original-date: 1856}`. These fields will not only be
 exported to Bib(La)TeX, but will also be [picked
 up](https://forums.zotero.org/discussion/3673/original-date-of-publication/) by the Zotero Bibliography manager, even
 though not all Zotero styles yet support this.
+
+## Common notes
 
 If you add a field called `referencetype` using either of these methods, that value will be used as the reference type
 instead of the one usually inferred from the Zotero reference type. You can use this to create, for example,

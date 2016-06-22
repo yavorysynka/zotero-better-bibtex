@@ -57,6 +57,46 @@ if (this.item.arXiv.id) {
 }
 ```
 
+## Custom field order
+
+Specify the ordering of the listing of fields in an exported Biblatex/Bibtex entry. Your postscript:
+
+```javascript
+// the bib(la)tex fields are ordered according to this array.
+// If a field is not in this list, it will show up at the end in random order.
+// https://github.com/retorquere/zotero-better-bibtex/issues/512
+var order = ['author', 'date', 'origdate', 'shorthand', 'title'];
+this.fields.sort(function(a, b) {
+  var oa = order.indexOf(a.name);
+  var ob = order.indexOf(b.name);
+  if (oa < 0) { return 1; } // a is not in order, so put it at the end
+  if (ob < 0) { return -1; } // b is not in order, so put it at the end
+  return oa - ob;
+});
+```
+In Zotero when using an Export Format of Better Biblatex we'll get something like the following entry ...
+
+<pre><code>@book{nietzsche_1974_gay,
+  <strong>author</strong> = {Nietzsche, Friedrich Wilhelm},
+  <strong>date</strong> = {1974-03},
+  <strong>origdate</strong> = {1882},
+  <strong>shorthand</strong> = {GS},
+  <strong>title</strong> = {The {{Gay Science}}: {{With}} a {{Prelude}} in {{Rhymes}} and an {{Appendix}} of {{Songs}}},
+  keywords = {Philosophy / General,Philosophy / History  Surveys / Modern},
+  translator = {Kaufmann, Walter},
+  publisher = {{Random House}},
+  timestamp = {2016-06-05T20:12:28Z},
+  pagetotal = {407},
+  shorttitle = {The {{Gay Science}}},
+  isbn = {0-394-71985-9},
+  edition = {1}
+}
+</code></pre>
+
+Further details [Export to Biblatex/Bibtex. Custom field order. #512](https://github.com/retorquere/zotero-better-bibtex/issues/512).
+
+
+
 <script type = 'text/javascript'>
           var redir = 'https://github.com/retorquere/zotero-better-bibtex/wiki/Scripting-examples';
           if (m = document.referrer.match(/libguides\.mit\.edu\/c\.php\?(.+)/)) {
