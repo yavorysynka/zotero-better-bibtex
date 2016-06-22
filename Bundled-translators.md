@@ -20,7 +20,12 @@ These translators are supported by the auto-export functionality built into Bett
 
 ## Import
 
-* **BibTeX AUX Scanner** is an import-only translator that can read AUX files to put references you cited in a LaTeX document in a collection, and a note for references cited but not in your Zotero library
+* **Better BibTeX** exports and imports references in BibTeX format
+
+## AUX Scanner
+
+* **AUX Scanning** can be triggered from the gear menu (it used to be an an import-only translator). The scanner can
+  read AUX files to put references you cited in a LaTeX document into the current collection, and a note for references cited but not in your Zotero library
 
 ## Included, but you should usually ignore it.
 
