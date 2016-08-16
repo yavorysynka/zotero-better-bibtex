@@ -1,0 +1,85 @@
+<html>
+  <head>
+    <title>Name parser</title>
+    <script>
+      var Translator = { unicode: true, debug: function(msg) { console.log(msg); }}, LaTeX = {};
+    </script>
+    <script src="xregexp-all.js"></script>
+    <script src="titlecaser.js"></script>
+    <script src="markupparser.js"></script>
+    <script src="latex_unicode_mapping.js"></script>
+    <script src="unicode_translator.js"></script>
+
+    <script>
+      function parse() {
+        var english = document.getElementById('english').checked;
+        var title = document.getElementById('title').value;
+        var translator;
+
+        if (document.getElementById("bibtex").checked) {
+          translator = 'bibtex';
+          Translator.BetterBibTeX = true;
+          Translator.BetterBibLaTeX = false;
+        } else {
+          translator = 'biblatex';
+          Translator.BetterBibTeX = false;
+          Translator.BetterBibLaTeX = true;
+        }
+
+        window.history.pushState(null, null, 'index.html?translator=' + translator + '&title=' + encodeURIComponent(title) + '&english=' + (english ? 'true' : 'false'));
+
+        var output = document.getElementById('output');
+        output.textContent = LaTeX.text2latex(title, {caseConversion: english});
+        return false;
+      }
+    </script>
+  </head>
+  <body>
+    <form onsubmit="return parse();">
+      <table>
+        <tr><td>Title:</td><td><input type="text" size="80" name="title" id="title"></td></tr>
+      </table>
+      <input type="checkbox" id="english" name="english" value="English"> Treat as English<br>
+      <input id="bibtex" type="radio" name="translator" value="bibtex"> BibTeX&nbsp;&nbsp;<input id="biblatex" type="radio" name="translator" value="biblatex"> BibLaTeX<br>
+      <input type="submit" vaue="Translate">
+    </form>
+    <div id="output"></div>
+  </body>
+
+  <script>
+    function decode(str) {
+      if (!str) { return str; }
+      return decodeURIComponent(str.replace(/\+/g, ' '));
+    }
+
+    var QueryString = function () {
+      // This function is anonymous, is executed immediately and 
+      // the return value is assigned to QueryString!
+      var query_string = {};
+      var query = window.location.search.substring(1);
+      var vars = query.split("&");
+      for (var i=0;i<vars.length;i++) {
+        var pair = vars[i].split("=");
+            // If first entry with this name
+        if (typeof query_string[pair[0]] === "undefined") {
+          query_string[pair[0]] = decode(pair[1]);
+            // If second entry with this name
+        } else if (typeof query_string[pair[0]] === "string") {
+          var arr = [ query_string[pair[0]],decode(pair[1]) ];
+          query_string[pair[0]] = arr;
+            // If third or later entry with this name
+        } else {
+          query_string[pair[0]].push(decode(pair[1]));
+        }
+      } 
+        return query_string;
+    }();
+
+    document.getElementById('title').value = QueryString.bracketed || '';
+    document.getElementById('english').checked = (QueryString.english == 'true');
+    document.getElementById('bibtex').checked = (QueryString.translator == 'bibtex');
+    document.getElementById('biblatex').checked = (QueryString.translator != 'bibtex');
+
+    if (QueryString.title) { parse(); }
+  </script>
+</html>
