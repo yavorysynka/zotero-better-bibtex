@@ -28,15 +28,18 @@
 
         var label = ('html' + Array(translator.length).join(' ')).substr(0, translator.length);
 
-        window.history.pushState(null, null, 'index.html?translator=' + translator + '&titles=' + encodeURIComponent(titles) + '&english=' + (english ? 'true' : 'false'));
+        if (window.location.protocol != 'file:') {
+          window.history.pushState(null, null, 'index.html?translator=' + translator + '&titles=' + encodeURIComponent(titles) + '&english=' + (english ? 'true' : 'false'));
+        }
 
         var output = document.getElementById('output');
         var bibtex;
         output.textContent = '';
 
+
         titles.split("\n").forEach(function(title) {
           bibtex = '{' + LaTeX.text2latex(title, {caseConversion: Translator.BetterBibLaTeX && english}) + '}';
-          if (Translator.BibTeX && !english) { bibtex = '{' + bibtex + '}'; }
+          if (Translator.BetterBibTeX && !english) { bibtex = '{' + bibtex + '}'; }
 
           output.textContent += label + ': ' + title + "\n" + translator + ': ' + bibtex + "\n\n";
         });
