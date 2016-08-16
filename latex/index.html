@@ -31,10 +31,14 @@
         window.history.pushState(null, null, 'index.html?translator=' + translator + '&titles=' + encodeURIComponent(titles) + '&english=' + (english ? 'true' : 'false'));
 
         var output = document.getElementById('output');
+        var bibtex;
         output.textContent = '';
 
         titles.split("\n").forEach(function(title) {
-          output.textContent += label + ': ' + title + "\n" + translator + ': ' + LaTeX.text2latex(title, {caseConversion: english}) + "\n\n";
+          bibtex = '{' + LaTeX.text2latex(title, {caseConversion: Translator.BetterBibLaTeX && english}) + '}';
+          if (Translator.BibTeX && !english) { bibtex = '{' + bibtex + '}'; }
+
+          output.textContent += label + ': ' + title + "\n" + translator + ': ' + bibtex + "\n\n";
         });
         return false;
       }
