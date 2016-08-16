@@ -7,16 +7,32 @@
     <script src="franc-most.js"></script>
     <script src="xregexp-all.js"></script>
     <script src="titlecaser.js"></script>
+    <script src="_titlecaser.js"></script>
     <script src="markupparser.js"></script>
     <script src="latex_unicode_mapping.js"></script>
     <script src="unicode_translator.js"></script>
 
     <script>
+
+      var TitleCaser = {
+        citeproc: Translator.TitleCaser.titleCase.bind(Translator.TitleCaser),
+        simple: Translator.simpleTitleCaser.titleCase.bind(Translator.simpleTitleCaser)
+      };
+
       function parse() {
         var language;
         var lang;
         var titles = document.getElementById('titles').value;
         var translator;
+        var tc;
+
+        if (document.getElementById("simple").checked) {
+          Translator.TitleCaser.titleCase = TitleCaser.simple;
+          tc = 'simple';
+        } else {
+          Translator.TitleCaser.titleCase = TitleCaser.citeproc;
+          tc = 'citeproc';
+        }
 
         if (document.getElementById("eng").checked) {
           language = 'eng'
@@ -36,7 +52,7 @@
         }
 
         if (window.location.protocol != 'file:') {
-          window.history.pushState(null, null, 'index.html?translator=' + translator + '&titles=' + encodeURIComponent(titles) + '&language=' + (language || 'guess'));
+          window.history.pushState(null, null, 'index.html?tc=' + tc + '&translator=' + translator + '&titles=' + encodeURIComponent(titles) + '&language=' + (language || 'guess'));
         }
 
         var output = document.getElementById('output');
@@ -66,7 +82,8 @@
         <input id="und" type="radio" name="language" value="und"> Assume Other&nbsp;&nbsp;
         <input id="guess" type="radio" name="language" value="guess"> Guess<br/>
       
-      <input id="bibtex" type="radio" name="translator" value="bibtex"> BibTeX&nbsp;&nbsp;<input id="biblatex" type="radio" name="translator" value="biblatex"> BibLaTeX<br>
+      Mode: <input id="bibtex" type="radio" name="translator" value="bibtex"> BibTeX&nbsp;&nbsp;<input id="biblatex" type="radio" name="translator" value="biblatex"> BibLaTeX<br>
+      Title Caser: <input id="citeproc" type="radio" name="tc" value="citeproc"> Citeproc&nbsp;&nbsp;<input id="simple" type="radio" name="tc" value="simple"> Simple<br>
       <input type="submit" vaue="Translate">
     </form>
     <pre id="output"></pre>
@@ -111,6 +128,10 @@
     var translator = {bibtex: 'bibtex'}[QueryString.translator] || 'biblatex';
     document.getElementById('bibtex').checked = (translator == 'bibtex');
     document.getElementById('biblatex').checked = (translator == 'biblatex');
+
+    var tc = {simple: 'simple'}[QueryString.tc] || 'citeproc';
+    document.getElementById('simple').checked = (tc == 'simple');
+    document.getElementById('citeproc').checked = (tc == 'citeproc');
 
     if (QueryString.titles) { parse(); }
   </script>
