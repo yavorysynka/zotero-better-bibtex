@@ -13,7 +13,7 @@
     <script>
       function parse() {
         var english = document.getElementById('english').checked;
-        var title = document.getElementById('title').value;
+        var titles = document.getElementById('titles').value;
         var translator;
 
         if (document.getElementById("bibtex").checked) {
@@ -26,24 +26,30 @@
           Translator.BetterBibLaTeX = true;
         }
 
-        window.history.pushState(null, null, 'index.html?translator=' + translator + '&title=' + encodeURIComponent(title) + '&english=' + (english ? 'true' : 'false'));
+        var label = ('html' + Array(translator.length).join(' ')).substr(0, translator.length);
+
+        window.history.pushState(null, null, 'index.html?translator=' + translator + '&titles=' + encodeURIComponent(titles) + '&english=' + (english ? 'true' : 'false'));
 
         var output = document.getElementById('output');
-        output.textContent = LaTeX.text2latex(title, {caseConversion: english});
+        output.textContent = '';
+
+        titles.split("\n").forEach(function(title) {
+          output.textContent += label + ': ' + title + "\n" + translator + ': ' + LaTeX.text2latex(title, {caseConversion: english}) + "\n\n";
+        });
         return false;
       }
     </script>
   </head>
   <body>
     <form onsubmit="return parse();">
-      <table>
-        <tr><td>Title:</td><td><input type="text" size="80" name="title" id="title"></td></tr>
-      </table>
+      <textarea id="titles" rows="10" cols="120">
+      </textarea>
+      <br/>
       <input type="checkbox" id="english" name="english" value="English"> Treat as English<br>
       <input id="bibtex" type="radio" name="translator" value="bibtex"> BibTeX&nbsp;&nbsp;<input id="biblatex" type="radio" name="translator" value="biblatex"> BibLaTeX<br>
       <input type="submit" vaue="Translate">
     </form>
-    <div id="output"></div>
+    <pre id="output"></pre>
   </body>
 
   <script>
@@ -75,11 +81,11 @@
         return query_string;
     }();
 
-    document.getElementById('title').value = QueryString.bracketed || '';
+    document.getElementById('titles').value = QueryString.titles || '';
     document.getElementById('english').checked = (QueryString.english == 'true');
     document.getElementById('bibtex').checked = (QueryString.translator == 'bibtex');
     document.getElementById('biblatex').checked = (QueryString.translator != 'bibtex');
 
-    if (QueryString.title) { parse(); }
+    if (QueryString.titles) { parse(); }
   </script>
 </html>
