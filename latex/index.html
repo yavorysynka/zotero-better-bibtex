@@ -44,9 +44,11 @@
         output.textContent = '';
 
         titles.split("\n").forEach(function(title) {
+          if (!title.trim()) { return; }
+
           lang = language || franc(title) || 'und';
-          bibtex = '{' + LaTeX.text2latex(title, {caseConversion: Translator.BetterBibLaTeX && (lang == 'eng')}) + '}';
-          if (Translator.BetterBibTeX && (lang != 'eng')) { bibtex = '{' + bibtex + '}'; }
+          bibtex = '{' + LaTeX.text2latex(title, {caseConversion: Translator.BetterBibLaTeX && (lang == 'eng' || lang == 'sco')}) + '}';
+          if (Translator.BetterBibTeX && (lang != 'eng' && lang != 'sco')) { bibtex = '{' + bibtex + '}'; }
 
           output.textContent += lang + ': ' + title + "\n" + translator + ': ' + bibtex + "\n\n";
         });
