@@ -195,7 +195,7 @@ titles.push({
 
 titles = [
   {
-    html: 'Pre-harvest, Pd-N-heterocyclic, S-matrix, High-speed'
+    html: 'Effects of open- and closed-system temperature changes on blood O<sub>2</sub>-binding characteristics of Atlantic bluefin tuna (<i>Thunnus <a span class="nocase">thynnus</span></a></i>)'
   }
 ];
 

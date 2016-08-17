@@ -129,8 +129,13 @@ Translator.MarkupParser = (function() {
           if (match) {
             html = html.substring(match[0].length);
             this.parseEndTag.apply(this, match);
-            chars = false;
+          } else {
+            if (this.handler.chars) {
+              this.handler.chars('<', length - html.length);
+            }
+            html = html.substring(1);
           }
+          chars = false;
           break;
         case !(html[0] === '<' || html[0] === "\x0E"):
           if (html[0] === '<') {
@@ -151,14 +156,13 @@ Translator.MarkupParser = (function() {
           if (match) {
             html = html.substring(match[0].length);
             this.parseStartTag.apply(this, match);
-            chars = false;
           } else {
             if (this.handler.chars) {
               this.handler.chars('<', length - html.length);
             }
             html = html.substring(1);
-            chars = false;
           }
+          chars = false;
       }
       if (chars) {
         index = html.search(/[<\x0E\x0F]/);
