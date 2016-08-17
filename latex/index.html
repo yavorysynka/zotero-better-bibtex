@@ -83,7 +83,7 @@
           bibtex = '{' + LaTeX.text2latex(title, {caseConversion: Translator.BetterBibLaTeX && english}) + '}';
           if (Translator.BetterBibTeX && !english) { bibtex = '{' + bibtex + '}'; }
 
-          output.textContent += language + ': ' + title + "\n" + options.translator + ': ' + bibtex + "\n\n";
+          output.textContent += language + ': ' + title + "\n" + 'titlecased: ' + Translator.TitleCaser.titleCase(title) + "\n" + options.translator + ': ' + bibtex + "\n\n";
         });
         return false;
       }

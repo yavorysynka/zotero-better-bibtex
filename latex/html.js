@@ -15,6 +15,7 @@ display = function(html, options) {
   lang = ((options.language || '<none>') + '        ').substr(0, 8);
   console.log(options.source);
   console.log(lang + ": `" + html + "`");
+  console.log(Translator.TitleCaser.titleCase(html));
   options.caseConversion = (options.language || 'en') === 'en';
   cp = LaTeX.text2latex(html, options);
   console.log("biblatex: {" + cp + "}");
@@ -191,6 +192,12 @@ titles = [
 titles.push({
   html: "This is really, <i>really</i> good"
 });
+
+titles = [
+  {
+    html: 'Pre-harvest, Pd-N-heterocyclic, S-matrix, High-speed'
+  }
+];
 
 for (i = 0, len = titles.length; i < len; i++) {
   title = titles[i];
