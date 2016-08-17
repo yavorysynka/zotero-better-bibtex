@@ -82,7 +82,7 @@
 
           var language = (options.language == 'guess' ? franc(title) : options.language || 'und');
           var english = (language == 'eng' || language == 'sco');
-          bibtex = '{' + LaTeX.text2latex(title, {caseConversion: Translator.BetterBibLaTeX && english}) + '}';
+          bibtex = '{' + LaTeX.text2latex(title, {caseConversion: english}) + '}';
           if (Translator.BetterBibTeX && !english) { bibtex = '{' + bibtex + '}'; }
 
           output.textContent += language + ': ' + title + "\n" + 'titlecased: ' + Translator.TitleCaser.titleCase(title) + "\n" + options.translator + ': ' + bibtex + "\n\n";
