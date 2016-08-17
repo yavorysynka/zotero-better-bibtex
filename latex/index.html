@@ -78,7 +78,7 @@
         options.titles.split("\n").forEach(function(title) {
           if (!title.trim()) { return; }
 
-          var language = options.language || franc(title) || 'und';
+          var language = (options.language == 'guess' ? franc(title) : options.language || 'und');
           var english = (language == 'eng' || language == 'sco');
           bibtex = '{' + LaTeX.text2latex(title, {caseConversion: Translator.BetterBibLaTeX && english}) + '}';
           if (Translator.BetterBibTeX && !english) { bibtex = '{' + bibtex + '}'; }
