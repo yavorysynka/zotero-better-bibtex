@@ -194,5 +194,5 @@ titles.push({
 
 for (i = 0, len = titles.length; i < len; i++) {
   title = titles[i];
-  console.log(title.html);
+  display(title.html, title);
 }

@@ -35,7 +35,7 @@ LaTeX.HTML = (function() {
   }
 
   HTML.prototype.walk = function(tag) {
-    var child, i, len, postfix, ref, ref1;
+    var child, i, latex, len, postfix, prefix, ref, ref1, ref2;
     if (!tag) {
       return;
     }
@@ -48,80 +48,62 @@ LaTeX.HTML = (function() {
         return;
     }
     this.stack.unshift(tag);
-    if (tag.smallcaps) {
-      this.latex += '\\textsc{';
-    }
-    if (tag.nocase) {
-      this.latex += '{{';
-    }
-    if (tag.relax) {
-      this.latex += '{\\relax ';
-    }
-    postfix = '';
+    latex = '...';
     switch (tag.name) {
       case 'i':
       case 'em':
       case 'italic':
-        this.latex += '{\\emph{';
-        postfix = '}}';
+        latex = '{\\emph{...}}';
         break;
       case 'b':
       case 'strong':
-        this.latex += '{\\textbf{';
-        postfix = '}}';
+        latex = '{\\textbf{...}}';
         break;
       case 'a':
 
         /* zotero://open-pdf/0_5P2KA4XM/7 is actually a reference. */
         if (((ref = tag.attrs.href) != null ? ref.length : void 0) > 0) {
-          this.latex += "\\href{" + tag.attrs.href + "}{";
-          postfix = '}';
+          latex = "\\href{" + tag.attrs.href + "}{...}";
         }
         break;
       case 'sup':
-        this.latex += '{\\textsuperscript{';
-        postfix = '}}';
+        latex = '{\\textsuperscript{...}}';
         break;
       case 'sub':
-        this.latex += '{\\textsubscript{';
-        postfix = '}}';
+        latex = '{\\textsubscript{...}}';
         break;
       case 'br':
+        latex = '';
 
         /* line-breaks on empty line makes LaTeX sad */
         if (this.latex !== '' && this.latex[this.latex.length - 1] !== "\n") {
-          this.latex += "\\\\";
+          latex = "\\\\";
         }
-        this.latex += "\n";
+        latex += "\n...";
         break;
       case 'p':
       case 'div':
       case 'table':
       case 'tr':
-        this.latex += "\n\n";
-        postfix = "\n\n";
+        latex = "\n\n...\n\n";
         break;
       case 'h1':
       case 'h2':
       case 'h3':
       case 'h4':
-        this.latex += "\n\n\\" + ((new Array(parseInt(tag.name[1]))).join('sub')) + "section{";
-        postfix = "}\n\n";
+        latex = "\n\n\\" + ((new Array(parseInt(tag.name[1]))).join('sub')) + "section{...}\n\n";
         break;
       case 'ol':
-        this.latex += "\n\n\\begin{enumerate}\n";
-        postfix = "\n\n\\end{enumerate}\n";
+        latex = "\n\n\\begin{enumerate}\n...\n\n\\end{enumerate}\n";
         break;
       case 'ul':
-        this.latex += "\n\n\\begin{itemize}\n";
-        postfix = "\n\n\\end{itemize}\n";
+        latex = "\n\n\\begin{itemize}\n...\n\n\\end{itemize}\n";
         break;
       case 'li':
-        this.latex += "\n\\item ";
+        latex = "\n\\item ...";
         break;
       case 'enquote':
-        this.latex += '\\enquote{';
-        postfix = '}';
+        latex = '\\enquote{...}';
         break;
       case 'span':
       case 'sc':
@@ -129,8 +111,7 @@ LaTeX.HTML = (function() {
         break;
       case 'td':
       case 'th':
-        this.latex += ' ';
-        postfix = ' ';
+        latex = ' ... ';
         break;
       case 'tbody':
       case '#document':
@@ -141,21 +122,23 @@ LaTeX.HTML = (function() {
       default:
         Translator.debug("unexpected tag '" + tag.name + "' (" + (Object.keys(tag)) + ")");
     }
-    ref1 = tag.children;
-    for (i = 0, len = ref1.length; i < len; i++) {
-      child = ref1[i];
+    if (tag.smallcaps) {
+      latex = "{\\textsc{...}}".replace('...', latex);
+    }
+    if (tag.nocase) {
+      latex = "{{...}}".replace('...', latex);
+    }
+    if (tag.relax) {
+      latex = "{\\relax ...}".replace('...', latex);
+    }
+    ref1 = latex.split('...'), prefix = ref1[0], postfix = ref1[1];
+    this.latex += prefix;
+    ref2 = tag.children;
+    for (i = 0, len = ref2.length; i < len; i++) {
+      child = ref2[i];
       this.walk(child);
     }
     this.latex += postfix;
-    if (tag.relax) {
-      this.latex += '}';
-    }
-    if (tag.nocase) {
-      this.latex += '}}';
-    }
-    if (tag.smallcaps) {
-      this.latex += '}';
-    }
     return this.stack.shift();
   };
 
