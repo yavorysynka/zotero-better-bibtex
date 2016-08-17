@@ -56,6 +56,8 @@
           }
         }
 
+        if (!options.titles.trim()) { return; }
+
         if (window.location.protocol != 'file:') {
           window.history.pushState(null, null, 'index.html?' + query.join('&'));
         }
@@ -93,6 +95,13 @@
     <form id="form", name="form" onsubmit="return parse();">
     </form>
     <script>
+      var textTimeOut = null;
+
+      function delayedParse() {
+        if (textTimeOut) { window.clearTimeout(textTimeOut); }
+        textTimeOut = window.setTimeout(function() { textTimeOut = null; parse(); }, 500);
+      }
+
       var form = '<table border="0">';
 
       for (var key in Options) {
@@ -104,16 +113,16 @@
           case '[object Object]':
             for (var option in value) {
               var label = value[option];
-              form += '<input id="' + option + '" type="radio" name="' + key + '" value="' + option + '"> ' + label + '&nbsp;&nbsp;';
+              form += '<input onclick="parse();" id="' + option + '" type="radio" name="' + key + '" value="' + option + '"> ' + label + '&nbsp;&nbsp;';
             }
             break;
 
           case '[object String]':
-            form += '<textarea id="' + key + '" rows="10" cols="120"></textarea>'
+            form += '<textarea oninput="delayedParse();" id="' + key + '" rows="10" cols="120"></textarea>'
             break;
 
           case '[object Boolean]':
-            form += '<input id="' + key + '" name="' + key + '" value="' + key + '" type="checkbox">';
+            form += '<input onclick="parse();" id="' + key + '" name="' + key + '" value="' + key + '" type="checkbox">';
             break;
 
           default:
@@ -122,7 +131,8 @@
 
         form += "</td></tr>\n";
       }
-      form += '</table><input type="submit" vaue="Translate">'
+      form += '</table>';
+      // form += '<input type="submit" vaue="Translate">';
 
       document.getElementById('form').innerHTML = form;
     </script>
