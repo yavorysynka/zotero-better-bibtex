@@ -103,7 +103,7 @@ LaTeX.HTML = (function() {
         latex = "\n\\item ...";
         break;
       case 'enquote':
-        latex = '\\enquote{...}';
+        latex = '{\\enquote{...}}';
         break;
       case 'span':
       case 'sc':
