@@ -13,6 +13,13 @@
     <script src="unicode_translator.js"></script>
 
     <script>
+      var Options = {
+        titles: '',
+        unicode: true,
+        titlecaser: {citeproc: 'CiteProc-js', simple: 'Simple'},
+        language: {'guess': 'Guess based on input', 'eng': 'Assume English', 'und': 'Assume other'},
+        translator: {'biblatex': 'BibLaTeX', 'bibtex': 'BibTeX'}
+      };
 
       var TitleCaser = {
         citeproc: Translator.TitleCaser.titleCase.bind(Translator.TitleCaser),
@@ -20,71 +27,105 @@
       };
 
       function parse() {
-        var language;
-        var lang;
-        var titles = document.getElementById('titles').value;
-        var translator;
-        var tc;
+        var options = {};
+        var query = [];
 
-        if (document.getElementById("simple").checked) {
-          Translator.TitleCaser.titleCase = TitleCaser.simple;
-          tc = 'simple';
-        } else {
-          Translator.TitleCaser.titleCase = TitleCaser.citeproc;
-          tc = 'citeproc';
-        }
+        for (var key in Options) {
+          var value = Options[key];
+          switch (Object.prototype.toString.call(value)) {
+            //case '[object Array]':
+            case '[object Object]':
+              var values = Object.keys(value)
+              options[key] = values[0];
+              values.forEach(function (option) { if (document.getElementById(option).checked) { options[key] = option; }});
+              query.push(key + '=' + encodeURIComponent(options[key]));
+              break;
 
-        if (document.getElementById("eng").checked) {
-          language = 'eng'
-        } 
-        else if (document.getElementById("und").checked) {
-          language = 'und'
-        }
+            case '[object String]':
+              options[key] = document.getElementById(key).value;
+              query.push(key + '=' + encodeURIComponent(options[key]));
+              break;
 
-        if (document.getElementById("bibtex").checked) {
-          translator = 'bibtex';
-          Translator.BetterBibTeX = true;
-          Translator.BetterBibLaTeX = false;
-        } else {
-          translator = 'biblatex';
-          Translator.BetterBibTeX = false;
-          Translator.BetterBibLaTeX = true;
+            case '[object Boolean]':
+              options[key] = !!document.getElementById(key).checked;
+              query.push(key + '=' + encodeURIComponent(!!options[key]));
+              break;
+
+            default:
+              throw new Error('Unexpected option ' + key + ' of type ' + Object.prototype.toString.call(value))
+          }
         }
 
         if (window.location.protocol != 'file:') {
-          window.history.pushState(null, null, 'index.html?tc=' + tc + '&translator=' + translator + '&titles=' + encodeURIComponent(titles) + '&language=' + (language || 'guess'));
+          window.history.pushState(null, null, 'index.html?' + query.join('&'));
         }
+
+        Translator.unicode = options.unicode;
+
+        if (options.titlecaser == 'simple') {
+          Translator.TitleCaser.titleCase = TitleCaser.simple;
+        } else {
+          Translator.TitleCaser.titleCase = TitleCaser.citeproc;
+        }
+
+        Translator.BetterBibTeX = (options.translator == 'bibtex');
+        Translator.BetterBibLaTeX = (options.translator == 'biblatex');
 
         var output = document.getElementById('output');
         var bibtex;
         output.textContent = '';
 
-        titles.split("\n").forEach(function(title) {
+        options.titles.split("\n").forEach(function(title) {
           if (!title.trim()) { return; }
 
-          lang = language || franc(title) || 'und';
-          bibtex = '{' + LaTeX.text2latex(title, {caseConversion: Translator.BetterBibLaTeX && (lang == 'eng' || lang == 'sco')}) + '}';
-          if (Translator.BetterBibTeX && (lang != 'eng' && lang != 'sco')) { bibtex = '{' + bibtex + '}'; }
+          var language = options.language || franc(title) || 'und';
+          var english = (language == 'eng' || language == 'sco');
+          bibtex = '{' + LaTeX.text2latex(title, {caseConversion: Translator.BetterBibLaTeX && english}) + '}';
+          if (Translator.BetterBibTeX && !english) { bibtex = '{' + bibtex + '}'; }
 
-          output.textContent += lang + ': ' + title + "\n" + translator + ': ' + bibtex + "\n\n";
+          output.textContent += language + ': ' + title + "\n" + options.translator + ': ' + bibtex + "\n\n";
         });
         return false;
       }
     </script>
   </head>
   <body>
-    <form onsubmit="return parse();">
-      <textarea id="titles" rows="10" cols="120">
-      </textarea>
-      <br/>
-      Language:
-        <input id="eng" type="radio" name="language" value="eng"> Assume English&nbsp;&nbsp;
-        <input id="und" type="radio" name="language" value="und"> Assume Other&nbsp;&nbsp;
-        <input id="guess" type="radio" name="language" value="guess"> Guess<br/>
-      
-      Mode: <input id="bibtex" type="radio" name="translator" value="bibtex"> BibTeX&nbsp;&nbsp;<input id="biblatex" type="radio" name="translator" value="biblatex"> BibLaTeX<br>
-      Title Caser: <input id="citeproc" type="radio" name="tc" value="citeproc"> Citeproc&nbsp;&nbsp;<input id="simple" type="radio" name="tc" value="simple"> Simple<br>
-      <input type="submit" vaue="Translate">
+    <form id="form", name="form" onsubmit="return parse();">
+    </form>
+    <script>
+      var form = '<table border="0">';
+
+      for (var key in Options) {
+        var value = Options[key];
+
+        form += '<tr><td align="left" valign="top">' + key + ': ' + '</td><td>'
+
+        switch (Object.prototype.toString.call(value)) {
+          case '[object Object]':
+            for (var option in value) {
+              var label = value[option];
+              form += '<input id="' + option + '" type="radio" name="' + key + '" value="' + option + '"> ' + label + '&nbsp;&nbsp;';
+            }
+            break;
+
+          case '[object String]':
+            form += '<textarea id="' + key + '" rows="10" cols="120"></textarea>'
+            break;
+
+          case '[object Boolean]':
+            form += '<input id="' + key + '" name="' + key + '" value="' + key + '" type="checkbox">';
+            break;
+
+          default:
+            throw new Error('Unexpected option ' + key + ' of type ' + Object.prototype.toString.call(value))
+        }
+
+        form += "</td></tr>\n";
+      }
+      form += '</table><input type="submit" vaue="Translate">'
+
+      document.getElementById('form').innerHTML = form;
+    </script>
     </form>
     <pre id="output"></pre>
   </body>
@@ -118,20 +159,32 @@
         return query_string;
     }();
 
-    document.getElementById('titles').value = QueryString.titles || '';
+    for (var key in Options) {
+      var value = Options[key];
+      switch (Object.prototype.toString.call(value)) {
+        case '[object Object]':
+          var values = Object.keys(value);
+          document.getElementById(values[0]).checked = true;
+          values.forEach(function (option) { if (QueryString[key] == option) { document.getElementById(option).checked = true; } });
+          break;
 
-    var language = {eng: 'eng', und: 'und'}[QueryString.language] || 'guess';
-    document.getElementById('eng').checked = (language == 'eng');
-    document.getElementById('und').checked = (language == 'und');
-    document.getElementById('guess').checked = (language == 'guess');
+        case '[object String]':
+          if (QueryString[key]) {
+            document.getElementById(key).value = (QueryString[key] || '');
+          } else {
+            document.getElementById(key).value = value;
+          }
+          break;
 
-    var translator = {bibtex: 'bibtex'}[QueryString.translator] || 'biblatex';
-    document.getElementById('bibtex').checked = (translator == 'bibtex');
-    document.getElementById('biblatex').checked = (translator == 'biblatex');
-
-    var tc = {simple: 'simple'}[QueryString.tc] || 'citeproc';
-    document.getElementById('simple').checked = (tc == 'simple');
-    document.getElementById('citeproc').checked = (tc == 'citeproc');
+        case '[object Boolean]':
+          if (QueryString[key]) {
+            document.getElementById(key).checked = (QueryString[key] == 'true');
+          } else {
+            document.getElementById(key).checked = value;
+          }
+          break;
+      }
+    }
 
     if (QueryString.titles) { parse(); }
   </script>
