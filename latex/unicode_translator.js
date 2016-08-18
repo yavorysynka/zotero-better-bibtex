@@ -183,7 +183,7 @@ LaTeX.HTML = (function() {
     }
 
     /* minor cleanup */
-    latex = latex.replace(/({})+([^0-9a-z])/ig, '$2');
+    latex = latex.replace(/([^\\])({})+([^0-9a-z])/ig, '$1$3');
     return this.latex += latex;
   };
 
