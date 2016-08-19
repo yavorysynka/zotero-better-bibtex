@@ -21,6 +21,47 @@
         translator: {'biblatex': 'BibLaTeX', 'bibtex': 'BibTeX'}
       };
 
+      var Reconstruct = (function() {
+        function Reconstruct(ast) {
+          this.html = '';
+          this.walk(ast);
+        }
+
+        Reconstruct.prototype.walk = function(node) {
+          var child, i, j, k, len, len1, ref, ref1, ref2, results, v;
+          switch (false) {
+            case node.name !== '#text':
+              return this.html += node.text;
+            case !(node.name === 'span' && Object.keys(node.attr).length === 0):
+              ref = node.children;
+              results = [];
+              for (i = 0, len = ref.length; i < len; i++) {
+                child = ref[i];
+                results.push(this.walk(child));
+              }
+              return results;
+              break;
+            default:
+              this.html += "<" + node.name;
+              ref1 = node.attr;
+              for (k in ref1) {
+                v = ref1[k];
+                this.html += " " + k + "='" + v + "'";
+              }
+              this.html += '>';
+              ref2 = node.children;
+              for (j = 0, len1 = ref2.length; j < len1; j++) {
+                child = ref2[j];
+                this.walk(child);
+              }
+              return this.html += "</" + node.name + ">";
+          }
+        };
+      
+        return Reconstruct;
+      
+      })();
+
       var TitleCaser = {
         citeproc: Translator.TitleCaser.titleCase.bind(Translator.TitleCaser),
         simple: Translator.simpleTitleCaser.titleCase.bind(Translator.simpleTitleCaser)
@@ -80,18 +121,32 @@
         options.titles.split("\n").forEach(function(title) {
           if (!title.trim()) { return; }
 
-          var language = (options.language == 'guess' ? franc(title) : options.language || 'und');
+          var language = (options.language == 'guess' ? franc(innerText(title)) : options.language || 'und');
           var english = (language == 'eng' || language == 'sco');
           bibtex = '{' + LaTeX.text2latex(title, {caseConversion: english}) + '}';
           if (Translator.BetterBibTeX && !english) { bibtex = '{' + bibtex + '}'; }
 
-          output.textContent += language + ': ' + title + "\n" + 'titlecased: ' + Translator.TitleCaser.titleCase(title) + "\n" + options.translator + ': ' + bibtex + "\n\n";
+          output.textContent += [
+            language + ': ' + title,
+            'titlecased: ' + Translator.TitleCaser.titleCase(title),
+            'reconstructed: ' + (new Reconstruct(Translator.MarkupParser.parse(title, {caseConversion: english}))).html,
+            options.translator + ': ' + bibtex
+          ].join("\n") + "\n";
+
+          (new Reconstruct(ast)).html
         });
         return false;
+      }
+
+      function innerText(text) {
+        var div = document.getElementById('innertext');
+        div.innerHTML = text;
+        return div.innerText;
       }
     </script>
   </head>
   <body>
+    <div id="innertext" style="display: none"></div>
     <form id="form", name="form" onsubmit="return parse();">
     </form>
     <script>

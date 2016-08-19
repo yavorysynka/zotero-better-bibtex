@@ -57,6 +57,7 @@ display = function(html, options) {
   ast = Translator.MarkupParser.parse(html, {
     caseConversion: true
   });
+  console.log(JSON.stringify(ast, null, 2));
   console.log((new Reconstruct(ast)).html);
   console.log(LaTeX.text2latex(html, {
     caseConversion: true
