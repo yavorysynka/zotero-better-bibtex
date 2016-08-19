@@ -24,14 +24,12 @@ LaTeX.html2latex = function(html, options) {
 };
 
 LaTeX.HTML = (function() {
-  function HTML(html, options) {
-    if (options == null) {
-      options = {};
-    }
+  function HTML(html, options1) {
+    this.options = options1 != null ? options1 : {};
     this.latex = '';
     this.mapping = (Translator.unicode ? LaTeX.toLaTeX.unicode : LaTeX.toLaTeX.ascii);
     this.stack = [];
-    this.walk(Translator.MarkupParser.parse(html, options));
+    this.walk(Translator.MarkupParser.parse(html, this.options));
   }
 
   HTML.prototype.walk = function(tag) {
@@ -53,11 +51,11 @@ LaTeX.HTML = (function() {
       case 'i':
       case 'em':
       case 'italic':
-        latex = '{\\emph{...}}';
+        latex = '\\emph{...}';
         break;
       case 'b':
       case 'strong':
-        latex = '{\\textbf{...}}';
+        latex = '\\textbf{...}';
         break;
       case 'a':
 
@@ -67,10 +65,10 @@ LaTeX.HTML = (function() {
         }
         break;
       case 'sup':
-        latex = '{\\textsuperscript{...}}';
+        latex = '\\textsuperscript{...}';
         break;
       case 'sub':
-        latex = '{\\textsubscript{...}}';
+        latex = '\\textsubscript{...}';
         break;
       case 'br':
         latex = '';
@@ -103,7 +101,7 @@ LaTeX.HTML = (function() {
         latex = "\n\\item ...";
         break;
       case 'enquote':
-        latex = '{\\enquote{...}}';
+        latex = '\\enquote{...}';
         break;
       case 'span':
       case 'sc':
@@ -122,14 +120,29 @@ LaTeX.HTML = (function() {
       default:
         Translator.debug("unexpected tag '" + tag.name + "' (" + (Object.keys(tag)) + ")");
     }
+
+    /* holy mother of %^$#^%$@ the bib(la)tex case conversion rules are insane */
+
+    /* https://github.com/retorquere/zotero-better-bibtex/issues/541 */
+
+    /* https://github.com/plk/biblatex/issues/459 ... oy! */
+    if (this.embrace == null) {
+      this.embrace = this.options.caseConversion && ((this.latex || latex)[0] !== '\\');
+    }
+    if (this.embrace && latex.match(/^\\[a-z]+{\.\.\.}$/)) {
+      latex = '{' + latex + '}';
+    }
     if (tag.smallcaps) {
-      latex = "{\\textsc{...}}".replace('...', latex);
+      latex = "\\textsc{" + latex + "}";
+    }
+    if (this.embrace && tag.smallcaps) {
+      latex = '{' + latex + '}';
     }
     if (tag.nocase) {
-      latex = "{{...}}".replace('...', latex);
+      latex = "{{" + latex + "}}";
     }
     if (tag.relax) {
-      latex = "{\\relax ...}".replace('...', latex);
+      latex = "{\\relax " + latex + "}";
     }
     ref1 = latex.split('...'), prefix = ref1[0], postfix = ref1[1];
     this.latex += prefix;
