@@ -76,6 +76,6 @@ display = function(html, options) {
   return console.log('');
 };
 
-html = 'How to derive<i> "Ought" from "Is"</i>';
+html = '<i>Foo</i>';
 
 display(html, {});

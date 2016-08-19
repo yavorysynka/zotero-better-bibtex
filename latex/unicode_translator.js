@@ -126,8 +126,10 @@ LaTeX.HTML = (function() {
     /* https://github.com/retorquere/zotero-better-bibtex/issues/541 */
 
     /* https://github.com/plk/biblatex/issues/459 ... oy! */
-    if (this.embrace == null) {
-      this.embrace = this.options.caseConversion && ((this.latex || latex)[0] !== '\\');
+    if (latex !== '...') {
+      if (this.embrace == null) {
+        this.embrace = this.options.caseConversion && ((this.latex || latex)[0] !== '\\');
+      }
     }
     if (this.embrace && latex.match(/^\\[a-z]+{\.\.\.}$/)) {
       latex = '{' + latex + '}';
