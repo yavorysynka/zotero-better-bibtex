@@ -208,7 +208,7 @@ Translator.MarkupParser = (function() {
   };
 
   MarkupParser.prototype.unwrapNocase = function(node) {
-    var child, children, clone, expand, expanded, j, k, len, len1, ref, ref1, ref2;
+    var child, children, clone, expand, expanded, j, k, last, len, len1, ref, ref1, ref2;
     if (node.name === '#text') {
       return node;
     }
@@ -236,17 +236,25 @@ Translator.MarkupParser = (function() {
       return node;
     }
     expanded = [];
+    last = null;
     ref2 = node.children;
     for (k = 0, len1 = ref2.length; k < len1; k++) {
       child = ref2[k];
       clone = JSON.parse(JSON.stringify(node));
-      if (child.nocase) {
-        clone.children = child.children;
-        child.children = [clone];
-        expanded.push(child);
-      } else {
-        clone.children = [child];
-        expanded.push(clone);
+      switch (false) {
+        case !child.nocase:
+          clone.children = child.children;
+          child.children = [clone];
+          expanded.push(child);
+          last = null;
+          break;
+        case !(last && !last.nocase):
+          last.children.push(child);
+          break;
+        default:
+          clone.children = [child];
+          expanded.push(clone);
+          last = clone;
       }
     }
     return expanded;
