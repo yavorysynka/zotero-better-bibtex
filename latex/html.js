@@ -8,6 +8,10 @@ Translator.csquotes = {
 
 Translator.unicode = true;
 
+Translator.BetterBibTeX = false;
+
+Translator.BetterBibLaTeX = true;
+
 Translator.titleCaseLowerCase = 'about above across afore after against along\nalongside amid amidst among amongst anenst apropos apud around as\naside astride at athwart atop barring before behind below beneath\nbeside besides between beyond but by circa despite down during\nexcept for forenenst from given in inside into lest like modulo\nnear next notwithstanding of off on onto out over per plus pro qua\nsans since than through thru throughout thruout till to toward\ntowards under underneath until unto up upon versus vs. v. vs v via\nvis-à-vis with within without according to ahead of apart from as\nfor as of as per as regards aside from back to because of close to\ndue to except for far from inside of instead of near to next to on\nto out from out of outside of prior to pursuant to rather than\nregardless of such as that of up to where as or yet so and nor a\nan the de d\' von van c et ca thru according ahead apart regards\nback because close due far instead outside prior pursuant rather\nregardless such their where'.replace(/\n/g, ' ').trim().split(/\s+/);
 
 Reconstruct = (function() {

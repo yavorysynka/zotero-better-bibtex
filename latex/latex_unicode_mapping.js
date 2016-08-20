@@ -7,7 +7,8 @@ if (!LaTeX) {
 
 LaTeX.toLaTeX = {
   unicode: {},
-  ascii: {}
+  ascii: {},
+  embrace: {}
 };
 
 LaTeX.toLaTeX.unicode.math = {
@@ -3253,6 +3254,19 @@ LaTeX.toLaTeX.ascii.text = {
   '\uD835\uDFC7': "\\mathsfbfsl{\\phi}",
   '\uD835\uDFC8': "\\mathsfbfsl{\\varrho}",
   '\uD835\uDFC9': "\\mathsfbfsl{\\varpi}"
+};
+
+LaTeX.toLaTeX.embrace = {
+  "\\k{A}": true,
+  "\\k{E}": true,
+  "\\k{I}": true,
+  "\\k{U}": true,
+  "\\k{a}": true,
+  "\\k{e}": true,
+  "\\k{i}": true,
+  "\\k{u}": true,
+  "\\r{U}": true,
+  "\\r{u}": true
 };
 
 LaTeX.toUnicode = {

@@ -183,6 +183,8 @@ Translator.MarkupParser = (function() {
       this.titleCased = Translator.TitleCaser.titleCase(this.innerText(this.handler.root));
       this.titleCase(this.handler.root);
       this.simplify(this.handler.root);
+
+      /* BibLaTeX is beyond insane https://github.com/retorquere/zotero-better-bibtex/issues/541#issuecomment-240999396 */
       this.unwrapNocase(this.handler.root);
     }
     return this.handler.root;
