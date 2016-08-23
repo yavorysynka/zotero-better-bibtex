@@ -326,6 +326,9 @@ Then /^the library (without collections )?should match '(.+)'$/ do |nocollection
       item['note'] = Nokogiri::HTML(item['note']).inner_text.gsub(/[\s\n]+/, ' ').strip if item['note']
       item.delete('__citekey__')
       item.delete('__citekeys__')
+      item.delete('key')
+      item.delete('libraryID')
+      item.delete('uri')
     }
     renum.call(library, newID, false)
     library.normalize!
