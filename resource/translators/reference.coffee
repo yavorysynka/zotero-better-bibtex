@@ -56,6 +56,16 @@ class Reference
 
     @override = Translator.extractFields(@item)
 
+    relation = @item.relations?['dc:relation']
+    if Array.isArray(relation)
+      if relation.length == 1
+        relation = relation[0]
+      else
+        relation = null
+    relation = Zotero.BetterBibTeX.keymanager.get({uri: relation})
+
+    # TODO: do something with @item.itemType and relation.itemType
+
     for own attr, f of Translator.fieldMap || {}
       @add(@clone(f, @item[attr])) if f.name
 

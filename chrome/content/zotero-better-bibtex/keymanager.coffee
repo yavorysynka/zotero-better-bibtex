@@ -289,8 +289,13 @@ Zotero.BetterBibTeX.keymanager = new class
     return clone
 
   get: (item, pinmode) ->
-    if (typeof item.itemID == 'undefined') && (typeof item.key != 'undefined') && (typeof item.libraryID != 'undefined')
-      item = Zotero.Items.getByLibraryAndKey(item.libraryID, item.key)
+    if typeof item.itemID == 'undefined'
+      if (typeof item.key != 'undefined') && (typeof item.libraryID != 'undefined')
+        item = Zotero.Items.getByLibraryAndKey(item.libraryID, item.key)
+      else if m = item.uri?.match(/^http:\/\/zotero.org\/(users|groups)\/([0-9]+|local\/[^\/]+)\/items\/(.*)/)
+        item = Zotero.Items.getByLibraryAndKey((if m[1] == 'users' then null else m[2]), m[3])
+      else
+        return
 
     ### no keys for notes and attachments ###
     return unless @eligible(item)
@@ -307,6 +312,8 @@ Zotero.BetterBibTeX.keymanager = new class
 
     ### store new cache item if we have a miss or if a re-pin is requested ###
     cached = @assign(item, pin) if !cached || (pin && cached.citekeyFormat)
+    cached = @clone(cache)
+    cache.itemType = (if item.getField then item.getField('itemType') else item.itemType)
     return @clone(cached)
 
   resolve: (citekeys, options = {}) ->

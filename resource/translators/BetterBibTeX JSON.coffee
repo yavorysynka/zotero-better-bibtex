@@ -1,11 +1,11 @@
 scrub = (item) ->
   delete item.__citekey__
-  delete item.libraryID
-  delete item.key
+  # delete item.libraryID
+  # delete item.key
+  # delete item.uri
   delete item.uniqueFields
   delete item.dateAdded
   delete item.dateModified
-  delete item.uri
   delete item.attachmentIDs
 
   delete item.collections

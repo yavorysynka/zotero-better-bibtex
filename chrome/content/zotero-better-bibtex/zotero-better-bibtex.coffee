@@ -960,8 +960,11 @@ Zotero.BetterBibTeX.itemChanged = notify: ((event, type, ids, extraData) ->
 
   items = Zotero.Items.get(ids)
   ids = {}
+  touched = {}
   references = []
   for item in items
+    for related in item.relatedItems || []
+      touched[related.itemID] = parseInet(related.itemID)
     ids[item.id] = parseInt(item.id)
     if item.isAttachment() || item.isNote()
       parent = item.getSource()
@@ -969,6 +972,10 @@ Zotero.BetterBibTeX.itemChanged = notify: ((event, type, ids, extraData) ->
     else
       references.push(item)
   ids = (v for k, v of ids)
+
+  # remove cache for related entries in case they're involved in a crossref
+  for k, itemID of touched
+    @cache.remove({itemID})
 
   pinned = if event in ['add', 'modify'] then @keymanager.scan(references) else []
 
