@@ -155,7 +155,7 @@ doExport = ->
     ref = new Reference(item)
 
     ref.referencetype = 'inbook' if item.itemType == 'bookSection' and ref.hasCreator('bookAuthor')
-    ref.referencetype = 'collection' if item.itemType == 'book' and not ref.hasCreator('author') and ref.hasCreator('editor')
+    ref.referencetype = 'collection' if ref.referencetype == 'book' and not ref.hasCreator('author') and ref.hasCreator('editor')
     ref.referencetype = 'mvbook' if ref.referencetype == 'book' and item.numberOfVolumes
 
     if m = item.url?.match(/^http:\/\/www.jstor.org\/stable\/([\S]+)$/i)

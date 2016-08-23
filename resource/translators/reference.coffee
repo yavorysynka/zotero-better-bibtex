@@ -54,8 +54,6 @@ class Reference
 
     @referencetype = Translator.typeMap.Zotero2BibTeX[@item.itemType] || 'misc'
 
-    @override = Translator.extractFields(@item)
-
     if @referencetype in ['inbook', 'bookinbook', 'incollection', 'inproceedings', 'inreference']
       crossref = @item.relations?['dc:relation']
       if Array.isArray(crossref)
@@ -63,19 +61,35 @@ class Reference
           crossref = crossref[0]
         else
           crossref = null
-      crossref = Zotero.BetterBibTeX.related(crossref)
-      if crossref
-        itemType = Zotero.BetterBibTeX.itemType(crossref.itemType)
+      Translator.debug('crossref:', {referencetype: @referencetype, citekey: @item.__citekey__, crossref: crossref})
+      crossref = Zotero.BetterBibTeX.related(crossref) if crossref
+      @add({'crossref': crossref.citekey}) if crossref?.itemType == 'book'
+        #switch @referencetype
+        #  when 'inbook', 'bookinbook'
+        #    @add({'crossref': crossref.citekey}) if Translator.typeMap.Zotero2BibTeX[crossref.itemType] == 'book'
+        #  when 'incollection'
+        #    @add({'crossref': crossref.citekey}) if Translator.typeMap.Zotero2BibTeX[crossref.itemType] == 'collection'
+        #  when 'inproceedings'
+        #    @add({'crossref': crossref.citekey}) if Translator.typeMap.Zotero2BibTeX[crossref.itemType] == 'proceedings'
+        #  when 'inreference'
+        #    @add({'crossref': crossref.citekey}) if Translator.typeMap.Zotero2BibTeX[crossref.itemType] in ['reference', 'collection']
+    else if @item.itemType == 'book'
+      crossrefs = @item.relations?['dc:relation']
+      crossrefs = [crossrefs] if crossrefs && !Array.isArray(crossrefs)
+      crossreftype = null
+      for crossref in crossrefs
+        crossref = Zotero.BetterBibTeX.related(crossref)
+        Translator.debug('crossref to:', crossref)
+        switch
+          when !crossreftype
+            crossreftype = crossref.itemType
+          when crossreftype != crossref.itemType
+            crossreftype = null
+      Translator.debug('book with crossreftype:', crossreftype)
+      switch crossreftype
+        when 'conferencePaper' then @referencetype = 'proceedings'
 
-        switch @referencetype
-          when 'inbook', 'bookinbook'
-            @add({'crossref': crossref.citekey}) if Translator.typeMap.Zotero2BibTeX[crossref.itemType] == 'book'
-          when 'incollection'
-            @add({'crossref': crossref.citekey}) if Translator.typeMap.Zotero2BibTeX[crossref.itemType] == 'collection'
-          when 'inproceedings'
-            @add({'crossref': crossref.citekey}) if Translator.typeMap.Zotero2BibTeX[crossref.itemType] == 'reference'
-          when 'inreference'
-            @add({'crossref': crossref.citekey}) if Translator.typeMap.Zotero2BibTeX[crossref.itemType] in ['reference', 'collection']
+    @override = Translator.extractFields(@item)
 
     for own attr, f of Translator.fieldMap || {}
       @add(@clone(f, @item[attr])) if f.name

@@ -510,7 +510,7 @@ Zotero.BetterBibTeX.init = ->
       return unless m = uri.match(/^http:\/\/zotero.org\/(users|groups)\/([0-9]+|local\/[^\/]+)\/items\/(.*)/)
       return unless item = Zotero.Items.getByLibraryAndKey((if m[1] == 'users' then null else m[2]), m[3])
       return unless citekey = Zotero.BetterBibTeX.keymanager.get({itemID: item.itemID})
-      return {citekey: citekey.citekey, itemType: item.getField('itemType')}
+      return {citekey: citekey.citekey, itemType: Zotero.ItemTypes.getName(item.itemTypeID)}
   }
 
   for own name, endpoint of @endpoints
@@ -970,7 +970,7 @@ Zotero.BetterBibTeX.itemChanged = notify: ((event, type, ids, extraData) ->
   references = []
   for item in items
     for related in item.relatedItems || []
-      touched[related.itemID] = parseInet(related.itemID)
+      touched[related.itemID] = parseInt(related.itemID)
     ids[item.id] = parseInt(item.id)
     if item.isAttachment() || item.isNote()
       parent = item.getSource()
