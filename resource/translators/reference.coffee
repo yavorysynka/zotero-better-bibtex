@@ -57,23 +57,25 @@ class Reference
     @override = Translator.extractFields(@item)
 
     if @referencetype in ['inbook', 'bookinbook', 'incollection', 'inproceedings', 'inreference']
-      relation = @item.relations?['dc:relation']
-      if Array.isArray(relation)
-        if relation.length == 1
-          relation = relation[0]
+      crossref = @item.relations?['dc:relation']
+      if Array.isArray(crossref)
+        if crossref.length == 1
+          crossref = crossref[0]
         else
-          relation = null
-      relation = Zotero.BetterBibTeX.keymanager.get({uri: relation})
-      if relation
+          crossref = null
+      crossref = Zotero.BetterBibTeX.related(crossref)
+      if crossref
+        itemType = Zotero.BetterBibTeX.itemType(crossref.itemType)
+
         switch @referencetype
           when 'inbook', 'bookinbook'
-            @add({'crossref': relation.citekey}) if Translator.typeMap.Zotero2BibTeX[relation.itemType] == 'book'
+            @add({'crossref': crossref.citekey}) if Translator.typeMap.Zotero2BibTeX[crossref.itemType] == 'book'
           when 'incollection'
-            @add({'crossref': relation.citekey}) if Translator.typeMap.Zotero2BibTeX[relation.itemType] == 'collection'
+            @add({'crossref': crossref.citekey}) if Translator.typeMap.Zotero2BibTeX[crossref.itemType] == 'collection'
           when 'inproceedings'
-            @add({'crossref': relation.citekey}) if Translator.typeMap.Zotero2BibTeX[relation.itemType] == 'reference'
+            @add({'crossref': crossref.citekey}) if Translator.typeMap.Zotero2BibTeX[crossref.itemType] == 'reference'
           when 'inreference'
-            @add({'crossref': relation.citekey}) if Translator.typeMap.Zotero2BibTeX[relation.itemType] in ['reference', 'collection']
+            @add({'crossref': crossref.citekey}) if Translator.typeMap.Zotero2BibTeX[crossref.itemType] in ['reference', 'collection']
 
     for own attr, f of Translator.fieldMap || {}
       @add(@clone(f, @item[attr])) if f.name

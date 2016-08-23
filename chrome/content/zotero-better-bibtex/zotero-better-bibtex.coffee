@@ -505,6 +505,12 @@ Zotero.BetterBibTeX.init = ->
     }
     parseDateToObject: (sandbox, date, locale) -> Zotero.BetterBibTeX.DateParser::parseDateToObject(date, {locale, verbatimDetection: true})
     parseDateToArray: (sandbox, date, locale) -> Zotero.BetterBibTeX.DateParser::parseDateToArray(date, {locale, verbatimDetection: true})
+    related: (sandbox, uri) ->
+      return unless uri
+      return unless m = uri.match(/^http:\/\/zotero.org\/(users|groups)\/([0-9]+|local\/[^\/]+)\/items\/(.*)/)
+      return unless item = Zotero.Items.getByLibraryAndKey((if m[1] == 'users' then null else m[2]), m[3])
+      return unless citekey = Zotero.BetterBibTeX.keymanager.get({itemID: item.itemID})
+      return {citekey: citekey.citekey, itemType: item.getField('itemType')}
   }
 
   for own name, endpoint of @endpoints

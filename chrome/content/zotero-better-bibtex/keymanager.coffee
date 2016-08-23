@@ -312,8 +312,6 @@ Zotero.BetterBibTeX.keymanager = new class
 
     ### store new cache item if we have a miss or if a re-pin is requested ###
     cached = @assign(item, pin) if !cached || (pin && cached.citekeyFormat)
-    cached = @clone(cache)
-    cache.itemType = (if item.getField then item.getField('itemType') else item.itemType)
     return @clone(cached)
 
   resolve: (citekeys, options = {}) ->
