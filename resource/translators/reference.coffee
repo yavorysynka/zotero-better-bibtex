@@ -89,6 +89,7 @@ class Reference
         Translator.debug('book with crossreftype:', crossreftype)
         switch crossreftype
           when 'conferencePaper' then @referencetype = 'proceedings'
+          when 'encyclopediaArticle', 'dictionaryEntry' then @referencetype = 'reference' if Translator.BetterBibLaTeX
 
     @override = Translator.extractFields(@item)
 
