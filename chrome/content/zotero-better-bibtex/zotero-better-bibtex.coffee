@@ -754,11 +754,11 @@ Zotero.BetterBibTeX.init = ->
     )(Zotero.Translate.ItemGetter::nextItem)
 
   ### monkey-patch zotfile wildcard table to add bibtex key ###
-  if Zotero.ZotFile
+  if Zotero.ZotFile && Zotero.BetterBibTeX.Pref.get('ZotFile')
     Zotero.ZotFile.wildcardTable = ((original) ->
       return (item) ->
         table = original.apply(@, arguments)
-        table['%b'] = Zotero.BetterBibTeX.keymanager.get(item).citekey unless item.isAttachment() || item.isNote()
+        table['%b'] ||= Zotero.BetterBibTeX.keymanager.get(item).citekey unless item.isAttachment() || item.isNote()
         return table
       )(Zotero.ZotFile.wildcardTable)
 
