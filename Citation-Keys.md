@@ -26,6 +26,7 @@ You can also
 
 * Drag and drop LaTeX citations to your favorite LaTeX editor
 * Show both pinned (fixed) citation keys and dynamically generated ones in the reference list view
+* Search for citation keys (if you select "All fields and tags" in the search box)
 
 ## Set your own, fixed citation keys
 
@@ -59,6 +60,8 @@ A common pattern is `[auth:lower][year]`, which means
 The default key pattern is `[zotero]`, which implements the key generator of the standard Bib(La)TeX exporters (even
 though having underscores in your keys is not handled gracefully by all versions of LaTeX's bibliography processors) in
 order to ease migration from existing exports.
+
+**note that changing the pattern will cause all your non-fixed keys to be regenerated**
 
 If you want to get fancy, you can set multiple patterns separated by a vertical bar, of which the first will be applied
 that yields a non-empty string. If all return a empty string, a random key will be generated. Note that in addition to
@@ -111,6 +114,7 @@ BBT adds a few fields, flags and filter functions that JabRef (perhaps wisely) d
 - `library`: returns the name of the shared group library, or nothing if the reference is in your personal library
 - `0`: a pseudo-function that sets the citekey disambiguation postfix to numeric (-1, -2, etc, like the standard Zotero
   Bib(La)TeX translators do) rather than alphabetic (a, b, c). Does not add any text to the citekey otherwise.
+- `>X`: a pseudo-function which aborts the current pattern generation if what came before it is X characters or less (`[>0]` is a typical use. You'd typically use this with something like `[auth][>0][year]|[title][year]` which means if there's no author you get `title-year` rather than just `year`.
 
 #### Flags
 
