@@ -1,6 +1,6 @@
 ---
 title: Performance
-redirect_from: "/zotero-better-bibtex/performance.html"
+redirect_from: "/performance.html"
 ---
 # Performance
 

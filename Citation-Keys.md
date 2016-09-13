@@ -1,6 +1,6 @@
 ---
 title: Citation Keys
-redirect_from: "/zotero-better-bibtex/citation-keys.html"
+redirect_from: "/citation-keys.html"
 ---
 # Citation Keys
 

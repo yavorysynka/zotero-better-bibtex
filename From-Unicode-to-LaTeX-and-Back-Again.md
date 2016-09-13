@@ -1,10 +1,10 @@
 ---
 title: From Unicode to LaTeX and Back Again
 redirect_from:
-- "/zotero-better-bibtex/Unicode-and-Markup.html"
-- "/zotero-better-bibtex/unicode.html"
-- "/zotero-better-bibtex/Going-hardcore.html"
-- "/zotero-better-bibtex/hardcore.html"
+- "/Unicode-and-Markup.html"
+- "/unicode.html"
+- "/Going-hardcore.html"
+- "/hardcore.html"
 ---
 # From Unicode to LaTeX and Back Again
 

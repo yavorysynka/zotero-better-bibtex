@@ -1,6 +1,6 @@
 ---
 title: Niceties
-redirect_from: "/zotero-better-bibtex/niceties.html"
+redirect_from: "/niceties.html"
 ---
 # Niceties
 

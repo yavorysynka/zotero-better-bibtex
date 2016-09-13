@@ -1,6 +1,6 @@
 ---
 title: Configuration
-redirect_from: "/zotero-better-bibtex/configuration.html"
+redirect_from: "/configuration.html"
 ---
 # Configuration
 

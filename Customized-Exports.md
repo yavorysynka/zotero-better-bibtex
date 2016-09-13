@@ -1,6 +1,6 @@
 ---
 title: Customized Exports
-redirect_from: "/zotero-better-bibtex/export.html"
+redirect_from: "/export.html"
 ---
 # Customized Exports
 

@@ -1,8 +1,8 @@
 ---
 title: Bundled translators
 redirect_from:
-- "/zotero-better-bibtex/collected-notes.html"
-- "/zotero-better-bibtex/translators.html"
+- "/collected-notes.html"
+- "/translators.html"
 ---
 # Bundled translators
 
