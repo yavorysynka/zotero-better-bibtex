@@ -5,9 +5,181 @@ title: Changelog
 
 # Change Log
 
-## [Unreleased](https://github.com/retorquere/zotero-better-bibtex/tree/HEAD)
+## [1.6.75](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.75) (2016-09-13)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.74...1.6.75)
 
-[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.51...HEAD)
+## [1.6.74](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.74) (2016-09-02)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.73...1.6.74)
+
+**Fixed bugs:**
+
+- \<pre\> not working in Extra field [\#559](https://github.com/retorquere/zotero-better-bibtex/issues/559)
+
+## [1.6.73](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.73) (2016-08-29)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.72...1.6.73)
+
+**Fixed bugs:**
+
+- Missing JabRef pattern: \[authEtAl\] [\#554](https://github.com/retorquere/zotero-better-bibtex/issues/554)
+- Missing JabRef pattern: \[authorsN+initials\] [\#553](https://github.com/retorquere/zotero-better-bibtex/issues/553)
+- Better BibLaTeX import improvements [\#549](https://github.com/retorquere/zotero-better-bibtex/issues/549)
+- Abbreviations in key generated for Conference Proceedings [\#548](https://github.com/retorquere/zotero-better-bibtex/issues/548)
+- italics in title - capitalization [\#541](https://github.com/retorquere/zotero-better-bibtex/issues/541)
+
+## [1.6.72](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.72) (2016-08-15)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.71...1.6.72)
+
+**Implemented enhancements:**
+
+- Request: Shortcut for quickly copying the citekey [\#544](https://github.com/retorquere/zotero-better-bibtex/issues/544)
+
+**Fixed bugs:**
+
+- kivelson1995, kivelson1995a swapped after update [\#545](https://github.com/retorquere/zotero-better-bibtex/issues/545)
+
+## [1.6.71](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.71) (2016-08-07)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.70...1.6.71)
+
+**Implemented enhancements:**
+
+- Citekey search on Zotero search box [\#502](https://github.com/retorquere/zotero-better-bibtex/issues/502)
+
+## [1.6.70](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.70) (2016-08-06)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.69...1.6.70)
+
+**Fixed bugs:**
+
+- Citation keys have changed [\#538](https://github.com/retorquere/zotero-better-bibtex/issues/538)
+- Auto exporting issue [\#533](https://github.com/retorquere/zotero-better-bibtex/issues/533)
+
+## [1.6.69](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.69) (2016-07-22)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.68...1.6.69)
+
+**Fixed bugs:**
+
+- Automatic Export error \(with Zotero Standalone\) [\#537](https://github.com/retorquere/zotero-better-bibtex/issues/537)
+- Report ID: PDQPCADE / An error occurred while trying to export the selected file. [\#530](https://github.com/retorquere/zotero-better-bibtex/issues/530)
+
+**Merged pull requests:**
+
+- Add a Gitter chat badge to README.md [\#539](https://github.com/retorquere/zotero-better-bibtex/pull/539) ([gitter-badger](https://github.com/gitter-badger))
+
+## [1.6.68](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.68) (2016-07-07)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.67...1.6.68)
+
+**Fixed bugs:**
+
+- Firefox crashed and now Better Bibtex doesn't work: no citation keys [\#526](https://github.com/retorquere/zotero-better-bibtex/issues/526)
+
+## [1.6.67](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.67) (2016-06-27)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.66...1.6.67)
+
+## [1.6.66](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.66) (2016-06-26)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.65...1.6.66)
+
+**Implemented enhancements:**
+
+- Cache must be dropped if Zotero profile location changes [\#524](https://github.com/retorquere/zotero-better-bibtex/issues/524)
+- Aux scanner does not scan secondary aux files when \include is used in the tex document [\#522](https://github.com/retorquere/zotero-better-bibtex/issues/522)
+
+**Fixed bugs:**
+
+- Aux scanner does not recognize multiple citations when using the cite package [\#521](https://github.com/retorquere/zotero-better-bibtex/issues/521)
+
+## [1.6.65](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.65) (2016-06-13)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.64...1.6.65)
+
+## [1.6.64](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.64) (2016-06-12)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.63...1.6.64)
+
+## [1.6.63](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.63) (2016-06-06)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.61...1.6.63)
+
+**Fixed bugs:**
+
+- Biblatex export. Date parses incorrectly with year '1000' when source Zotero field is in datetime format. [\#515](https://github.com/retorquere/zotero-better-bibtex/issues/515)
+
+**Merged pull requests:**
+
+- Some more changes. [\#514](https://github.com/retorquere/zotero-better-bibtex/pull/514) ([KarlHegbloom](https://github.com/KarlHegbloom))
+
+## [1.6.61](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.61) (2016-06-04)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.60...1.6.61)
+
+**Implemented enhancements:**
+
+- Database updates every minute [\#510](https://github.com/retorquere/zotero-better-bibtex/issues/510)
+
+**Fixed bugs:**
+
+- Mantain JabRef group structure when importing BibTeX db \(again\) [\#508](https://github.com/retorquere/zotero-better-bibtex/issues/508)
+- Repeatedly asks to clear cache on launch [\#507](https://github.com/retorquere/zotero-better-bibtex/issues/507)
+- Zotero Standalone doesn't show citekeys in reference list on startup [\#497](https://github.com/retorquere/zotero-better-bibtex/issues/497)
+
+**Merged pull requests:**
+
+- Probably done now... [\#511](https://github.com/retorquere/zotero-better-bibtex/pull/511) ([KarlHegbloom](https://github.com/KarlHegbloom))
+
+## [1.6.60](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.60) (2016-05-30)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.59...1.6.60)
+
+**Implemented enhancements:**
+
+- Protocol in case of clash between shared collection citation keys and other keys? [\#505](https://github.com/retorquere/zotero-better-bibtex/issues/505)
+
+**Fixed bugs:**
+
+- "Citation key rescan after upgrade" message [\#506](https://github.com/retorquere/zotero-better-bibtex/issues/506)
+- Authors with a single name are exported with a comma inside the value. [\#504](https://github.com/retorquere/zotero-better-bibtex/issues/504)
+
+**Merged pull requests:**
+
+- Latest changes to support TeXmacs integration. [\#503](https://github.com/retorquere/zotero-better-bibtex/pull/503) ([KarlHegbloom](https://github.com/KarlHegbloom))
+
+## [1.6.59](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.59) (2016-05-26)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.58...1.6.59)
+
+## [1.6.58](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.58) (2016-05-26)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.57...1.6.58)
+
+**Fixed bugs:**
+
+- Citekey generation is broken with conditional formatting after v1.6.50 [\#499](https://github.com/retorquere/zotero-better-bibtex/issues/499)
+
+## [1.6.57](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.57) (2016-05-20)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.56...1.6.57)
+
+## [1.6.56](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.56) (2016-05-14)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.55...1.6.56)
+
+**Implemented enhancements:**
+
+- Zotero picker add page, suffix/ prefix does not work [\#495](https://github.com/retorquere/zotero-better-bibtex/issues/495)
+
+**Fixed bugs:**
+
+- export of report item : no institution field [\#494](https://github.com/retorquere/zotero-better-bibtex/issues/494)
+- Synchronization with attachments between different computers. [\#489](https://github.com/retorquere/zotero-better-bibtex/issues/489)
+
+## [1.6.55](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.55) (2016-05-13)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.54...1.6.55)
+
+**Fixed bugs:**
+
+- Issue Citing Websites [\#492](https://github.com/retorquere/zotero-better-bibtex/issues/492)
+
+## [1.6.54](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.54) (2016-05-12)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.53...1.6.54)
+
+**Fixed bugs:**
+
+- Cannot add an auto-export [\#490](https://github.com/retorquere/zotero-better-bibtex/issues/490)
+
+## [1.6.53](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.53) (2016-05-11)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.52...1.6.53)
+
+## [1.6.52](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.52) (2016-05-11)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.51...1.6.52)
 
 **Implemented enhancements:**
 

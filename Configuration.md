@@ -281,11 +281,6 @@ to your system locale otherwise, but if you add a language code here, this will 
 here myself as I generally prefer the en-US locale for my systems, but not the wacky idea of date formatting that comes
 with it.
 
-### titleCase
-<!-- extensions.zotero.translators.better-bibtex.titleCase -->
-
-Automatically titlecase English titles on export
-
 ### titleCaseLowerCase
 <!-- extensions.zotero.translators.better-bibtex.titleCaseLowerCase -->
 

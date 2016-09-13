@@ -31,7 +31,7 @@
 
 Translator.TitleCaser = {
 
-    PROCESSOR_VERSION: "1.1.113",
+    PROCESSOR_VERSION: "1.1.114",
 
     TERMINAL_PUNCTUATION: [":", ".", ";", "!", "?", " "],
 

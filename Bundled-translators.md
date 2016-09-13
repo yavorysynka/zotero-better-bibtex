@@ -13,14 +13,14 @@ Better BibTeX bundles 6 translators you might care about:
 These translators are supported by the auto-export functionality built into Better BibTeX:
 
 * **Better BibLaTeX** exports references in BibLaTeX format (but better, natch)
-* **Better BibTeX** exports and imports references in BibTeX format
+* **Better BibTeX** exports references in BibTeX format
 * **Better CSL JSON** exports references in pandoc-compatible CSL-JSON format, with added citation keys and parsing of metadata
 * **Better CSL YAML** exports the same as the **Better CSL JSON** exporter, but in YAML format
 * **Collected Notes** exports just notes -- standalone notes and notes attached to references, not the extra field -- to HTML. This way, Zotero can serve as a (very) simple research notebook.
 
 ## Import
 
-* **Better BibTeX** exports and imports references in BibTeX format
+* **Better BibTeX** exports and imports references in Bib(La)TeX format
 
 ## AUX Scanner
 

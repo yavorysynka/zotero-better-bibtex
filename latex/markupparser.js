@@ -84,6 +84,10 @@ Translator.MarkupParser = (function() {
     if (options == null) {
       options = {};
     }
+    Translator.debug('parse:', {
+      html: html,
+      options: options
+    });
     this.handler = new AST(options.caseConversion);
     this.stack = [];
     htmlMode = options.mode === 'html';
@@ -101,8 +105,8 @@ Translator.MarkupParser = (function() {
         case this.lastTag !== 'pre':
           html = html.replace(this.re.pre, (function(_this) {
             return function(all, text) {
-              if (_this.handler.chars) {
-                _this.handler.chars(text.replace(/[\x0E\x0F]/g, ''));
+              if (_this.handler.pre) {
+                _this.handler.pre(text.replace(/[\x0E\x0F]/g, ''));
               }
               return '';
             };
@@ -411,6 +415,19 @@ Translator.MarkupParser = (function() {
       } else {
         return this.elems[0].children[l - 1].text += text;
       }
+    };
+
+    AST.prototype.pre = function(text) {
+      if (this.elems[0].name !== 'pre') {
+        throw "Expectd 'pre' tag, found '" + this.elems[0].name + "'";
+      }
+      if (this.elems[0].text) {
+        throw "Text already set on pre tag'";
+      }
+      if (this.elems[0].children && this.elems[0].children.length > 0) {
+        throw "Prei must not have children";
+      }
+      return this.elems[0].text = text;
     };
 
     AST.prototype.chars = function(text, pos) {

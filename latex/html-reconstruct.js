@@ -13,6 +13,10 @@ Reconstruct = (function() {
       this.html += node.text.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       return;
     }
+    if (node.name === 'pre') {
+      this.html += '<pre>' + node.text + '</pre>';
+      return;
+    }
     for (k in node) {
       if (k !== 'children' && k !== 'name' && k !== 'attr' && k !== 'class') {
         (base = node.attr)[k] || (base[k] = '');

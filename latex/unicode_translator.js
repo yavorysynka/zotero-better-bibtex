@@ -101,7 +101,11 @@ LaTeX.HTML = (function() {
         latex = "\n\\item ...";
         break;
       case 'enquote':
-        latex = '\\enquote{...}';
+        if (Translator.BetterBibTeX) {
+          latex = '\\enquote{...}';
+        } else {
+          latex = '\\mkbibquote{...}';
+        }
         break;
       case 'span':
       case 'sc':
