@@ -1,6 +1,6 @@
 ---
 title: Push and Pull Export
-redirect_from: "/pull-export.html"
+redirect_from: pull-export.html
 ---
 # Push and Pull Export
 

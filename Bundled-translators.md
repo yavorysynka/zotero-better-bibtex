@@ -1,8 +1,8 @@
 ---
 title: Bundled translators
 redirect_from:
-- "/collected-notes.html"
-- "/translators.html"
+- collected-notes.html
+- translators.html
 ---
 # Bundled translators
 

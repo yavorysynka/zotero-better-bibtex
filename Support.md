@@ -1,6 +1,6 @@
 ---
 title: Support
-redirect_from: "/support.html"
+redirect_from: support.html
 ---
 # Support
 

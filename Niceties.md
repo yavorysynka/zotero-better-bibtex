@@ -1,6 +1,6 @@
 ---
 title: Niceties
-redirect_from: "/niceties.html"
+redirect_from: niceties.html
 ---
 # Niceties
 

@@ -1,10 +1,10 @@
 ---
 title: From Unicode to LaTeX and Back Again
 redirect_from:
-- "/Unicode-and-Markup.html"
-- "/unicode.html"
-- "/Going-hardcore.html"
-- "/hardcore.html"
+- Unicode-and-Markup.html
+- unicode.html
+- Going-hardcore.html
+- hardcore.html
 ---
 # From Unicode to LaTeX and Back Again
 

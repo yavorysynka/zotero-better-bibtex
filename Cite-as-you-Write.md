@@ -1,6 +1,6 @@
 ---
 title: Cite as you Write
-redirect_from: "/cayw.html"
+redirect_from: cayw.html
 ---
 # Cite as you Write
 

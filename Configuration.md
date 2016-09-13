@@ -1,6 +1,6 @@
 ---
 title: Configuration
-redirect_from: "/configuration.html"
+redirect_from: configuration.html
 ---
 # Configuration
 
