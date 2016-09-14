@@ -1,5 +1,6 @@
 ---
 title: Better BibTeX
+redirect_from: niceties.html
 ---
 <!-- WARNING: GENERATED FROM https://github.com/retorquere/zotero-better-bibtex/blob/master/README.md. EDITS WILL BE OVERWRITTEN -->
 
@@ -30,6 +31,21 @@ BeaST](http://www.lsv.ens-cachan.fr/~markey/BibTeX/doc/ttb_en.pdf) for BibTeX, a
 [The Biblatex Package](http://ctan.mirrorcatalogs.com/macros/latex/contrib/biblatex/doc/biblatex.pdf) for BibLaTeX, but
 since there isn't really a definitive manual for either format that is universally followed by Bib(La)TeX
 editors/processors, I'm pragmatic about implementing what works.
+
+# Niceties
+
+* [Cite as you Write](Cite-as-you-Write) for text-based editors such as Vi (or emacs, if you swing that way), and several others
+* Integration with **[Report Customizer](Citation-Keys)**
+* Integration with **[Zotfile](Citation-Keys)**
+* **[Customized Exports](Customized-Exports)**
+* **Jabref groups import/export**: During import, if JabRef explicit (not dynamic) groups are present, collections will
+  be created to mirror these. During export, collections will be added to the export as explicit jabref groups.
+* **Fixes date field exports**: export dates like 'forthcoming' as 'forthcoming' instead of empty.
+* **[Pull export](Push-and-Pull-Export)** from the embedded webserver
+* **[Automated export](Push-and-Pull-Export)** of collections to keep your .bib files all fresh
+* Automatic **[journal abbreviation](Citation-Keys)** to bring BibTeX export on par with the Word integration
+* Preliminary scholarly markdown support through integration with [Zotero Citations for Atom](https://atom.io/packages/zotero-citations)
+* Spectacular must-see support for scholarly markdown with auto-complete citations for [Adobe Brackets](https://github.com/baig/brackets-zotero) by Wasif Hasan Baig
 
 # Got problems? We got fixes!
 
