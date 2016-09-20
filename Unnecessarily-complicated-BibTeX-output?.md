@@ -12,11 +12,7 @@ On the first point -- the extra braces -- BBT can't distinguish between a refere
 one hand, and it containing words that are intentionally capitalized and which do need to be protected (like `IEEE
 proceedings`) on the other, or a combination thereof. Zotero [recommends storing references in
 sentence](https://www.zotero.org/support/kb/sentence_casing) case (it's what their own citation processor expects); you
-can right-click the title text to change it to sentence case. BBT exports references with that recommendation on mind,
-knowing Bib(La)TeX expects title case (for English references only btw, and references without a language set are
-assumed to be English by BBT).  You can steer this process somewhat by enclosing the parts you don't want case
-manipulation on in `<span class="nocase">...</span>`. Anything between those won't be touched by Zotero or BBT. This is
-formally supported by Zotero and will work in the Word/LibreOffice plugins as well as in the BibTeX export.
+can right-click the title text to change it to sentence case, in which case most of the extra braces disappear; BBT exports references with the sentence-case recommendation in mind, knowing Bib(La)TeX expects title case (for English references only btw, and references without a language set are assumed to be English by BBT).  You can steer this process somewhat by enclosing the parts you don't want case manipulation on in `<span class="nocase">...</span>`. Anything between those won't be touched by Zotero or BBT. This is formally supported by Zotero and will work in the Word/LibreOffice plugins as well as in the BibTeX export.
 
 But why then the double-braces (`{{...}}`) rather than the commonly recommended single braces (`{...}`)?
 
