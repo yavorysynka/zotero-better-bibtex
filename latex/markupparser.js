@@ -84,11 +84,14 @@ Translator.MarkupParser = (function() {
     if (options == null) {
       options = {};
     }
-    Translator.debug('parse:', {
-      html: html,
-      options: options
-    });
     this.handler = new AST(options.caseConversion);
+    if (options.mode === 'plain') {
+      if (options.caseConversion) {
+        throw "No case conversion in plain mode";
+      }
+      this.handler.chars(html);
+      return this.handler.root;
+    }
     this.stack = [];
     htmlMode = options.mode === 'html';
     last = html;
