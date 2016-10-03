@@ -1,0 +1,91 @@
+<html>
+  <head>
+    <title>Name parser</title>
+    <script>
+      var CSL = {};
+    </script>
+    <script src="util_name_particles.js"></script>
+    <script>
+      function parse() {
+        var fullname = document.getElementById('fullname').value;
+        var given, family;
+        var fudge = document.getElementById('fudge').checked;
+
+        if (fullname) {
+          var m = fullname.match(/\[([^\]]*)\]\s*\[([^\]]*)\]/);
+          if (m) {
+            family = m[1].trim();
+            given = m[2].trim();
+          }
+          window.history.pushState(null, null, 'nameparser.html?bracketed=' + encodeURIComponent(fullname) + '&fudge=' + (fudge ? 'true' : 'false'));
+        } else {
+          family = document.getElementById('lastname').value;
+          given = document.getElementById('firstname').value;
+          window.history.pushState(null, null, 'nameparser.html?lastname=' + encodeURIComponent(family) + '&firstname=' + encodeURIComponent(given) + '&fudge=' + (fudge ? 'true' : 'false'));
+        }
+
+        var name = {
+          family: family,
+          given: given
+        }
+        var source = JSON.stringify(name, null, 2);
+
+        CSL.parseParticles(name);
+        if (fudge) { CSL.parseParticles(name); }
+
+        var output = document.getElementById('output');
+        output.textContent = source + ' => ' + JSON.stringify(name, null, 2);
+        return false;
+      }
+    </script>
+  </head>
+  <body>
+    <form onsubmit="return parse();">
+      <table>
+        <tr><td>Bracketed:</td><td><input type="text" size="80" name="fullname" id="fullname"></td></tr>
+        <tr><td>Lastname:</td><td><input type="text" size="80" name="lastname" id="lastname"></td></tr>
+        <tr><td>Firstname:</td><td><input type="text" size="80" name="firstname" id="firstname"></td></tr>
+      </table>
+      <input type="checkbox" id="fudge" name="fudge" value="Fudge"> Fudge suffix detection<br>
+      <input type="submit" vaue="Parse">
+    </form>
+    <div id="output"></div>
+  </body>
+
+  <script>
+    function decode(str) {
+      if (!str) { return str; }
+      return decodeURIComponent(str.replace(/\+/g, ' '));
+    }
+
+    var QueryString = function () {
+      // This function is anonymous, is executed immediately and 
+      // the return value is assigned to QueryString!
+      var query_string = {};
+      var query = window.location.search.substring(1);
+      var vars = query.split("&");
+      for (var i=0;i<vars.length;i++) {
+        var pair = vars[i].split("=");
+            // If first entry with this name
+        if (typeof query_string[pair[0]] === "undefined") {
+          query_string[pair[0]] = decode(pair[1]);
+            // If second entry with this name
+        } else if (typeof query_string[pair[0]] === "string") {
+          var arr = [ query_string[pair[0]],decode(pair[1]) ];
+          query_string[pair[0]] = arr;
+            // If third or later entry with this name
+        } else {
+          query_string[pair[0]].push(decode(pair[1]));
+        }
+      } 
+        return query_string;
+    }();
+
+    document.getElementById('lastname').value = QueryString.lastname || '';
+    document.getElementById('firstname').value = QueryString.firstname || '';
+    document.getElementById('fullname').value = QueryString.bracketed || '';
+    document.getElementById('fudge').checked = (QueryString.fudge == 'true');
+
+    if (QueryString.lastname || QueryString.firstname || QueryString.bracketed) { parse(); }
+  </script>
+</html>
