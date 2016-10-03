@@ -3,10 +3,7 @@ title: Unnecessarily complicated BibTeX output?
 ---
 # Unnecessarily complicated BibTeX output?
 
-Even for titles that are just text, no math or markup involved, you will probably have noticed that Better BibTeX adds
-braces left and right, causing the Bib(La)TeX processor to force-render these parts in title case even where you don't
-want it to. Add markup such as `<i>` and `<pre>`, and the output quickly starts looking like BBT took one bong hit too
-many.
+Even for titles that are just text, no math or markup involved, you will probably have noticed that Better BibTeX capitalizes words, and adds braces willy-nilly, causing the Bib(La)TeX processor to force-render these parts in title case even where you don't want it to. Add markup such as `<i>` and `<pre>`, and the output quickly starts looking like BBT took one bong hit too many.
 
 On the first point -- the extra braces -- BBT can't distinguish between a reference being stored in title case on the
 one hand, and it containing words that are intentionally capitalized and which do need to be protected (like `IEEE

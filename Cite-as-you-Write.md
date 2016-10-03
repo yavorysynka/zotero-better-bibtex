@@ -44,6 +44,7 @@ the following URL parameters:
 
 
 If you picked the `pandoc` format, you can pass the following extra parameters:
+
 | parameter |   |
 | -------- | --------- |
 | `brackets` | any non-empty value surrounds the citation with brackets |
