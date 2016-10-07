@@ -7,7 +7,6 @@
     <script src="franc-most.js"></script>
     <script src="xregexp-all.js"></script>
     <script src="titlecaser.js"></script>
-    <script src="simple-titlecaser.js"></script>
     <script src="markupparser.js"></script>
     <script src="html-reconstruct.js"></script>
     <script src="latex_unicode_mapping.js"></script>
@@ -17,14 +16,8 @@
       var Options = {
         titles: '',
         unicode: true,
-        titlecaser: {citeproc: 'CiteProc-js', simple: 'Simple'},
         language: {'guess': 'Guess based on input', 'eng': 'Assume English', 'und': 'Assume other'},
         translator: {'biblatex': 'BibLaTeX', 'bibtex': 'BibTeX'}
-      };
-
-      var TitleCaser = {
-        citeproc: Translator.TitleCaser.titleCase.bind(Translator.TitleCaser),
-        simple: Translator.simpleTitleCaser.titleCase.bind(Translator.simpleTitleCaser)
       };
 
       function parse() {
@@ -64,12 +57,6 @@
         }
 
         Translator.unicode = options.unicode;
-
-        if (options.titlecaser == 'simple') {
-          Translator.TitleCaser.titleCase = TitleCaser.simple;
-        } else {
-          Translator.TitleCaser.titleCase = TitleCaser.citeproc;
-        }
 
         Translator.BetterBibTeX = (options.translator == 'bibtex');
         Translator.BetterBibLaTeX = (options.translator == 'biblatex');
