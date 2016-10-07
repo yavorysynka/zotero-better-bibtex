@@ -103,12 +103,11 @@ Many but not all BibTeX managers support this format, but if yours (like emacs e
 When enabled, single-word strings will be assumed to be externally-defined @string vars, and thus not
 surrounded by braces. If you don't know what this means, leave it off.
 
-### Move name-particles (de, von, ...) to the family name (default: true)
+### Disregard name prefixes when sorting (default: false)
 
-Name handling is a lot more complex than I had ever thought it to be. A *lot* more complex. This setting
-determines how two-part names (that is, names specified in separate `last name` and `first name` fields) are handled.
-When enabled, `Gogh`, `Rembrandt van` will be exported (roughly) to `author = {van Gogh, Rembrandt}`. This is not
-always desirable, so you can disable this, in which case you will get (roughly) `author = {Gogh, Rembrandt van}`
+Name handling is a lot more complex than I had ever thought it to be. A *lot* more complex. BibTeX has
+really limited ways of dealing with names with particles (van, von, de, etc). If you turn this on, BBT
+will add code to have `van Gogh` sorted under `Gogh`.
 
 ### Fields to omit from export (comma-separated) (default: `empty`)
 
@@ -244,6 +243,10 @@ When language alternates are present in Juris-M, this is the language BBT will p
 ### extensions.zotero.translators.better-bibtex.qualityReport (default: false)
 
 Generate quality reports for exported references.
+
+### extensions.zotero.translators.better-bibtex.biblatexExtendedNameFormat (default: false)
+
+Use the extended biber 2.6 format for names with particles
 
 
 <script type = 'text/javascript'>
