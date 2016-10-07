@@ -232,10 +232,6 @@ fall back to your system locale otherwise, but if you add a language code here, 
 `en-GB` here myself as I generally prefer the en-US locale for my systems, but not the wacky idea of date formatting
 that comes with it.
 
-### extensions.zotero.translators.better-bibtex.titleCaseLowerCase (default: about abov...)
-
-List of words to keep lowercase when applying title casing.
-
 ### extensions.zotero.translators.better-bibtex.jurismPreferredLanguage (default: zh-alalc97)
 
 When language alternates are present in Juris-M, this is the language BBT will pick.
