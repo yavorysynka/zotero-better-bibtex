@@ -121,6 +121,10 @@ omitted from BibTeX exports by default. Using this setting you can have them add
 field (not as clean, but compatible with BibTeX out of the box), or in an `url` field (requires extra packages to be loaded,
 or bibtex will error out).
 
+### Use BibLaTeX extended name format (requires biblatex 3.5) (default: false)
+
+Use the extended biber 2.7 format for names with particles - ony works in BibLaTeX 3.5 or later
+
 ## Journal abbreviations
 
 ### Automatically abbreviate journal title if none is set explicitly (default: false)
@@ -239,10 +243,6 @@ When language alternates are present in Juris-M, this is the language BBT will p
 ### extensions.zotero.translators.better-bibtex.qualityReport (default: false)
 
 Generate quality reports for exported references.
-
-### extensions.zotero.translators.better-bibtex.biblatexExtendedNameFormat (default: false)
-
-Use the extended biber 2.6 format for names with particles
 
 
 <script type = 'text/javascript'>
