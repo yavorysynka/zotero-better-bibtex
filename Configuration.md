@@ -131,6 +131,10 @@ Use the extended biber 2.7 format for names with particles - ony works in BibLaT
 
 If set, generates journal abbreviations on export using the Zotero journal abbreviator, according to the abbreviation style selected in the list below the checkbox.
 
+### Abbreviation style: (default: `empty`)
+
+Select the style for auto-abbreviation.
+
 ## Automatic export
 
 ### Automatic export (default: idle)
@@ -186,10 +190,6 @@ Snippet of javascript to run [after each reference generation](Scripting).
 ### extensions.zotero.translators.better-bibtex.langID (default: babel)
 
 Switches between `babel` and `polyglossia`, except I haven't gotten around to polyglossia yet.
-
-### extensions.zotero.translators.better-bibtex.autoAbbrevStyle (default: `empty`)
-
-Select the style for auto-abbreviation.
 
 ### extensions.zotero.translators.better-bibtex.autoExportIdleWait (default: 10)
 
