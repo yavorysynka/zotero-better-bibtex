@@ -213,48 +213,58 @@ Snippet of javascript to run [after each reference generation](Scripting).
 
 ## Hidden preferences
 
-### extensions.zotero.translators.better-bibtex.langID (default: babel)
+### extensions.zotero.translators.better-bibtex.langID
+*default: babel*
 
 Switches between `babel` and `polyglossia`, except I haven't gotten around to polyglossia yet.
 
-### extensions.zotero.translators.better-bibtex.autoExportIdleWait (default: 10)
+### extensions.zotero.translators.better-bibtex.autoExportIdleWait
+*default: 10*
 
 Number of seconds to wait after your system goes idle before kicking off auto-exports.
 
-### extensions.zotero.translators.better-bibtex.cacheFlushInterval (default: 5)
+### extensions.zotero.translators.better-bibtex.cacheFlushInterval
+*default: 5*
 
 How often the Better BibTeX database should be saved to disk. Defaults to once every 5 seconds. Note that
 your database is always saved when your computer goes idle, or when you exit Zotero.
 
-### extensions.zotero.translators.better-bibtex.confirmCacheResetSize (default: 1000)
+### extensions.zotero.translators.better-bibtex.confirmCacheResetSize
+*default: 1000*
 
 On upgrading to a new version, Better BibTeX drops your cache to make sure you get the latest export
 implementation. For large libraries, this may be undesirable because Better BibTeX updates frequently, and export on an empty
 cache is really slow. If you have more than N entries in your cache, you will be asked if you want to keep the cache (and forego
 the benefits of the upgrade until the relevant entries change to change their cache).
 
-### extensions.zotero.translators.better-bibtex.caching (default: true)
+### extensions.zotero.translators.better-bibtex.caching
+*default: true*
 
 You really want this on. Better BibTeX has a very involved process of generating BibTeX output, and the
 caching mechanism makes sure it doesn't happen any more frequently than necessary.
 
-### extensions.zotero.translators.better-bibtex.csquotes (default: `empty`)
+### extensions.zotero.translators.better-bibtex.csquotes
+*default: `empty`*
 
 Enables [csquotes](From-Unicode-to-LaTeX-and-Back-Again) support.
 
-### extensions.zotero.translators.better-bibtex.skipWords (default: a,ab,aboar...)
+### extensions.zotero.translators.better-bibtex.skipWords
+*default: a,ab,aboar...*
 
 list of words to skip in title when generating citation keys
 
-### extensions.zotero.translators.better-bibtex.tests (default: `empty`)
+### extensions.zotero.translators.better-bibtex.tests
+*default: `empty`*
 
 Unit tests to run
 
-### extensions.zotero.translators.better-bibtex.jabrefGroups (default: true)
+### extensions.zotero.translators.better-bibtex.jabrefGroups
+*default: true*
 
 Export JabRef groups for collections.
 
-### extensions.zotero.translators.better-bibtex.defaultDateParserLocale (default: `empty`)
+### extensions.zotero.translators.better-bibtex.defaultDateParserLocale
+*default: `empty`*
 
 The Better BibTeX date parser uses locale hints when provided with ambiguous dates such as 1/2/2008 (which is
 either 1st of February, or 2nd of Januari). Better BibTeX will first look at the language specified in your reference and
@@ -262,15 +272,18 @@ fall back to your system locale otherwise, but if you add a language code here, 
 `en-GB` here myself as I generally prefer the en-US locale for my systems, but not the wacky idea of date formatting
 that comes with it.
 
-### extensions.zotero.translators.better-bibtex.jurismPreferredLanguage (default: zh-alalc97)
+### extensions.zotero.translators.better-bibtex.jurismPreferredLanguage
+*default: zh-alalc97*
 
 When language alternates are present in Juris-M, this is the language BBT will pick.
 
-### extensions.zotero.translators.better-bibtex.qualityReport (default: false)
+### extensions.zotero.translators.better-bibtex.qualityReport
+*default: false*
 
 Generate quality reports for exported references.
 
-### extensions.zotero.translators.better-bibtex.suppressTitleCase (default: false)
+### extensions.zotero.translators.better-bibtex.suppressTitleCase
+*default: false*
 
 If you're dead-set on ignoring both the BibTeX/BibLaTeX spec and the Zotero recommendations on title/sentence
 casing, set this preference to "true" to suppress title casing for English references.
