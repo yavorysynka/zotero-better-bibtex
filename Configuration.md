@@ -246,7 +246,8 @@ Generate quality reports for exported references.
 
 ### extensions.zotero.translators.better-bibtex.suppressTitleCase (default: false)
 
-If you're dead-set on ignoring both the BibTeX/BibLaTeX spec and the Zotero recommendations on title/sentence casing, set this preference to "true" to suppress title casing.
+If you're dead-set on ignoring both the BibTeX/BibLaTeX spec and the Zotero recommendations on title/sentence
+casing, set this preference to "true" to suppress title casing for English references.
 
 
 
