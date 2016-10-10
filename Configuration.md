@@ -21,24 +21,28 @@ really large library, but you can read about what is involved [here](Performance
 
 ## Citation keys
 
-### LaTeX command (default: cite)
+### LaTeX command
+*default: cite*
 
 Used for drag-and-drop/quick copy citations. In the Zotero "Export" pane, choose, "Better BibTeX
 Quick Copy" as the default export format for quick copy, then set the desired LaTeX citation
 command here. If you set this to `citep`, drag-and-drop citations will yield
 `\citep{key1,key2,...}`
 
-### Citation key format (default: [zotero])
+### Citation key format
+*default: [zotero]*
 
 Set the pattern used to generate citation keys. The format of the keys is documented [here](Citation-Keys).
 
-### Force citation key to ASCII (default: true)
+### Force citation key to ASCII
+*default: true*
 
 If you have deviated from the default citation key format pattern by [specifying your own](Citation-Keys), you may
 wind up with non-ASCII characters in your citation keys. You can prevent that using the `fold` function at the
 appropriate place in your pattern, but checking this checkbox will just apply `fold` to all your keys.
 
-### On conflict, non-pinned keys will be (default: keep)
+### On conflict, non-pinned keys will be
+*default: keep*
 
 This determines what happens if you pin a key to a value that is already in use in a different
 reference but not pinned there. Neither are ideal, you just get to pick your poison. The options are:
@@ -46,7 +50,8 @@ reference but not pinned there. Neither are ideal, you just get to pick your poi
 * **postfixed (causes key changes)**: Change the non-pinned key by adding a postfix character. This means the citation key changes which could be problematic for existing papers.
 * **kept (causes key duplicates)**: Keep the non-pinned key as-is. This means your library now has duplicate keys.
 
-### Auto-pin citation keys (default: manual)
+### Auto-pin citation keys
+*default: manual*
 
 By default, Better BibTeX assigns dynamic keys to your references; if your reference changes, your citation key will
 also likely change (depending on which fields you changed). If you don't want this, you can "pin" the citation key; if
@@ -68,76 +73,90 @@ export your full library) could overwhelm the Zotero sync service if presented a
 ameliorates that problem. Not doing this would risk sync being permanently impossible, as the Zotero server will
 kick you out if a sync takes too long.
 
-### Show citekey instead of 'extra' field in reference list (default: false)
+### Show citekey instead of 'extra' field in reference list
+*default: false*
 
 If you enable this, the `extra` column in the Zotero reference list (if you have selected it to be
 shown) will display the citation key instead of the extra field.
 
-### QuickCopy format (default: latex)
+### QuickCopy format
+*default: latex*
 
 Used for drag-and-drop/quick copy citations. You can select the output format here: LaTeX (in
 combination with the Citation command preference), Pandoc, or Org-mode
 
 ## Export
 
-### When a reference has both a DOI and an URL, export (default: both)
+### When a reference has both a DOI and an URL, export
+*default: both*
 
 Does what it says on the tin, really. If a reference has both a DOI and an URL, you can choose to have them both exported, or either one of them.
 
-### Export BibLaTeX as ASCII (default: false)
+### Export BibLaTeX as ASCII
+*default: false*
 
 BibLaTeX actually has really good Unicode support, so you generally want this off. But for some geezers such as me it is
 simply more pleasing to have things like accented characters translated to their equivalent LaTeX constructs on export.
 
-### Export BibTeX as ASCII (default: true)
+### Export BibTeX as ASCII
+*default: true*
 
 BibTeX has really spotty Unicode support, so you generally want this on. It will translate things like accented characters to their equivalent LaTeX constructs on export.
 
-### Omit title and mimetype for attachments (default: false)
+### Omit title and mimetype for attachments
+*default: false*
 
 By default, Better BibTeX will export attachments including a title and their mimetype, in a format supported by JabRef.
 Many but not all BibTeX managers support this format, but if yours (like emacs ebib) doesn't, enable this to export only the filename.
 
-### Assume single-word strings to be externally-defined @string vars, and thus not surrounded by braces (default: false)
+### Assume single-word strings to be externally-defined @string vars, and thus not surrounded by braces
+*default: false*
 
 When enabled, single-word strings will be assumed to be externally-defined @string vars, and thus not
 surrounded by braces. If you don't know what this means, leave it off.
 
-### Disregard name prefixes when sorting (default: false)
+### Disregard name prefixes when sorting
+*default: false*
 
 Name handling is a lot more complex than I had ever thought it to be. A *lot* more complex. BibTeX has
 really limited ways of dealing with names with particles (van, von, de, etc). If you turn this on, BBT
 will add code to have `van Gogh` sorted under `Gogh`.
 
-### Fields to omit from export (comma-separated) (default: `empty`)
+### Fields to omit from export (comma-separated)
+*default: `empty`*
 
 If there are some fields you don't want in your bibtex files (such as `note` for example), add a
 list of them here, separated by comma's.
 
-### Add URLs to BibTeX export (default: off)
+### Add URLs to BibTeX export
+*default: off*
 
 BibLaTeX supports urls in your references natively; BibTeX does not. For this reason, URLs are
 omitted from BibTeX exports by default. Using this setting you can have them added to your exports either in a `note`
 field (not as clean, but compatible with BibTeX out of the box), or in an `url` field (requires extra packages to be loaded,
 or bibtex will error out).
 
-### Use BibLaTeX extended name format (requires biblatex 3.5) (default: false)
+### Use BibLaTeX extended name format (requires biblatex 3.5)
+*default: false*
 
 Use the extended biber 2.7 format for names with particles - ony works in BibLaTeX 3.5 or later
 
 ## Journal abbreviations
 
-### Automatically abbreviate journal title if none is set explicitly (default: false)
+### Automatically abbreviate journal title if none is set explicitly
+*default: false*
 
 If set, generates journal abbreviations on export using the Zotero journal abbreviator, according to the abbreviation style selected in the list below the checkbox.
 
-### Abbreviation style: (default: `empty`)
+### Abbreviation style:
+*default: `empty`*
 
 Select the style for auto-abbreviation.
 
 ## Automatic export
 
-### Automatic export (default: idle)
+### Automatic export
+*default: idle*
 
 Determines when [automatic exports](Push-and-Pull-Export) are kicked off:
 * **Disabled**: disable automatic exports (but still marks them when changes occur)
@@ -146,42 +165,49 @@ Determines when [automatic exports](Push-and-Pull-Export) are kicked off:
 
 ## Advanced
 
-### Better BibTeX extended debug logging. Restart Firefox/Zotero to activate, persists over reboots. Affects performance, so turn off when done. (default: false)
+### Better BibTeX extended debug logging. Restart Firefox/Zotero to activate, persists over reboots. Affects performance, so turn off when done.
+*default: false*
 
 This will generate more verbose logs. This really does affect performance, so only enable this if you're
 trying to diagnose a problem in Better BibTeX.
 
-### Retain LaTeX markup on BibTeX import (default: false)
+### Retain LaTeX markup on BibTeX import
+*default: false*
 
 Enables [hardcore](From-Unicode-to-LaTeX-and-Back-Again#you-are-a-hardcore-latex-user) mode. You like
 Zotero in some ways, but really just want it to be a BibTeX manager. If
 you enable this, any BibTeX files you import will retain all the LaTeX commands they have, and marks the
 entry to be exported without any translation.
 
-### Add '%b' to the Zotfile pattern generator (requires restart) (default: true)
+### Add '%b' to the Zotfile pattern generator (requires restart)
+*default: true*
 
 Adds a '%b' formatter to Zotfile which retrieves the BibTeX citation key. This is going to be deprecated
 soon, as it's much safer to have this done on the ZotFile side.
 
-### Re-scan pinned citekeys after restart (default: true)
+### Re-scan pinned citekeys after restart
+*default: true*
 
 There have been occasions where Better BibTeX seemed to ignore keys you have specified manually by having
 `bibtex: <whatever>` in the `extra` field of your reference. I haven't seen this in ages, but enabling this and then restarting
 Zotero will force a re-scan to find them. This slows down startup tremendously if you have a big library. The checkbox
 will automatically clear after restart.
 
-### Show reference ID instead of 'call number' field in reference list (requires restart) (default: false)
+### Show reference ID instead of 'call number' field in reference list (requires restart)
+*default: false*
 
 If you enable this, the `call number` column in the Zotero reference list (if you have selected it to be
 shown) will display the internal reference ID instead of the call number field. Only useful for debugging.
 
-### Warn me when changing citation keys in bulk (default: 10)
+### Warn me when changing citation keys in bulk
+*default: 10*
 
 For those who are curious about what the "Clear/Generate BibTeX key" right-click options do, this will warn
 you if you are doing this on more than 10 (default) at the same time, to prevent your curiosity from changing
 all your citation keys at once.
 
-### Postscript (default: `empty`)
+### Postscript
+*default: `empty`*
 
 Snippet of javascript to run [after each reference generation](Scripting).
 
