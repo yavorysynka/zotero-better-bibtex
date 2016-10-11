@@ -261,7 +261,7 @@ caching mechanism makes sure it doesn't happen any more frequently than necessar
 ### extensions.zotero.translators.better-bibtex.csquotes
 *default: `empty`*
 
-Enables [csquotes](From-Unicode-to-LaTeX-and-Back-Again) support.
+Enables [csquotes](Unnecessarily-complicated-BibTeX-output%3F#hidden-features) support.
 
 ### extensions.zotero.translators.better-bibtex.skipWords
 *default: a,ab,aboar...*
