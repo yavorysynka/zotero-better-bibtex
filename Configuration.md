@@ -300,8 +300,8 @@ Generate quality reports for exported references.
 ### extensions.zotero.translators.better-bibtex.suppressTitleCase
 *default: false*
 
-If you're dead-set on ignoring both the BibTeX/BibLaTeX spec and the Zotero recommendations on title/sentence
-casing, set this preference to "true" to suppress title casing for English references.
+If you're dead-set on ignoring both BibTeX/BibLaTeX best practice and the Zotero recommendations on title/sentence
+casing, set this preference to "true" to suppress [title casing for English references](Unnecessarily-complicated-BibTeX-output%3F#mapping-fields).
 
 
 
