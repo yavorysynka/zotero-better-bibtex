@@ -23,7 +23,7 @@ have to if yo uuse BibLaTeX, which has fairly good Unicode support.
 
 * In titles of English references, you can control capitalization by surrounding parts of the text in `<span
   class="nocase">...</span>`. Text between these will not have their capitalization changed in any way. See more on this
-  below in the section `Title fields`.
+  below in the section `Mapping fields`.
 * In names, you can force first names like `Philippe` to be exported to `{\relax Ph}ilippe` (which causes it to get
   initial `Ph.` rather than \P.` in styles that do initials) by adding a [end of guarded
   area](http://www.fileformat.info/info/unicode/char/0097/index.htm) character between `Ph` and `ilippe`.
