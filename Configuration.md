@@ -224,7 +224,7 @@ changing the regular preferences through the preferences UI rather than here --
 it is possible to enter unexpected values here, and not all of these cases have
 been tested.
 
-All Zotero hidden preferences are preceded by `extensions.zotero.better-bibtex.`
+All Zotero hidden preferences are preceded by `extensions.zotero.translators.better-bibtex.`
 
     
 
