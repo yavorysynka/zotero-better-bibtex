@@ -30,7 +30,7 @@ have to if yo uuse BibLaTeX, which has fairly good Unicode support.
 
 ## Hidden features
 
-* **`csquotes` support**; if you open `about:config` and set
+* **`csquotes` support**; if you [open `about:config`](Configuration#hidden-preferences) and set
   `extensions.zotero.translators.better-bibtex.csquotes` to a string of character pairs, each pair will be assumed to be
   the open and close parts of a pair and will be replaced with a `\\enquote{...}` construct.
 

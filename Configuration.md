@@ -216,7 +216,7 @@ Snippet of javascript to run [after each reference generation](Scripting).
 You can edit most BBT preferences through the Preferences window. However, the
 preferences window does not include all of the different ways you can customize
 BBT. To view the the full list of BBT's preferences, including many hidden
-preferences, type `about:config' into the Firefox location bar and enter
+preferences, type `about:config` into the Firefox location bar and enter
 `better-bibtex` into the Filter field at the top of the list that comes up. In
 Zotero Standalone you can access `about:config` from the Advanced pane of the
 preferences. You can change all preferences here but I strongly recommend
