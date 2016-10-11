@@ -58,16 +58,12 @@ wraps those (strings of) words in those double braces. This is to let BibTeX kno
 The simplest approach would be to wrap title fields in extra braces as a whole, and some sites will erroneouslyi
 recommend doing so (looking at you here MIT librarians). But there are styles do need to recapitalize parts of the
 title (for example to selectively downcase the titlecasing), and having the whole field so wrapped interferes with that. So Better BibTeX wraps individual words -- or strings
-of those words -- that have capitals in them with double braces. Yup, not one, but two. Because for reasons unknown,
-`\emph{Homo sapiens}` will not be recapitalized, but -- get this now -- `{\emph{Homo sapiens}}` *will*. So to get
-predictable behavior, this is written out as `{{\emph{Homo sapiens}}}`.
+of those words -- that have capitals in them with double braces.
 
 For English titles BBT will Title Case and brace-protect your titles on output. Except, those Title Cased words which BBT changed itself will *not* be wrapped in double-braces,
 as it *is* OK for the styles to change casing for those, depending on the style at play. So `I like ISDN heaps better
 than dialup` would output to `I Like {{ISDN}} Heaps Better than Dialup`. Apparently non-English titles are supposed to
 be in sentence case, so BBT doesn't touch those.
-
-Bib(La)TeX be crazy.
 
 You can steer this process somewhat by enclosing the parts you don't want case manipulation on in `<span
 class="nocase">...</span>`. Anything between those won't be touched by Zotero or BBT. This is formally supported by
@@ -88,7 +84,9 @@ convoluted ([#541](https://github.com/retorquere/zotero-better-bibtex/issues/541
 [#383](https://github.com/retorquere/zotero-better-bibtex/issues/383)). For example, here are some "interesting" cases
 that BBT has learned to deal with. Did you know that
 
-* `{\emph{Homo sapiens}}` does *not* case-protect `Homo sapiens`? It sure was a surprise to me.
+* `{\emph{Homo sapiens}}` does *not* case-protect `Homo sapiens`? It sure was a surprise to me.  For reasons unknown,
+  `\emph{Homo sapiens}` will not be recapitalized by Bib(La)TeX, but -- get this now -- `{\emph{Homo sapiens}}` *will*. So to get
+  predictable behavior, this is written out as `{{\emph{Homo sapiens}}}`.
 * casing behavior over the *whole* reference field depends on [whether there's a slash-command at the first position](https://github.com/retorquere/zotero-better-bibtex/issues/541#issuecomment-240156274) of the title? 
 * [apparently](https://github.com/retorquere/zotero-better-bibtex/issues/541#issuecomment-240999396), to make sure that `Reading HLA Hart's: <i>The Concept of Law</i>` renders as expected means I have to output the astoundingly ugly `{Reading {{HLA Hart}}'s: {{{\emph{The Concept}}}}{\emph{ of }}{{{\emph{Law}}}}}`?
 
@@ -96,6 +94,7 @@ The double-bracing is the only unambiguous rule I could could construct that con
 
 Bib(La)TeX provides a never-ending stream of edge cases, which BBT tries to decide algorithmically. I try to keep the resulting file as pretty as I can (I'm sensitive to the aesthetics myself), but the target is best described as "given reasonable input, generate well-rendering output", and reasonable in this case will have to include "follows Zotero recommendations for storing references".
 
+Bib(La)TeX be crazy.
 
 ## You are a hardcore LaTeX user!
 
