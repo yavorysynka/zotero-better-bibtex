@@ -116,18 +116,12 @@ Translator.CSLVariables = {
   scale:                          {}
   section:                        {}
   source:                         {}
-  status:                         {}
+  status:                         { BibLaTeX: 'pubstate' }
   title:                          { BibLaTeX: -> (if @referencetype == 'book' then 'maintitle' else null) }
   'title-short':                  {}
   URL:                            {}
   version:                        {}
-  'volume-title':
-    BibLaTeX: ->
-      switch @item.itemType
-        when 'book' then 'title'
-        when 'bookSection' then 'booktitle'
-        else null
-
+  'volume-title':                 { field: 'volumeTitle' }
   'year-suffix':                  {}
   'chapter-number':               {}
   'collection-number':            {}
@@ -206,13 +200,16 @@ Translator.extractFields = (item) ->
   ### fetch fields as per https://forums.zotero.org/discussion/3673/2/original-date-of-publication/ ###
   item.extra = item.extra.replace(/{:([^:]+):\s*([^}]+)}/g, (m, name, value) =>
     cslvar = Translator.CSLVariable(name)
-    return '' unless cslvar
+    return m unless cslvar
 
-    if cslvar.type == 'creator'
-      fields[cslvar.name] = {value: [], format: 'csl'} unless Array.isArray(fields[name]?.value)
-      fields[cslvar.name].value.push(@CSLCreator(value))
-    else
-      fields[cslvar.name] = { value, format: 'csl' }
+    switch
+      when cslvar.field
+        item[cslvar.field] = value
+      when cslvar.type == 'creator'
+        fields[cslvar.name] = {value: [], format: 'csl'} unless Array.isArray(fields[name]?.value)
+        fields[cslvar.name].value.push(@CSLCreator(value))
+      else
+        fields[cslvar.name] = { value, format: 'csl' }
 
     return ''
   )
@@ -227,6 +224,8 @@ Translator.extractFields = (item) ->
         extra.push(line)
       when !cslvar
         fields[m[1].toLowerCase()] = {value: m[2].trim(), format: 'key-value'}
+      when cslvar.field
+        item[cslvar.field] = m[2].trim()
       when cslvar.type == 'creator'
         fields[cslvar.name] = {value: [], format: 'csl'} unless Array.isArray(fields[cslvar.name]?.value)
         fields[cslvar.name].value.push(@CSLCreator(m[2].trim()))
@@ -243,6 +242,7 @@ Translator.initialize = ->
   return if @initialized
   @initialized = true
 
+  @preamble = {DeclarePrefChars: ''}
   @citekeys = Object.create(null)
   @attachmentCounter = 0
   @rawLaTag = '#LaTeX'
@@ -260,7 +260,6 @@ Translator.initialize = ->
     @preferences[pref] = @[pref] = Zotero.getHiddenPref("better-bibtex.#{pref}")
 
   @skipWords = @skipWords.trim().split(/\s*,\s*/)
-  @titleCaseLowerCase = @titleCaseLowerCase.trim().split(/\s+/)
   @skipFields = (field.trim() for field in (@skipFields || '').split(',') when field.trim())
   if @csquotes
     @csquotes = { open: '', close: '' }
@@ -342,17 +341,25 @@ Translator.sanitizeCollection = (coll) ->
 
   return sane
 
+Translator.unique_chars = (str) ->
+  uniq = ''
+  for c in str
+    uniq += c if uniq.indexOf(c) < 0
+  return uniq
+
 Translator.nextItem = ->
   @initialize()
 
   while item = Zotero.nextItem()
     continue if item.itemType == 'note' || item.itemType == 'attachment'
+    Translator.debug('fetched item:', item)
     if @caching
       cached = Zotero.BetterBibTeX.cache.fetch(item.itemID, @context)
       if cached?.citekey
         Translator.debug('nextItem: cached')
         @citekeys[item.itemID] = cached.citekey
         Zotero.write(cached.bibtex)
+        @preamble.DeclarePrefChars += cached.data.DeclarePrefChars if cached.data.DeclarePrefChars
         continue
 
     Zotero.BetterBibTeX.keymanager.extract(item, 'nextItem')
@@ -362,6 +369,16 @@ Translator.nextItem = ->
     return item
 
   return null
+
+Translator.complete = ->
+  @exportGroups()
+
+  preamble = []
+  preamble.push('\\DeclarePrefChars{' + @unique_chars(@preamble.DeclarePrefChars) + '}') if @preamble.DeclarePrefChars
+  preamble.push('\\newcommand{\\noopsort}[1]{}') if @preamble.noopsort
+  if preamble.length > 0
+    preamble = ('"' + cmd + ' "' for cmd in preamble)
+    Zotero.write("@preamble{ " + preamble.join(" \n # ") + " }\n")
 
 Translator.exportGroups = ->
   @debug('exportGroups:', @collections)

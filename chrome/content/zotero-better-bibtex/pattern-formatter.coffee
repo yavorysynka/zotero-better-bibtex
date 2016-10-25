@@ -1,6 +1,6 @@
-class BetterBibTeXPatternFormatter
+class Zotero.BetterBibTeX.PatternFormatter
   constructor: (@patterns, @fold) ->
-    Zotero.BetterBibTeX.debug('BetterBibTeXPatternFormatter:', {patterns: @patterns.length, fold: @fold})
+    Zotero.BetterBibTeX.debug('PatternFormatter:', {patterns: @patterns.length, fold: @fold})
 
   re:
     unsafechars: Zotero.Utilities.XRegExp("[^-\\p{L}0-9_!$*+./;?\\[\\]]")
@@ -8,7 +8,12 @@ class BetterBibTeXPatternFormatter
     punct: Zotero.Utilities.XRegExp('\\p{Pc}|\\p{Pd}|\\p{Pe}|\\p{Pf}|\\p{Pi}|\\p{Po}|\\p{Ps}', 'g')
     caseNotUpperTitle: Zotero.Utilities.XRegExp('[^\\p{Lu}\\p{Lt}]', 'g')
     caseNotUpper: Zotero.Utilities.XRegExp('[^\\p{Lu}]', 'g')
-    word: Zotero.Utilities.XRegExp("[\\p{L}\\p{Nd}\\{Pc}\\p{M}]+", 'g')
+    word: Zotero.Utilities.XRegExp("[\\p{L}\\p{Nd}\\{Pc}\\p{M}]+(-[\\p{L}\\p{Nd}\\{Pc}\\p{M}]+)*", 'g')
+
+  removeDiacritics: (str) ->
+    str = Zotero.BetterBibTeX.Transliterate.transl(str || '')
+    str = Zotero.BetterBibTeX.fold2ASCII(str)
+    return str
 
   getLanguages: ->
     delete @language
@@ -23,7 +28,7 @@ class BetterBibTeXPatternFormatter
         for lang in Object.keys(creator.multi._key)
           @languages[lang] = true
     @languages = [null].concat(Object.keys(@languages))
-    Zotero.BetterBibTeX.debug('formatting for:', @languages)
+    Zotero.BetterBibTeX.debug('PatternFormatter.getLanguages: formatting for:', @languages)
 
   format: (item) ->
     @item = Zotero.BetterBibTeX.serialized.get(item)
@@ -85,11 +90,11 @@ class BetterBibTeXPatternFormatter
       continue unless longest
       result += longest.replace(/[\s{},]/g, '')
 
-    result = Zotero.BetterBibTeX.removeDiacritics(result) if @fold
+    result = @removeDiacritics(result) if @fold
     return result
 
   evaluate: (step) ->
-    Zotero.BetterBibTeX.debug('evaluate', typeof step.method, step)
+    Zotero.BetterBibTeX.debug('PatternFormatter.evaluate:', typeof step.method, step)
 
     value = step.method.apply(@, step.arguments) || ''
     return value if typeof(value) == 'function'
@@ -102,13 +107,14 @@ class BetterBibTeXPatternFormatter
     return value
 
   clean: (str) ->
-    return @safechars(Zotero.BetterBibTeX.removeDiacritics(str || '')).trim()
+    return @safechars(@removeDiacritics(str)).trim()
 
   safechars: (str) ->
     return Zotero.Utilities.XRegExp.replace(str, @re.unsafechars, '', 'all')
 
   words: (str) ->
-    return (@clean(word) for word in Zotero.Utilities.XRegExp.matchChain(@innerText(str), [@re.word]) when word != '')
+    # 551
+    return (@clean(word).replace(/-/g, '') for word in Zotero.Utilities.XRegExp.matchChain(@innerText(str), [@re.word]) when word != '')
 
   ###
   # three-letter month abbreviations. I assume these are the same ones that the
@@ -148,7 +154,7 @@ class BetterBibTeXPatternFormatter
       if name != ''
         if withInitials && creator.firstName
           initials = Zotero.Utilities.XRegExp.replace(creator.firstName, @re.caseNotUpperTitle, '', 'all')
-          initials = Zotero.BetterBibTeX.removeDiacritics(initials)
+          initials = @removeDiacritics(initials)
           initials = Zotero.Utilities.XRegExp.replace(initials, @re.caseNotUpper, '', 'all')
           name += initials
       else
@@ -408,7 +414,7 @@ class BetterBibTeXPatternFormatter
       return Zotero.Utilities.XRegExp.replace(value || '', @re.alphanum, '', 'all').split(/\s+/).join(' ').trim()
 
     fold: (value) ->
-      return Zotero.BetterBibTeX.removeDiacritics(value || '').split(/\s+/).join(' ').trim()
+      return @removeDiacritics(value).split(/\s+/).join(' ').trim()
 
     capitalize: (value) ->
       return (value || '').replace(/((^|\s)[a-z])/g, (m) -> m.toUpperCase())

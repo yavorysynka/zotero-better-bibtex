@@ -10,13 +10,17 @@ Background:
 
 ### BibLaTeX cookie-cutter ###
 
-@test-cluster-1 @127 @201 @219 @253 @268 @288 @294 @302 @308 @309 @310 @326 @327 @351 @376 @389 @bblt-0 @bblt @485 @515
+@test-cluster-1 @127 @201 @219 @253 @268 @288 @294 @302 @308 @309 @310 @326 @327 @351 @376 @389 @bblt-0 @bblt @485 @515 @573
 Scenario Outline: BibLaTeX Export
   And I import <references> references from 'export/<file>.json'
   Then a library export using 'Better BibLaTeX' should match 'export/<file>.biblatex'
 
   Examples:
      | file                                                                                           | references  |
+     | transliteration for citekey #580                                                               | 1           |
+     | CSL status = biblatex pubstate #573                                                            | 1           |
+     | Title case of latex greek text on biblatex export #564                                         | 2           |
+     | pre not working in Extra field #559                                                            | 1           |
      | @jurisdiction; map court,authority to institution #326                                         | 1           |
      | @legislation; map code,container-title to journaltitle #327                                    | 1           |
      | Abbreviations in key generated for Conference Proceedings #548                                 | 1           |
@@ -57,10 +61,10 @@ Scenario Outline: BibLaTeX Export
 
   Examples:
      | file                                                                               | references  |
-     | Extra semicolon in biblatexadata causes export failure #133                        | 2           |
-     | Better BibLaTeX.019                                                                | 1           |
-     | Ignore HTML tags when generating citation key #264                                 | 1           |
      | CSL title, volume-title, container-title=BL title, booktitle, maintitle #381       | 2           |
+     | Better BibLaTeX.019                                                                | 1           |
+     | Extra semicolon in biblatexadata causes export failure #133                        | 2           |
+     | Ignore HTML tags when generating citation key #264                                 | 1           |
      | map csl-json variables #293                                                        | 2           |
      | Export Forthcoming as Forthcoming                                                  | 1           |
      | biblatex export of phdthesis does not case-protect -type- #435                     | 1           |
@@ -115,13 +119,16 @@ Scenario Outline: BibLaTeX Export
 
 ### BibTeX cookie-cutter ###
 
-@441 @439 @bbt @300
+@441 @439 @bbt @300 @565 @551 @558
 Scenario Outline: BibTeX Export
   Given I import <references> references from 'export/<file>.json'
   Then a library export using 'Better BibTeX' should match 'export/<file>.bibtex'
 
   Examples:
      | file                                                                               | references |
+     | veryshorttitle and compound words #551                                             | 4          |
+     | titles are title-cased in .bib file #558                                           | 2          |
+     | Braces around author last name when exporting BibTeX #565                          | 5          |
      | Missing JabRef pattern; authEtAl #554                                              | 1          |
      | Missing JabRef pattern; authorsN+initials #553                                     | 1          |
      | custom fields should be exported as-is #441                                        | 1          |
@@ -186,6 +193,7 @@ Scenario: CAYW picker
   And the picks for mmd should be '[#bentley_academic_2011][][#pollard_bicycle_2007][]'
   And the picks for latex should be '\cite[1]{bentley_academic_2011}\cite[ch. 1]{pollard_bicycle_2007}'
   And the picks for scannable-cite should be '{|Abram, 2014|p. 1||zu:0:ITEMKEY}{|Pollard and Bray, 2007|ch. 1||zu:0:ITEMKEY}'
+  And the picks for asciidoctor-bibtex should be 'cite:[bentley_academic_2011(1), pollard_bicycle_2007(ch. 1)]'
 
 @307 @bbt
 Scenario: thesis zotero entries always create @phpthesis bibtex entries #307
@@ -294,24 +302,28 @@ Scenario: Diacritics stripped from keys regardless of ascii or fold filters #266
   When I set preference .citekeyFold to false
   Then a library export using 'Better BibLaTeX' should match 'export/Diacritics stripped from keys regardless of ascii or fold filters #266-nofold.biblatex'
 
-@384 @bbt
-Scenario: Do not caps-protect name fields #384
-  Given I import 40 references from 'export/Do not caps-protect name fields #384.json'
-  Then a library export using 'Better BibLaTeX' should match 'export/Do not caps-protect name fields #384.biblatex'
-  And a library export using 'Better BibTeX' should match 'export/Do not caps-protect name fields #384.bibtex'
+@384 @bbt @565 @566
+Scenario: Do not caps-protect name fields #384 #565 #566
+  Given I import 40 references from 'export/Do not caps-protect name fields #384 #565 #566.json'
+  Then a library export using 'Better BibLaTeX' should match 'export/Do not caps-protect name fields #384 #565 #566.biblatex'
+  And a library export using 'Better BibTeX' should match 'export/Do not caps-protect name fields #384 #565 #566.bibtex'
+  When I set preference .bibtexParticleNoOp to true
+  Then a library export using 'Better BibTeX' should match 'export/Do not caps-protect name fields #384 #565 #566.noopsort.bibtex'
+  When I set preference .biblatexExtendedNameFormat to true
+  Then a library export using 'Better BibLaTeX' should match 'export/Do not caps-protect name fields #384 #565 #566.biber26.biblatex'
 
 @383 @bblt
 Scenario: Capitalize all title-fields for language en #383
   Given I import 8 references from 'export/Capitalize all title-fields for language en #383.json'
   Then a library export using 'Better BibLaTeX' should match 'export/Capitalize all title-fields for language en #383.biblatex'
 
-@411 @bblt
-Scenario: Sorting and optional particle handling #411
-  Given I import 2 references from 'export/Sorting and optional particle handling #411.json'
-  And I set preference .parseParticles to true
-  Then a library export using 'Better BibLaTeX' should match 'export/Sorting and optional particle handling #411.on.biblatex'
-  When I set preference .parseParticles to false
-  Then a library export using 'Better BibLaTeX' should match 'export/Sorting and optional particle handling #411.off.biblatex'
+#@411 @bblt
+#Scenario: Sorting and optional particle handling #411
+#  Given I import 2 references from 'export/Sorting and optional particle handling #411.json'
+#  And I set preference .parseParticles to true
+#  Then a library export using 'Better BibLaTeX' should match 'export/Sorting and optional particle handling #411.on.biblatex'
+#  When I set preference .parseParticles to false
+#  Then a library export using 'Better BibLaTeX' should match 'export/Sorting and optional particle handling #411.off.biblatex'
 
 @test-cluster-1 @ae
 Scenario: auto-export

@@ -16,7 +16,8 @@ Zotero.BetterBibTeX.endpoints.collection.init = (url, data, sendResponseCallback
       sendResponseCallback(404, 'text/plain', "Could not export bibliography '#{collection}': no format specified")
       return
 
-    translator = path.pop()
+    translator = path.pop().toLowerCase()
+    translator = Zotero.BetterBibTeX.Translators.getID(translator) || Zotero.BetterBibTeX.Translators.getID('better' + translator)
     path = path.join('.')
     path = "/0/#{path}" if path.charAt(0) != '/'
     path = path.split('/')
@@ -39,14 +40,11 @@ Zotero.BetterBibTeX.endpoints.collection.init = (url, data, sendResponseCallback
     col ||= Zotero.Collections.getByLibraryAndKey(libid, key)
     throw "#{collectionkey} not found" unless col
 
-    deferred = Q.defer()
-    Zotero.BetterBibTeX.translate(Zotero.BetterBibTeX.getTranslator(translator), {collection: col}, Zotero.BetterBibTeX.displayOptions(url), (err, result) ->
-      if err
-        deferred.reject(err)
-      else
-        deferred.fulfill(result)
+    Zotero.BetterBibTeX.Translators.translate(translator, {collection: col}, Zotero.BetterBibTeX.displayOptions(url)).then((result) ->
+      sendResponseCallback(200, 'text/plain', result)
+    ).catch((err) ->
+      sendResponseCallback(500, 'text/plain', '' + err)
     )
-    sendResponseCallback(200, 'text/plain', deferred.promise)
 
   catch err
     Zotero.BetterBibTeX.log("Could not export bibliography '#{collection}", err)
@@ -77,19 +75,16 @@ Zotero.BetterBibTeX.endpoints.library.init = (url, data, sendResponseCallback) -
       sendResponseCallback(404, 'text/plain', "Could not export bibliography '#{library}': no format specified")
       return
 
-    translator = Zotero.BetterBibTeX.getTranslator(format)
+    translator = Zotero.BetterBibTeX.Translator.getID(format)
     if !translator
       sendResponseCallback(404, 'text/plain', "Could not export bibliography '#{library}': unsupported format #{format}")
       return
 
-    deferred = Q.defer()
-    Zotero.BetterBibTeX.translate(translator, {library: libid}, Zotero.BetterBibTeX.displayOptions(url), (err, result) ->
-      if err
-        deferred.reject(err)
-      else
-        deferred.fulfill(result)
+    Zotero.BetterBibTeX.Translators.translate(translator, {library: libid}, Zotero.BetterBibTeX.displayOptions(url)).then((result) ->
+      sendResponseCallback(200, 'text/plain', result)
+    ).catch((err) ->
+      sendResponseCallback(500, 'text/plain', '' + err)
     )
-    sendResponseCallback(200, 'text/plain', deferred.promise)
 
   catch err
     Zotero.BetterBibTeX.log("Could not export bibliography '#{library}'", err)
@@ -109,14 +104,11 @@ Zotero.BetterBibTeX.endpoints.selected.init = (url, data, sendResponseCallback) 
   zoteroPane = Zotero.getActiveZoteroPane()
   items = Zotero.Items.get((item.id for item of zoteroPane.getSelectedItems()))
 
-  deferred = Q.defer()
-  Zotero.BetterBibTeX.translate(Zotero.BetterBibTeX.getTranslator(translator), {items: items}, Zotero.BetterBibTeX.displayOptions(url), (err, result) ->
-    if err
-      deferred.reject(err)
-    else
-      deferred.fulfill(result)
+  Zotero.BetterBibTeX.Translators.translate(Zotero.BetterBibTeX.Translators.getID(translator), {items}, Zotero.BetterBibTeX.displayOptions(url)).then((result) ->
+    sendResponseCallback(200, 'text/plain', result)
+  ).catch((err) ->
+    sendResponseCallback(500, 'text/plain', '' + err)
   )
-  sendResponseCallback(200, 'text/plain', deferred.promise)
 
 Zotero.BetterBibTeX.endpoints.schomd = { supportedMethods: ['POST'] }
 Zotero.BetterBibTeX.endpoints.schomd.init = (url, data, sendResponseCallback) ->
@@ -126,34 +118,30 @@ Zotero.BetterBibTeX.endpoints.schomd.init = (url, data, sendResponseCallback) ->
   throw new Error('batch requests are not supported') if Array.isArray(req)
 
   try
-    switch req.method
-      when 'citations', 'citation', 'bibliography', 'bibtex', 'search'
-        ### the schomd methods search by citekey -- the cache needs to be fully primed for this to work ###
-        Zotero.BetterBibTeX.keymanager.prime()
+    ### the schomd methods search by citekey -- the cache needs to be fully primed for this to work ###
+    Zotero.BetterBibTeX.keymanager.prime()
 
-        result = Zotero.BetterBibTeX.schomd[req.method].apply(Zotero.BetterBibTeX.schomd, req.params)
-        if typeof result?.then == 'function'
-          result = result.then((result) ->
-            return JSON.stringify({
-              jsonrpc: (if req.jsonrpc then req.jsonrpc else undefined)
-              id: (if req.id || (typeof req.id) == 'number' then req.id else null)
-              result
-            })
-          ).catch((e) ->
-            return JSON.stringify({
-              jsonrpc: (if req.jsonrpc then req.jsonrpc else undefined)
-              id: (if req.id || (typeof req.id) == 'number' then req.id else null)
-              result: e.message || e.name
-            })
-          )
-        else
-          result = JSON.stringify({
-            jsonrpc: (if req.jsonrpc then req.jsonrpc else undefined)
-            id: (if req.id || (typeof req.id) == 'number' then req.id else null)
-            result
-          })
-
-      else throw("Unsupported method '#{req.method}'")
+    result = Zotero.BetterBibTeX.schomd['jsonrpc_' + req.method].apply(Zotero.BetterBibTeX.schomd, req.params)
+    if typeof result?.then == 'function'
+      result = result.then((result) ->
+        return JSON.stringify({
+          jsonrpc: (if req.jsonrpc then req.jsonrpc else undefined)
+          id: (if req.id || (typeof req.id) == 'number' then req.id else null)
+          result
+        })
+      ).catch((e) ->
+        return JSON.stringify({
+          jsonrpc: (if req.jsonrpc then req.jsonrpc else undefined)
+          id: (if req.id || (typeof req.id) == 'number' then req.id else null)
+          result: e.message || e.name
+        })
+      )
+    else
+      result = JSON.stringify({
+        jsonrpc: (if req.jsonrpc then req.jsonrpc else undefined)
+        id: (if req.id || (typeof req.id) == 'number' then req.id else null)
+        result
+      })
   catch err
     result = JSON.stringify({jsonrpc: '2.0', error: {code: 5000, message: '' + err + "\n" + err.stack}, id: null})
 
@@ -176,7 +164,10 @@ Zotero.BetterBibTeX.endpoints.cayw.init = (url, data, sendResponseCallback) ->
     mode = if !Zotero.isMac and Zotero.Prefs.get('integration.keepAddCitationDialogRaised') then 'popup' else 'alwaysRaised'
     Zotero.Integration.displayDialog(doc, 'chrome://zotero/content/integration/quickFormat.xul', mode, io)
 
-  sendResponseCallback(200, 'text/plain', deferred.promise)
+  deferred.promise.then(
+    ((value) -> sendResponseCallback(200, 'text/plain', value)),
+    ((reason) -> sendResponseCallback(500, 'text/plain', '' + reason)),
+  )
 
 Zotero.BetterBibTeX.endpoints.cacheActivity =
   supportedMethods: ['GET']

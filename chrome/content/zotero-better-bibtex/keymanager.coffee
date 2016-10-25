@@ -150,7 +150,7 @@ Zotero.BetterBibTeX.keymanager = new class
 
       if affected > warn
         params = { treshold: warn, response: null }
-        window.openDialog('chrome://zotero-better-bibtex/content/bulk-clear-confirm.xul', '', 'chrome,dialog,centerscreen,modal', params)
+        window.openDialog('chrome://zotero-better-bibtex/content/xul/bulk-clear-confirm.xul', '', 'chrome,dialog,centerscreen,modal', params)
         switch params.response
           when 'ok'       then
           when 'whatever' then Zotero.BetterBibTeX.Pref.set('warnBulkModify', 0)
@@ -345,7 +345,7 @@ Zotero.BetterBibTeX.keymanager = new class
         citekeyPattern = Zotero.BetterBibTeX.Pref.get('citekeyFormat')
         citekeyFormat = citekeyPattern.replace(/>.*/, '')
         throw new Error("no variable parts found in citekey pattern '#{citekeyFormat}'") unless citekeyFormat.indexOf('[') >= 0
-        formatter = new BetterBibTeXPatternFormatter(BetterBibTeXPatternParser.parse(citekeyPattern), Zotero.BetterBibTeX.Pref.get('citekeyFold'))
+        formatter = new Zotero.BetterBibTeX.PatternFormatter(Zotero.BetterBibTeX.PatternParser.parse(citekeyPattern), Zotero.BetterBibTeX.Pref.get('citekeyFold'))
 
         Zotero.BetterBibTeX.debug('keymanager.setFormatter.apply:', {pattern: citekeyFormat, fold: formatter.fold})
 

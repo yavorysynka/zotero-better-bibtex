@@ -93,6 +93,43 @@ class DateField
     return "#{_v.year}-#{@pad(_v.month, '00')}" if _v.year && _v.month
     return '' + _v.year
 
+Reference::requiredFields =
+  article: ['author', 'title', 'journaltitle', 'year/date']
+  book: ['author', 'title', 'year/date']
+  mvbook: ['book']
+  inbook: ['author', 'title', 'booktitle', 'year/date']
+  bookinbook: ['inbook']
+  suppbook: ['inbook']
+  booklet: ['author/editor', 'title', 'year/date']
+  collection: ['editor', 'title', 'year/date']
+  mvcollection: ['collection']
+  incollection: ['author', 'title', 'booktitle', 'year/date']
+  suppcollection: ['incollection']
+  manual: ['author/editor', 'title', 'year/date']
+  misc: ['author/editor', 'title', 'year/date']
+  online: ['author/editor', 'title', 'year/date', 'url']
+  patent: ['author', 'title', 'number', 'year/date']
+  periodical: ['editor', 'title', 'year/date']
+  suppperiodical: ['article']
+  proceedings: ['title', 'year/date']
+  mvproceedings: ['proceedings']
+  inproceedings: ['author', 'title', 'booktitle', 'year/date']
+  reference: ['collection']
+  mvreference: ['collection']
+  inreference: ['incollection']
+  report: ['author', 'title', 'type', 'institution', 'year/date']
+  thesis: ['author', 'title', 'type', 'institution', 'year/date']
+  unpublished: ['author', 'title', 'year/date']
+
+  # semi aliases (differing fields)
+  mastersthesis: ['author', 'title', 'institution', 'year/date']
+  techreport: ['author', 'title', 'institution', 'year/date']
+
+Reference::requiredFields.conference = Reference::requiredFields.inproceedings
+Reference::requiredFields.electronic = Reference::requiredFields.online
+Reference::requiredFields.phdthesis = Reference::requiredFields.mastersthesis
+Reference::requiredFields.www = Reference::requiredFields.online
+
 Reference::addCreators = ->
   return unless @item.creators and @item.creators.length
 
@@ -318,7 +355,7 @@ doExport = ->
       when item.firstPage
         ref.add({ pages: "#{item.firstPage}" })
 
-    ref.add({ name: (if ref.has.note then 'annotation' else 'note'), value: item.extra, allowDuplicates: true, html: true })
+    ref.add({ name: (if ref.has.note then 'annotation' else 'note'), value: item.extra, allowDuplicates: true })
     ref.add({ name: 'keywords', value: item.tags, enc: 'tags' })
 
     if item.notes and Translator.exportNotes
@@ -333,28 +370,22 @@ doExport = ->
 
     ref.add({ name: 'file', value: item.attachments, enc: 'attachments' })
 
-    ### pre-process overrides for #381 ###
-    for own name, value of ref.override
-      continue unless value.format == 'csl'
+    if item.volumeTitle # #381
+      Translator.debug('volumeTitle: true, itemType:', item.itemType, 'has:', Object.keys(ref.has))
+      if item.itemType == 'book' && ref.has.title
+        Translator.debug('volumeTitle: for book, itemType:', item.itemType, 'has:', Object.keys(ref.has))
+        ref.add({name: 'maintitle', value: item.volumeTitle, caseConversion: true })
+        [ref.has.title.bibtex, ref.has.maintitle.bibtex] = [ref.has.maintitle.bibtex, ref.has.title.bibtex]
+        [ref.has.title.value, ref.has.maintitle.value] = [ref.has.maintitle.value, ref.has.title.value]
 
-      switch
-        when name == 'volume-title' && ref.item.itemType == 'book' && ref.has.title
-          ref.add({name: 'maintitle', value: value.value, caseConversion: true })
-          [ref.has.title.bibtex, ref.has.maintitle.bibtex] = [ref.has.maintitle.bibtex, ref.has.title.bibtex]
-          [ref.has.title.value, ref.has.maintitle.value] = [ref.has.maintitle.value, ref.has.title.value]
-
-        when  name == 'volume-title' && ref.item.itemType == 'bookSection' && ref.has.booktitle
-          ref.add({name: 'maintitle', value: value.value, caseConversion: true })
-          [ref.has.booktitle.bibtex, ref.has.maintitle.bibtex] = [ref.has.maintitle.bibtex, ref.has.booktitle.bibtex]
-          [ref.has.booktitle.value, ref.has.maintitle.value] = [ref.has.maintitle.value, ref.has.booktitle.value]
-
-        else
-          continue
-
-      delete ref.override[name]
+      if item.itemType == 'bookSection' && ref.has.booktitle
+        Translator.debug('volumeTitle: for bookSection, itemType:', item.itemType, 'has:', Object.keys(ref.has))
+        ref.add({name: 'maintitle', value: item.volumeTitle, caseConversion: true })
+        [ref.has.booktitle.bibtex, ref.has.maintitle.bibtex] = [ref.has.maintitle.bibtex, ref.has.booktitle.bibtex]
+        [ref.has.booktitle.value, ref.has.maintitle.value] = [ref.has.maintitle.value, ref.has.booktitle.value]
 
     ref.complete()
 
-  Translator.exportGroups()
+  Translator.complete()
   Zotero.write('\n')
   return

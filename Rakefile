@@ -32,6 +32,7 @@ require 'yaml'
 require 'zip'
 require 'zlib'
 require_relative 'lib/unicode_table'
+require_relative 'lib/PreferencesDoc'
 
 #require 'github_changelog_generator'
 
@@ -223,10 +224,16 @@ DOWNLOADS.each_pair{|dir, files|
   }
 }
 
-file 'chrome/content/zotero-better-bibtex/translators.js' => Dir['resource/translators/*.yml'] + ['Rakefile'] do |t|
+file 'chrome/content/zotero-better-bibtex/translator-metadata.js' => Dir['resource/translators/*.yml'] + ['Rakefile'] do |t|
   translators = Dir['resource/translators/*.yml'].collect{|header| header = YAML::load_file(header) }.select{|header| header.is_a?(Hash) && header['label'] }
   open(t.name, 'w') {|f|
-    f.puts("Zotero.BetterBibTeX.Translators = #{JSON.pretty_generate(translators)};")
+    names = []
+    translators.each{|tr|
+      names << "Zotero.BetterBibTeX.Translators.#{tr['label'].gsub(' ', '')}"
+      f.puts("#{names[-1]} = Zotero.BetterBibTeX.Translators.#{tr['label'].gsub(' ', '').downcase} = Zotero.BetterBibTeX.Translators['#{tr['translatorID']}'] = #{JSON.pretty_generate(tr)};")
+    }
+
+    f.puts("Zotero.BetterBibTeX.Translators.all = [#{names.join(', ')}];")
   }
 end
 
@@ -301,6 +308,7 @@ file 'resource/translators/titlecaser.js' => ['resource/translators/titlecaser-c
         AbbreviationSegments
         BEFORE
         CITE_FIELDS
+        CLOSURES
         COLLAPSE_VALUES
         CONDITION_LEVEL_BOTTOM
         CONDITION_LEVEL_TOP
@@ -415,23 +423,35 @@ file 'resource/translators/titlecaser.js' => ['resource/translators/titlecaser-c
   end
 end
 
-file 'resource/citeproc.js' => 'Rakefile' do |t|
+file 'chrome/content/zotero-better-bibtex/lib/citeproc.js' => 'Rakefile' do |t|
+  bundled = false
+
   cleanly(t.name) do
-    download('https://raw.githubusercontent.com/Juris-M/citeproc-js/master/citeproc.js', t.name)
-    sh "#{NODEBIN}/grasp -i -e 'thedate[DATE_PARTS_ALL[i]]' --replace 'thedate[CSL.DATE_PARTS_ALL[i]]' #{t.name.shellescape}"
-    sh "#{NODEBIN}/grasp -i -e 'if (!Array.indexOf) { _$ }' --replace '' #{t.name.shellescape}"
-    File.rewrite(t.name){|src|
-      patched = StringIO.new(src).readlines.collect{|line|
-        if line.strip == 'if (!m1split[i-1].match(/[:\\?\\!]\\s*$/)) {'
-          line.sub(/if.*{/, 'if (i > 0 && !m1split[i-1].match(/[:\\?\\!]\\s*$/)) {')
-        else
-          line
-        end
-      }.join('')
-      open('https://raw.githubusercontent.com/zotero/zotero/4.0/chrome/content/zotero/xpcom/citeproc-prereqs.js').read + patched + "\nvar EXPORTED_SYMBOLS = ['CSL'];\n"
-    }
-    sh "#{NODEBIN}/grasp -i -e 'xmldata.open($a, $b, $c);' --replace 'xmldata.dontopen({{a}}, {{b}}, {{c}});' #{t.name.shellescape}"
-    sh "#{NODEBIN}/grasp -i -e 'doc.createElement' --replace 'doc.dontcreateElement' #{t.name.shellescape}"
+    if bundled
+      open(t.name, 'w'){|f| f.puts('Zotero.BetterBibTeX.CSL = Zotero.CiteProc.CSL;') }
+    else
+      Tempfile.create(['citeproc', '.js'], '/tmp') do |mod|
+        download('https://raw.githubusercontent.com/Juris-M/citeproc-js/master/citeproc.js', mod.path)
+        sh "#{NODEBIN}/grasp -i -e 'thedate[DATE_PARTS_ALL[i]]' --replace 'thedate[CSL.DATE_PARTS_ALL[i]]' #{mod.path.shellescape}"
+        sh "#{NODEBIN}/grasp -i -e 'if (!Array.indexOf) { _$ }' --replace '' #{mod.path.shellescape}"
+        File.rewrite(mod.path){|src|
+          patched = StringIO.new(src).readlines.collect{|line|
+            if line.strip == 'if (!m1split[i-1].match(/[:\\?\\!]\\s*$/)) {'
+              line.sub(/if.*{/, 'if (i > 0 && !m1split[i-1].match(/[:\\?\\!]\\s*$/)) {')
+            else
+              line
+            end
+          }.join('')
+          open('https://raw.githubusercontent.com/zotero/zotero/4.0/chrome/content/zotero/xpcom/citeproc-prereqs.js').read + patched + """
+            var exports = module.exports = CSL;
+          """
+        }
+        sh "#{NODEBIN}/grasp -i -e 'xmldata.open($a, $b, $c);' --replace 'xmldata.dontopen({{a}}, {{b}}, {{c}});' #{mod.path.shellescape}"
+        sh "#{NODEBIN}/grasp -i -e 'doc.createElement' --replace 'doc.dontcreateElement' #{mod.path.shellescape}"
+  
+        browserify("Zotero.BetterBibTeX.CSL = require(#{File.absolute_path(mod.path).to_json});", t.name)
+      end
+    end
   end
 end
 
@@ -627,19 +647,32 @@ file 'resource/translators/acorn.js' => 'Rakefile' do |t|
   browserify("acorn = require('../../node_modules/acorn/dist/acorn_csp');", t.name)
 end
 
-file 'chrome/content/zotero-better-bibtex/lokijs.js' => 'Rakefile' do |t|
-  browserify("Zotero.LokiJS = require('lokijs');", t.name)
+file 'chrome/content/zotero-better-bibtex/lib/lokijs.js' => 'Rakefile' do |t|
+  browserify("Zotero.BetterBibTeX.LokiJS = require('lokijs');", t.name)
 end
 
-file 'chrome/content/zotero-better-bibtex/vardump.js' => 'Rakefile' do |t|
+file 'chrome/content/zotero-better-bibtex/lib/translit.js' => 'Rakefile' do |t|
+  cleanly(t.name) do
+    FileUtils.cp('node_modules/transliteration/lib/browser/transliteration.js', t.name)
+    graspe(t, 'window', 'Zotero.BetterBibTeX.Transliterate')
+    File.rewrite(t.name){|js|
+      """
+        Zotero.BetterBibTeX.Transliterate = { document: {} };
+        #{js};
+      """
+    }
+  end
+end
+
+file 'chrome/content/zotero-better-bibtex/lib/vardump.js' => 'Rakefile' do |t|
   browserify("Zotero.BetterBibTeX.varDump = require('util').inspect;", t.name)
 end
 
-file 'chrome/content/zotero-better-bibtex/fold-to-ascii.js' => 'Rakefile' do |t|
-  browserify("Zotero.BetterBibTeX.removeDiacritics = require('fold-to-ascii').fold;", t.name)
+file 'chrome/content/zotero-better-bibtex/lib/fold-to-ascii.js' => 'Rakefile' do |t|
+  browserify("Zotero.BetterBibTeX.fold2ASCII = require('fold-to-ascii').fold;", t.name)
 end
 
-file 'chrome/content/zotero-better-bibtex/punycode.js' => 'Rakefile' do |t|
+file 'chrome/content/zotero-better-bibtex/lib/punycode.js' => 'Rakefile' do |t|
   browserify("Zotero.BetterBibTeX.punycode = require('punycode');", t.name)
 end
 
@@ -702,10 +735,6 @@ task :test, [:tag] => [XPI.xpi] + Dir['test/fixtures/*/*.coffee'].collect{|js| j
   #sh "bundle list"
   #sh "npm list"
 
-  if ENV['JURIS_M'] == 'true'
-    XPI.test.xpis.download.reject!{|update| update == 'https://www.zotero.org/download/update.rdf'}
-    XPI.test.xpis.download << 'https://juris-m.github.io/zotero/update.rdf'
-  end
   XPI.getxpis
 
   features = 'resource/tests'
@@ -736,9 +765,11 @@ task :test, [:tag] => [XPI.xpi] + Dir['test/fixtures/*/*.coffee'].collect{|js| j
     output += " --format json --out " + "#{ENV['CIRCLE_TEST_REPORTS']}/cucumber/tests.cucumber".shellescape
   end
   cucumber = "cucumber #{output} --require features --strict #{tag} #{features}"
-  puts "Tests running: JURIS_M=#{ENV['JURIS_M'] || 'false'} #{cucumber}"
+  puts "Tests running: JURISM=#{ENV['JURISM'] || 'false'} #{cucumber}"
   if ENV['CI'] == 'true'
     sh cucumber
+    logdir = ENV['LOGS'] || '.'
+    sh "rm -f #{logdir}/*.log #{logdir}/*.debug"
   else
     begin
       if OS.mac?
@@ -792,6 +823,30 @@ file 'resource/translators/BetterBibTeXParser.pegjs' => [ 'resource/translators/
   cleanly(t.name) do
     UnicodeConverter.new.patterns(t.source, t.name)
   end
+end
+
+rule '.js' => '.pegjs' do |t|
+  cleanly(t.name) do
+    var = File.basename(t.source, File.extname(t.source))
+    declaration = ''
+    var.split('.')[0..-2].inject([]){|result, part|
+      result = result + [part]
+      v = result.join('.')
+      declaration += "if (typeof #{v} === 'undefined') { #{v} = {}; }\n"
+      result
+    }
+    sh "#{NODEBIN}/pegjs -e #{var.shellescape} #{t.source.shellescape} #{t.name.shellescape}"
+    File.rewrite(t.name){|js|
+      declaration + js
+    }
+  end
+end
+
+file 'chrome/content/zotero-better-bibtex/include.coffee' => %w{Rakefile} + XPI.files.select{|js| File.extname(js) == '.js' && File.basename(js) != 'include.js' } do |t|
+  scripts = t.sources.select{|js| File.extname(js) == '.js'}.collect{|js| js.sub('chrome/content/zotero-better-bibtex/', '')}.select{|js| %w{. lib util}.include?(File.dirname(js)) }
+  File.rewrite(t.name){|js|
+    js.sub(/for script in.*?\n/, "for script in #{scripts.to_json}\n")
+  }
 end
 
 task :markfailing do
@@ -1018,61 +1073,8 @@ task :logs2s3 do
   end
 end
 
-task :doc do
-  preferences = {}
-  defaults = {}
-
-  YAML::load_file('defaults/preferences/defaults.yml').each_pair{|pref, default|
-    preferences["extensions.zotero.translators.better-bibtex.#{pref}"] = 'Hidden'
-    defaults["extensions.zotero.translators.better-bibtex.#{pref}"] = default
-  }
-
-  settings = Nokogiri::XML(open('chrome/content/zotero-better-bibtex/preferences.xul'))
-  settings.remove_namespaces!
-
-  panels = [
-    'Citation keys',
-    'Export',
-    'Journal abbreviations',
-    'Automatic export',
-    'Advanced'
-  ]
-  settings.xpath('//tabpanel').each_with_index{|panel, panelnr|
-    panel.xpath('.//*[@preference]').each{|pref|
-      name = settings.at("//preference[@id='#{pref['preference']}']")['name']
-      preferences[name] = panels[panelnr]
-    }
-  }
-
-  documented = {}
-
-  section = nil
-  IO.readlines('wiki/Configuration.md').each{|line|
-    line.strip!
-    if line =~ /^## /
-      section = line.sub(/^##/, '').strip
-      next
-    end
-
-    if line =~ /^<!-- (.*) -->/
-      pref = $1.strip
-      documented[pref] = section
-    end
-  }
-
-  documented.keys.each{|pref|
-    if !preferences[pref]
-      puts "Documented obsolete preference #{documented[pref]} / #{pref}"
-    elsif preferences[pref] != documented[pref]
-      puts "#{pref} documented in #{documented[pref]} but visible in #{preferences[pref]}"
-    end
-  }
-  preferences.keys.each{|pref|
-    if !documented[pref]
-      heading = "## #{pref.sub(/.*\./, '')} <!-- #{pref} -->"
-      puts "Undocumented preference #{preferences[pref]} / #{heading} (#{defaults[pref]})"
-    end
-  }
+file 'wiki/Configuration.md' => ['lib/PreferencesDoc.rb', 'defaults/preferences/defaults.yml', 'chrome/content/zotero-better-bibtex/xul/preferences.xul', 'chrome/locale/en-US/zotero-better-bibtex/zotero-better-bibtex.dtd'] do |t|
+  PreferencesDoc.new(t)
 end
 
 task :s3form do

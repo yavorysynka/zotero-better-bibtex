@@ -62,7 +62,7 @@ class UnicodeConverter
 
       done = {}
       cs.puts "LaTeX.toUnicode ="
-      @chars.execute('SELECT charcode, latex, description FROM mapping ORDER BY charcode, preference'){|mapping|
+      @chars.execute("SELECT charcode, latex, description FROM mapping WHERE latex_to_unicode = 'true' ORDER BY charcode, preference"){|mapping|
         charcode, latex, desc = *mapping
         next if latex =~ /^[a-z]+$/i || latex.strip == ''
         next if charcode < 256 && latex == charcode.chr
@@ -176,10 +176,13 @@ class UnicodeConverter
       [0x2009,  "\\,",                'text'],
       [0x2009,  "\\,",                'text'],
       [0x200B,  "\\hspace{0pt}",      'text'],
+      [0x200B,  "\\mbox{}",           'text'],
+      [0x200C,  "{\\aftergroup\\ignorespaces}", 'text'],
       [0x205F,  "\\:",                'text'],
       [0xFFFD,  "\\dbend{}",          'text'],
       [0X219C,  "\\arrowwaveleft{}",  'math'],
       [0x00B0,  '^\\circ{}',          'math'],
+      [0x20AC,  '\\texteuro{}',       'text'],
       # TODO: replace '}' and '{' with textbrace(left|right) once the bug mentioned in
       # http://tex.stackexchange.com/questions/230750/open-brace-in-bibtex-fields/230754#comment545453_230754
       # is widely enough distributed
@@ -191,6 +194,45 @@ class UnicodeConverter
       @prefer << patch[1]
       @chars.execute("REPLACE INTO mapping (charcode, latex, mode) VALUES (?, ?, ?)", patch)
     }
+
+    # http://jblevins.org/log/greek
+    ucaseGreek = {
+      'Alpha' => 'A',
+      'Beta' => 'B',
+      'Epsilon' => 'E',
+      'Zeta' => 'Z',
+      'Eta' => 'H',
+      'Iota' => 'I',
+      'Kappa' => 'K',
+      'Mu' => 'M',
+      'Nu' => 'N',
+      'Rho' => 'P',
+      'Tau' => 'T',
+      'Chi' => 'X'
+    }
+    @chars.execute("select distinct charcode, latex from mapping where mode = 'math'").each{|row|
+      charcode, latex = *row
+
+      fixed = ucaseGreek.select{|k, v| latex =~ /^\\#{k}( |{})$/}
+      if fixed.length == 1
+        @chars.execute("UPDATE mapping SET latex = ? WHERE charcode = ? AND mode = 'math'", [fixed.values[0], charcode])
+        next
+      end
+      fixed = ucaseGreek.select{|k, v| latex =~ /{\\#{k}}/ }
+      if fixed.length == 1
+        @chars.execute("UPDATE mapping SET latex = ? WHERE charcode = ? AND mode = 'math'", [latex.sub(/{\\#{fixed.keys[0]}}/, "{#{fixed.values[0]}}"), charcode])
+      end
+    }
+    invalid = false
+    @chars.execute('select distinct charcode, latex, mode  from mapping').each{|row|
+      charcode, latex, mode = *row
+
+      if latex =~ /\\(Alpha|Beta|Epsilon|Zeta|Eta|Iota|Kappa|Mu|Nu|Rho|Tau|Chi)\b/
+        puts "Please add replacement for [0x#{charcode.to_s(16)}, ??, 'text'], # '#{latex}' (#{mode})"
+        invalid = true
+      end
+    }
+    throw 'Invalid mappings' if invalid
 
     @chars.execute("REPLACE INTO mapping (charcode, latex, mode) VALUES (?, ?, ?)", ["`".ord, "\\textasciigrave", 'text'])
     @chars.execute("REPLACE INTO mapping (charcode, latex, mode) VALUES (?, ?, ?)", ["'".ord, "\\textquotesingle", 'text'])
@@ -326,6 +368,7 @@ class UnicodeConverter
     @chars.create_function('rank', 1) do |func, latex, mode|
       latex = latex.to_s
       tests = [
+        lambda{ latex == '\\mbox{}' },
         lambda{ @prefer.include?(latex) },
         lambda{ latex !~ /\\/ || latex == "\\$" || latex =~ /^\\[^a-zA-Z0-9]$/ || latex =~ /^\\\^[1-3]$/ },
         lambda{ latex =~ /^(\\[0-9a-zA-Z]+)+{}$/ },
@@ -347,6 +390,7 @@ class UnicodeConverter
           latex NOT NULL,
           mode CHECK (mode IN ('text', 'math')),
           unicode_to_latex DEFAULT 'false' CHECK (unicode_to_latex IN ('true', 'false', 'ascii')),
+          latex_to_unicode DEFAULT 'true' CHECK (latex_to_unicode IN ('true', 'false')),
           preference NOT NULL DEFAULT 0,
           description,
 
@@ -362,14 +406,21 @@ class UnicodeConverter
       self.fixup
       self.expand
 
-      @chars.execute("""UPDATE mapping SET unicode_to_latex = CASE
-        WHEN mode = 'text' AND (charcode = 0x20 OR charcode BETWEEN 0x20 AND 0x7E AND CHAR(charcode) = latex) THEN
-          'false'
-        WHEN charcode = 0x00A0 OR charcode BETWEEN 0x20 AND 0x7E THEN
-          'true'
-        ELSE
-          'ascii'
-        END""")
+      @chars.execute("""UPDATE mapping SET
+        unicode_to_latex = CASE
+          WHEN mode = 'text' AND (charcode = 0x20 OR (charcode BETWEEN 0x20 AND 0x7E AND CHAR(charcode) = latex)) THEN
+            'false'
+          WHEN charcode IN (0x00A0, 0x200B, 0x200C) OR charcode BETWEEN 0x20 AND 0x7E THEN
+            'true'
+          ELSE
+            'ascii'
+          END,
+        latex_to_unicode = CASE charcode
+          WHEN 0x200B THEN 'false'
+          WHEN 0x200C THEN 'false'
+          ELSE 'true'
+          END
+      """)
 
       @chars.execute("UPDATE mapping SET preference = rank(latex, mode)")
       preference = {}

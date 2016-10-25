@@ -46,11 +46,11 @@ BetterBibTeXPref =
   checkCitekeyFormat: ->
     keyformat = document.getElementById('id-better-bibtex-preferences-citekeyFormat')
     try
-      BetterBibTeXPatternParser.parse(keyformat.value)
+      Zotero.BetterBibTeX.PatternParser.parse(keyformat.value)
     catch err
       if BetterBibTeXPref.savedPattern
         try
-          BetterBibTeXPatternParser.parse(BetterBibTeXPref.savedPattern)
+          Zotero.BetterBibTeX.PatternParser.parse(BetterBibTeXPref.savedPattern)
         catch
           BetterBibTeXPref.savedPattern = null
 
@@ -61,7 +61,7 @@ BetterBibTeXPref =
 
   paneUnload: ->
     try
-      BetterBibTeXPatternParser.parse(Zotero.BetterBibTeX.Pref.get('citekeyFormat'))
+      Zotero.BetterBibTeX.PatternParser.parse(Zotero.BetterBibTeX.Pref.get('citekeyFormat'))
     catch err
       Zotero.BetterBibTeX.Pref.set('citekeyFormat', BetterBibTeXPref.savedPattern)
 
@@ -94,11 +94,11 @@ BetterBibTeXPref =
 
     parseerror = null
     try
-      BetterBibTeXPatternParser.parse(keyformat.value)
+      Zotero.BetterBibTeX.PatternParser.parse(keyformat.value)
     catch err
       parseerror = err
 
-    Zotero.BetterBibTeX.debug('parsing format', keyformat.value, ':', !parseerror)
+    Zotero.BetterBibTeX.debug('parsing format', keyformat.value, ':', !parseerror, parseerror)
     keyformat.setAttribute('style', (if parseerror then '-moz-appearance: none !important; background-color: DarkOrange' else ''))
     keyformat.setAttribute('tooltiptext', '' + (parseerror || ''))
 
@@ -213,7 +213,7 @@ BetterBibTeXAutoExportPref =
           @treecell({editable: 'false', label: "#{BetterBibTeXAutoExportPref.exportType(ae.collection)}: #{BetterBibTeXAutoExportPref.exportName(ae.collection)}"})
           @treecell({editable: 'false', label: status})
           @treecell({editable: 'false', label: ae.path})
-          @treecell({editable: 'false', label: Zotero.BetterBibTeX.translatorName(ae.translatorID)})
+          @treecell({editable: 'false', label: Zotero.BetterBibTeX.Translators.getName(ae.translatorID)})
           @treecell({editable: 'false', label: ae.exportCharset})
           @treecell({editable: 'false', label: '' + ae.useJournalAbbreviation})
           @treecell({editable: 'false', label: '' + ae.exportNotes})

@@ -31,44 +31,50 @@ test:
   xpis:
     download:
     - https://github.com/retorquere/zotero-debug-bridge/releases/download/update.rdf/update.rdf
-    - https://www.zotero.org/download/update.rdf
+    - default: https://www.zotero.org/download/update.rdf
+    - jurism: https://juris-m.github.io/zotero/update.rdf
+    - jurismbeta: https://github.com/Juris-M/zotero/releases/download/v4.0.29.12m98beta/jurism-v4.0.29.12m98beta1-fx.xpi
+    - zotero5: https://www.zotero.org/download/dev/zotero-5.0-beta.xpi
     install: test/fixtures/plugins
 xpi: zotero-better-bibtex.xpi
 changelog: https://retorquere.github.io/zotero-better-bibtex/CHANGELOG.html
 files:
 - chrome.manifest
-- chrome/content/zotero-better-bibtex/BetterBibTeXPatternFormatter.js
-- chrome/content/zotero-better-bibtex/BetterBibTeXPatternParser.js
-- chrome/content/zotero-better-bibtex/autoexport.js
-- chrome/content/zotero-better-bibtex/bulk-clear-confirm.xul
-- chrome/content/zotero-better-bibtex/cache.js
-- chrome/content/zotero-better-bibtex/cayw.js
-- chrome/content/zotero-better-bibtex/csl-localedata.js
-- chrome/content/zotero-better-bibtex/db.js
-- chrome/content/zotero-better-bibtex/debug-bridge.js
-- chrome/content/zotero-better-bibtex/errorReport.js
-- chrome/content/zotero-better-bibtex/errorReport.xul
-- chrome/content/zotero-better-bibtex/exportOptions.js
-- chrome/content/zotero-better-bibtex/exportOptions.xul
-- chrome/content/zotero-better-bibtex/fold-to-ascii.js
 - chrome/content/zotero-better-bibtex/include.js
-- chrome/content/zotero-better-bibtex/itemPane.js
-- chrome/content/zotero-better-bibtex/itemPane.xul
+- chrome/content/zotero-better-bibtex/zotero-better-bibtex.js
+- chrome/content/zotero-better-bibtex/lib/lokijs.js
+- chrome/content/zotero-better-bibtex/lib/translit.js
+- chrome/content/zotero-better-bibtex/lib/citeproc.js
+- chrome/content/zotero-better-bibtex/lib/vardump.js
+- chrome/content/zotero-better-bibtex/lib/fold-to-ascii.js
+- chrome/content/zotero-better-bibtex/lib/punycode.js
+- chrome/content/zotero-better-bibtex/preferences.js
+- chrome/content/zotero-better-bibtex/translators.js
+- chrome/content/zotero-better-bibtex/translator-metadata.js
+- chrome/content/zotero-better-bibtex/db.js
+- chrome/content/zotero-better-bibtex/csl-localedata.js
+- chrome/content/zotero-better-bibtex/pattern-formatter.js
+- chrome/content/zotero-better-bibtex/Zotero.BetterBibTeX.PatternParser.js
 - chrome/content/zotero-better-bibtex/keymanager.js
 - chrome/content/zotero-better-bibtex/journalAbbrev.js
-- chrome/content/zotero-better-bibtex/lokijs.js
-- chrome/content/zotero-better-bibtex/preferences.js
-- chrome/content/zotero-better-bibtex/preferences/preferences.js
-- chrome/content/zotero-better-bibtex/preferences/preferences.xul
-- chrome/content/zotero-better-bibtex/punycode.js
-- chrome/content/zotero-better-bibtex/schomd.js
-- chrome/content/zotero-better-bibtex/serialized.js
-- chrome/content/zotero-better-bibtex/translators.js
 - chrome/content/zotero-better-bibtex/web-endpoints.js
-- chrome/content/zotero-better-bibtex/zotero-better-bibtex.js
-- chrome/content/zotero-better-bibtex/vardump.js
-- chrome/content/zotero-better-bibtex/zoteroPane.js
-- chrome/content/zotero-better-bibtex/zoteroPane.xul
+- chrome/content/zotero-better-bibtex/schomd.js
+- chrome/content/zotero-better-bibtex/cayw.js
+- chrome/content/zotero-better-bibtex/debug-bridge.js
+- chrome/content/zotero-better-bibtex/cache.js
+- chrome/content/zotero-better-bibtex/autoexport.js
+- chrome/content/zotero-better-bibtex/serialized.js
+- chrome/content/zotero-better-bibtex/xul/bulk-clear-confirm.xul
+- chrome/content/zotero-better-bibtex/xul/errorReport.js
+- chrome/content/zotero-better-bibtex/xul/errorReport.xul
+- chrome/content/zotero-better-bibtex/xul/exportOptions.js
+- chrome/content/zotero-better-bibtex/xul/exportOptions.xul
+- chrome/content/zotero-better-bibtex/xul/itemPane.js
+- chrome/content/zotero-better-bibtex/xul/itemPane.xul
+- chrome/content/zotero-better-bibtex/xul/preferences.js
+- chrome/content/zotero-better-bibtex/xul/preferences.xul
+- chrome/content/zotero-better-bibtex/xul/zoteroPane.js
+- chrome/content/zotero-better-bibtex/xul/zoteroPane.xul
 - chrome/locale/en-US/zotero-better-bibtex/zotero-better-bibtex.dtd
 - chrome/locale/en-US/zotero-better-bibtex/zotero-better-bibtex.properties
 - chrome/skin/default/zotero-better-bibtex/auto-export/done.svg
@@ -88,7 +94,6 @@ files:
 - chrome/skin/default/zotero-better-bibtex/preferences.css
 - defaults/preferences/defaults.js
 - install.rdf
-- resource/citeproc.js
 - resource/reports/cacheActivity.txt
 - resource/translators/Better BibLaTeX.json
 - resource/translators/Better BibLaTeX.translator

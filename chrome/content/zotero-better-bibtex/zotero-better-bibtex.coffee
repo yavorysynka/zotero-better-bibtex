@@ -4,216 +4,171 @@ Components.utils.import("resource://services-common/async.js")
 
 Components.utils.import('resource://zotero/config.js') unless ZOTERO_CONFIG?
 
-Zotero.BetterBibTeX = {
+Zotero.BetterBibTeX = new class
+  disabled: "BBT load failed"
+
+  constructor: ->
+    @debug = @debug_on
+    @log = @log_on
+
+    # because bugger async
+    @activeAddons = {}
+    callback = Async.makeSyncCallback()
+    AddonManager.getAllAddons(callback)
+    addons = Async.waitForSyncCallback(callback)
+    for addon in addons
+      Zotero.debug("Addon: #{addon.id} (#{addon.isActive}): #{addon.name} @ #{addon.version}")
+      continue unless addon.isActive
+      @activeAddons[addon.id] = addon.version
+    # fallback for ZSA
+    for guid in ['zotero@chnm.gmu.edu', 'juris-m@juris-m.github.io']
+      @activeAddons[guid] ||= ZOTERO_CONFIG.VERSION if ZOTERO_CONFIG.GUID == guid
+
+    @release = @activeAddons['better-bibtex@iris-advies.com']
+
+    @flash('Better BibTeX has been disabled', @disabled) if @disabled = @versionConflict()
+
   serializer: Components.classes['@mozilla.org/xmlextras/xmlserializer;1'].createInstance(Components.interfaces.nsIDOMSerializer)
   document: Components.classes['@mozilla.org/xul/xul-document;1'].getService(Components.interfaces.nsIDOMDocument)
-}
-# because bugger this async crap
-do ->
-  cb = Async.makeSyncCallback()
-  AddonManager.getAddonByID('better-bibtex@iris-advies.com', cb)
-  Zotero.BetterBibTeX.release = Async.waitForSyncCallback(cb).version
 
-Components.utils.import('resource://zotero-better-bibtex/citeproc.js', Zotero.BetterBibTeX)
+  # because bugger this async crap
+  demand: (promise) ->
+    callback = Async.makeSyncCallback()
+    promise.then(
+      (value) -> callback(value),
+      (reason) -> callback.throw(reason)
+    )
+    return Async.waitForSyncCallback(callback)
 
-class Zotero.BetterBibTeX.DateParser
-  parseDateToObject: (date, options) -> (new Zotero.BetterBibTeX.DateParser(date, options)).date
-  parseDateToArray: (date, options) -> (new Zotero.BetterBibTeX.DateParser(date, options)).array()
+  versionConflict: ->
+    if (version = @activeAddons['zotfile@columbia.edu']) && Services.vc.compare(version, '4.2.6') < 0
+      return """
+        Better BibTeX has been disabled because it has detected conflicting extension "ZotFile" #{version}.
+        After upgrading to ZotFile to 4.2.6, Better BibTeX will start up as usual.
+      """
 
-  toArray: (suffix = '') ->
-    date = {}
-    for d in ['year', 'month', 'day', 'empty']
-      date[d] = @date["#{d}#{suffix}"]
+    if (version = @activeAddons['zoteromaps@zotero.org']) && Services.vc.compare(version, '1.0.10.1') < 0
+      return """
+        Better BibTeX has been disabled because it has detected conflicting extension "zotero-maps" #{version}. Versions
+        up to and including 1.0.10 interfere with Better BibTeX; unfortunately this plugin appears to be abandoned, and
+        their issue tracker at
 
-    ### [ 0 ] instead if [0, 0]; see https://github.com/retorquere/zotero-better-bibtex/issues/360#issuecomment-143540469 ###
-    return [ 0 ] if date.empty
+        https://github.com/zotero/zotero-maps
 
-    return null unless date.year
+        is not enabled.
+      """
 
-    arr = [ date.year ]
-    if date.month
-      arr.push(date.month)
-      arr.push(date.day) if date.day
-    return arr
+    if (version = @activeAddons['zutilo@www.wesailatdawn.com']) && Services.vc.compare(version, '1.2.10.1') <= 0
+      return """
+        Better BibTeX has been disabled because it has detected conflicting extension "zutilo" #{version}. Zutilo
+        versions 1.2.10.1 and earlier interfere with Better BibTeX; If have proposed a fix at
 
-  array: ->
-    date1 = @toArray()
-    return {literal: @source} unless date1
+        https://github.com/willsALMANJ/Zutilo/issues/42
 
-    date2 = @toArray('_end')
+        Once that has been implemented, Better BibTeX will start up as usual. In the meantime, beta7 from
 
-    array = {'date-parts': (if date2 then [date1, date2] else [date1])}
-    array.circa = true if @date.circa || @date.circa_end
-    return array
+        https://addons.mozilla.org/en-US/firefox/addon/zutilo-utility-for-zotero/versions/
 
-  constructor: (@source, options = {}) ->
-    @source = @source.trim() if @source
-    @zoteroLocale ?= Zotero.locale.toLowerCase()
+        should work; alternately, you can uninstall Zutilo.
+      """
 
-    return unless @source
+    if (version = @activeAddons['{359f0058-a6ca-443e-8dd8-09868141bebc}']) && Services.vc.compare(version, '1.2.3') <= 0
+      return """
+        Better BibTeX has been disabled because it has detected conflicting extension "recoll-firefox" #{version}.
+        Recoll-firefox 1.2.3 and earlier interfere with Better BibTeX; if have proposed a fix for recall-firefox at
 
-    if options.verbatimDetection && @source.indexOf('[') >= 0
-      @date = {literal: @source}
-      return
+        https://sourceforge.net/p/recollfirefox/discussion/general/thread/a31d3c89/
 
-    if options.locale
-      locale = options.locale.toLowerCase()
-      @dateorder = Zotero.BetterBibTeX.Locales.dateorder[locale]
-      if @dateorder
-        found = locale
-      else
-        for k, v of Zotero.BetterBibTeX.Locales.dateorder
-          if k == locale || k.slice(0, locale.length) == locale
-            found = k
-            @dateorder = Zotero.BetterBibTeX.Locales.dateorder[options.locale] = v
-            break
+        Once that has been implemented, Better BibTeX will start up as usual.  Alternately, you can uninstall Recoll Firefox.
 
-    if !@dateorder
-      fallback = Zotero.BetterBibTeX.Pref.get('defaultDateParserLocale')
-      @dateorder = Zotero.BetterBibTeX.Locales.dateorder[fallback]
-      if !@dateorder
-        @dateorder = Zotero.BetterBibTeX.Locales.dateorder[fallback] = Zotero.BetterBibTeX.Locales.dateorder[fallback.trim().toLowerCase()]
-
-    @dateorder ||= Zotero.BetterBibTeX.Locales.dateorder[@zoteroLocale]
-
-    @date = @parse()
-
-  swapMonth: (date, dateorder) ->
-    return unless date.day && date.month
+        In the meantime, unfortunately, Better BibTeX and recoll-firefox cannot co-exist.
+      """
 
     switch
-      when @dateorder && @dateorder == dateorder && date.day <= 12 then
-      when date.month > 12 then
-      else return
-    [date.month, date.day] = [date.day, date.month]
+      when version = @activeAddons['zotero@chnm.gmu.edu']
+        switch
+          when Services.vc.compare(version.replace(/(\.SOURCE|beta[0-9]+)$/, ''), '4.0.28') < 0
+            return "Better BibTeX has been disabled because it found Zotero #{version}, but requires 4.0.28 or later."
 
-  cruft: new Zotero.Utilities.XRegExp("[^\\p{Letter}\\p{Number}]+", 'g')
-  parsedate: (date) ->
-    date = date.trim()
-    return {empty: true} if date == ''
+          when Services.vc.compare(version.replace(/(\.SOURCE|beta[0-9]+)$/, ''), '5.0.0') >= 0
+            return "Zotero #{version} found. Better BibTeX has been disabled because is not compatible with Zotero version 5.0 or later."
 
-    ### TODO: https://bitbucket.org/fbennett/citeproc-js/issues/189/8-juli-2011-parsed-as-literal ###
-    date = date.replace(/^([0-9]+)\.\s+([a-z])/i, '$1 $2')
+          when version.match(/(\.SOURCE|beta[0-9]+)$/)
+            @flash(
+              "You are on a custom/beta Zotero build (#{version}). " +
+              'Feel free to submit error reports for Better BibTeX when things go wrong, I will do my best to address them, but the target will always be the latest official version of Zotero'
+            )
 
-    ### https://github.com/retorquere/zotero-better-bibtex/issues/515 ###
-    if m = date.match(/^(-?[0-9]{3,4}-[0-9]{1,2}-[0-9]{1,2})T[0-9]{2}:[0-9]{2}:[0-9]{2}(\+[0-9]+|\s*[A-Z]+)?(.*)/)
-      date = m[1] + m[3]
+      when version = @activeAddons['juris-m@juris-m.github.io']?.replace('m', '.')
+        switch
+          when Services.vc.compare(version.replace(/(\.SOURCE|beta[0-9]+)$/, ''), '4.0.29.12.95') < 0
+            return "Better BibTeX has been disabled because it found Juris-M #{version}, but requires 4.0.29.12m95 or later."
 
-    if m = date.match(/^(-?[0-9]{3,4})(\?)?(~)?$/)
-      return {
-        year: @year(m[1])
-        uncertain: (if m[2] == '?' then true else undefined)
-        circa: (if m[3] == '?' then true else undefined)
-      }
+          when Services.vc.compare(version.replace(/(\.SOURCE|beta[0-9]+)$/, ''), '4.0.29.12.98') < 0
+            @flash("Juris-M #{version} has known incompatibilities with Better BibTeX -- for full compatibility, install 4.0.29.12m98 or later (m98beta will do)", 20)
 
-    ### CSL dateparser doesn't recognize d?/m/y ###
-    if m = date.match(/^(([0-9]{1,2})[-\.\s\/])?([0-9]{1,2})[-\.\s\/]([0-9]{3,4})(\?)?(~)?$/)
-      parsed = {
-        year: parseInt(m[4])
-        month: parseInt(m[3])
-        day: parseInt(m[1]) || undefined
-        uncertain: (if m[5] == '?' then true else undefined)
-        circa: (if m[6] == '~' then true else undefined)
-      }
-      @swapMonth(parsed, 'mdy')
-      return parsed
+          when Services.vc.compare(version.replace(/(\.SOURCE|beta[0-9]+)$/, ''), '5.0.0') >= 0
+            return "Juris-M #{version} found. Better BibTeX has been disabled because is not compatible with Juris-M version 5.0 or later."
 
-    if m = date.match(/^(-?[0-9]{3,4})[-\.\s\/]([0-9]{1,2})([-\.\s\/]([0-9]{1,2}))?(\?)?(~)?$/)
-      parsed = {
-        year: @year(m[1])
-        month: parseInt(m[2])
-        day: parseInt(m[4]) || undefined
-        uncertain: (if m[5] == '?' then true else undefined)
-        circa: (if m[6] == '~' then true else undefined)
-      }
-      ### only swap to repair -- assume yyyy-nn-nn == EDTF-0 ###
-      @swapMonth(parsed)
-      return parsed
+          when version.match(/(\.SOURCE|beta[0-9]+)$/)
+            @flash(
+              "You are on a custom Juris-M build (#{version}). " +
+              'Feel free to submit error reports for Better BibTeX when things go wrong, I will do my best to address them, but the target will always be the latest official version of Juris-M'
+            )
 
-    parsed = Zotero.BetterBibTeX.CSL.DateParser.parseDateToObject(date)
-    for k, v of parsed
+      else
+        @flash('Neither Zotero nor Juris-M seem to be installed.')
+
+    if Zotero.isConnector
+      return """
+        You are running Zotero in connector mode (running Zotero Firefox and Zotero Standalone simultaneously.
+        This is not supported by Better BibTeX; see https://github.com/retorquere/zotero-better-bibtex/issues/143
+      """
+
+    return null
+
+  _log: (level, msg...) ->
+    str = []
+    for m in msg
       switch
-        when v == 'NaN' then  parsed[k] = undefined
-        when typeof v == 'string' && v.match(/^-?[0-9]+$/) then parsed[k] = parseInt(v)
+        when m instanceof Error
+          str.push("<Exception: #{m.message || m.name}#{if m.stack then '\n' + m.stack else ''}>")
+        when !m || (typeof m in ['number', 'string', 'boolean'])
+          str.push('' + m)
+        when @varDump
+          str.push(@varDump(m).replace(/\n/g, ''))
+        else
+          str.push('' + m)
 
-    return null if parsed.literal
+    str = "[better-bibtex @ #{new Date()}] #{str.join(' ')}"
 
-    ### there's a season in there somewhere ###
-    return null if parsed.month && parsed.month > 12
+    if level == 0
+      Zotero.logError(str)
+    else
+      Zotero.debug(str, level)
+    console.log(str)
 
-    shape = date
-    shape = shape.slice(1) if shape[0] == '-'
-    shape = Zotero.Utilities.XRegExp.replace(shape.trim(), @cruft, ' ', 'all')
-    shape = shape.split(' ')
+  flash: (title, body, timeout = 8) ->
+    try
+      @debug('flash:', title, body)
+      pw = new Zotero.ProgressWindow()
+      pw.changeHeadline('Better BibTeX: ' + title)
+      body ||= title
+      body = body.join("\n") if Array.isArray(body)
+      pw.addDescription(body)
+      pw.show()
+      pw.startCloseTimer(timeout * 1000)
+    catch err
+      @error('@flash failed:', {title, body}, err)
 
-    fields = (if parsed.year then 1 else 0) + (if parsed.month then 1 else 0) + (if parsed.day then 1 else 0)
+  error: (msg...) -> @_log.apply(@, [0].concat(msg))
+  warn: (msg...) -> @_log.apply(@, [1].concat(msg))
 
-    return parsed if fields == 3 || shape.length == fields
+  debug_on: (msg...) -> @_log.apply(@, [5].concat(msg))
+  debug_off: ->
 
-    return null
-
-  parserange: (separators) ->
-    for sep in separators
-      continue if @source == sep
-      ### too hard to distinguish from negative year ###
-      continue if sep == '-' && @source.match(/^-[0-9]{3,4}$/)
-
-      range = @source.split(sep)
-      continue unless range.length == 2
-
-      range = [
-        @parsedate(range[0])
-        @parsedate(range[1])
-      ]
-
-      continue unless range[0] && range[1]
-
-      return {
-        empty: range[0].empty
-        year: range[0].year
-        month: range[0].month
-        day: range[0].day
-        circa: range[0].circa
-
-        empty_end: range[1].empty
-        year_end: range[1].year
-        month_end: range[1].month
-        day_end: range[1].day
-        circa_end: range[1].circa
-      }
-
-    return null
-
-  year: (y) ->
-    y = parseInt(y)
-    y -= 1 if y <= 0
-    return y
-
-  parse: ->
-    return {} if !@source || @source in ['--', '/', '_']
-
-    candidate = @parserange(['--', '_', '/', '-'])
-
-    ### if no range was found, try to parse the whole input as a single date ###
-    candidate ||= @parsedate(@source)
-
-    ### if that didn't yield anything, assume literal ###
-    candidate ||= {literal: @source}
-
-    return candidate
-
-Zotero.BetterBibTeX.error = (msg...) ->
-  @_log.apply(@, [0].concat(msg))
-Zotero.BetterBibTeX.warn = (msg...) ->
-  @_log.apply(@, [1].concat(msg))
-
-Zotero.BetterBibTeX.debug_off = ->
-Zotero.BetterBibTeX.debug = Zotero.BetterBibTeX.debug_on = (msg...) ->
-  @_log.apply(@, [5].concat(msg))
-
-Zotero.BetterBibTeX.log_off = ->
-Zotero.BetterBibTeX.log = Zotero.BetterBibTeX.log_on = (msg...) ->
-  @_log.apply(@, [3].concat(msg))
+  log_on: (msg...) -> @_log.apply(@, [3].concat(msg))
+  log_off: ->
 
 Zotero.BetterBibTeX.addCacheHistory = ->
   Zotero.BetterBibTeX.cacheHistory ||= []
@@ -251,161 +206,8 @@ Zotero.BetterBibTeX.debugMode = (silent) ->
     @debug = @debug_off
     @log = @log_off
 
-Zotero.BetterBibTeX.stringify = (obj, replacer, spaces, cycleReplacer) ->
-  str = JSON.stringify(obj, @stringifier(replacer, cycleReplacer), spaces)
-
-  if Array.isArray(obj)
-    hybrid = false
-    keys = Object.keys(obj)
-    if keys.length > 0
-      o = {}
-      for key in keys
-        continue if key.match(/^\d+$/)
-        o[key] = obj[key]
-        hybrid = true
-      str += '+' + @stringify(o) if hybrid
-  return str
-
-Zotero.BetterBibTeX.stringifier = (replacer, cycleReplacer) ->
-  stack = []
-  keys = []
-  if cycleReplacer == null
-    cycleReplacer = (key, value) ->
-      return '[Circular ~]' if stack[0] == value
-      return '[Circular ~.' + keys.slice(0, stack.indexOf(value)).join('.') + ']'
-
-  return (key, value) ->
-    if stack.length > 0
-      thisPos = stack.indexOf(this)
-      if ~thisPos then stack.splice(thisPos + 1) else stack.push(this)
-      if ~thisPos then keys.splice(thisPos, Infinity, key) else keys.push(key)
-      value = cycleReplacer.call(this, key, value) if ~stack.indexOf(value)
-    else
-      stack.push(value)
-
-    return value if replacer == null || replacer == undefined
-    return replacer.call(this, key, value)
-
-Zotero.BetterBibTeX._log = (level, msg...) ->
-  str = []
-  for m in msg
-    switch
-      when m instanceof Error
-        str.push("<Exception: #{m.message || m.name}#{if m.stack then '\n' + m.stack else ''}>")
-      when !m || (typeof m in ['number', 'string', 'boolean'])
-        str.push('' + m)
-      else
-        str.push(Zotero.BetterBibTeX.varDump(m).replace(/\n/g, ''))
-
-  str = "[better-bibtex] #{str.join(' ')}"
-
-  if level == 0
-    Zotero.logError(str)
-  else
-    Zotero.debug(str, level)
-  console.log(str)
-
-Zotero.BetterBibTeX.extensionConflicts = ->
-  AddonManager.getAddonByID('zotfile@columbia.edu', (extension) ->
-    return unless extension
-    return if Services.vc.compare(extension.version, '4.2.6') >= 0
-
-    Zotero.BetterBibTeX.disable('''
-      Better BibTeX has been disabled because it has detected conflicting extension "ZotFile" 4.2.5 or
-      earlier. After upgrading to 4.2.6, Better BibTeX will start up as usual. A pre-release of ZotFile 4.2.6 can be
-      found at
-
-      https://addons.mozilla.org/en-US/firefox/addon/zotfile/versions/
-    ''')
-  )
-
-  AddonManager.getAddonByID('zoteromaps@zotero.org', (extension) ->
-    return unless extension
-    return if Services.vc.compare(extension.version, '1.0.10.1') > 0
-
-    Zotero.BetterBibTeX.disable('''
-      Better BibTeX has been disabled because it has detected conflicting extension "zotero-maps" 1.0.10 or
-      earlier. Unfortunately this plugin appears to be abandoned, and their issue tracker at
-
-      https://github.com/zotero/zotero-maps
-
-      is not enabled.
-    ''')
-  )
-
-  AddonManager.getAddonByID('zutilo@www.wesailatdawn.com', (extension) ->
-    return unless extension
-    return if Services.vc.compare(extension.version, '1.2.10.1') > 0
-
-    Zotero.BetterBibTeX.disable('''
-      Better BibTeX has been disabled because it has detected conflicting extension "zutilo" 1.2.10.1 or
-      earlier. If have proposed a fix at
-
-      https://github.com/willsALMANJ/Zutilo/issues/42
-
-      Once that has been implemented, Better BibTeX will start up as usual. In the meantime, beta7 from
-
-      https://addons.mozilla.org/en-US/firefox/addon/zutilo-utility-for-zotero/versions/
-
-      should work; alternately, you can uninstall Zutilo.
-    ''')
-  )
-
-  AddonManager.getAddonByID('{359f0058-a6ca-443e-8dd8-09868141bebc}', (extension) ->
-    return unless extension
-    return if Services.vc.compare(extension.version, '1.2.3') > 0
-
-    Zotero.BetterBibTeX.disable( '''
-      Better BibTeX has been disabled because it has detected conflicting extension "recoll-firefox" 1.2.3 or
-      earlier. If have proposed a fix for recall-firefox at
-
-      https://sourceforge.net/p/recollfirefox/discussion/general/thread/a31d3c89/
-
-      Once that has been implemented, Better BibTeX will start up as usual.  Alternately, you can uninstall Recoll Firefox.
-
-      In the meantime, unfortunately, Better BibTeX and recoll-firefox cannot co-exist, and the previous workaround
-      Better BibTeX had in place conflicts with a Mozilla policy all Fireox extensions must soon comply with.
-    ''')
-  )
-
-  if ZOTERO_CONFIG.VERSION?.match(/\.SOURCE$/)
-    @flash(
-      "You are on a custom Zotero build (#{ZOTERO_CONFIG.VERSION}). " +
-      'Feel free to submit error reports for Better BibTeX when things go wrong, I will do my best to address them, but the target will always be the latest officially released version of Zotero'
-    )
-  if Services.vc.compare(ZOTERO_CONFIG.VERSION?.replace(/\.SOURCE$/, '') || '0.0.0', '4.0.28') < 0
-    @disable("Better BibTeX has been disabled because it found Zotero #{ZOTERO_CONFIG.VERSION}, but requires 4.0.28 or later.")
-
-  @disableInConnector(Zotero.isConnector)
-
-Zotero.BetterBibTeX.disableInConnector = (isConnector) ->
-  return unless isConnector
-  @disable("""
-    You are running Zotero in connector mode (running Zotero Firefox and Zotero Standalone simultaneously.
-    This is not supported by Better BibTeX; see https://github.com/retorquere/zotero-better-bibtex/issues/143
-  """)
-
-Zotero.BetterBibTeX.disable = (message) ->
-  @removeTranslators()
-  @disabled = message
-  @debug('Better BibTeX has been disabled:', message)
-  @flash('Better BibTeX has been disabled', message)
-
-Zotero.BetterBibTeX.flash = (title, body) ->
-  try
-    Zotero.BetterBibTeX.debug('flash:', title)
-    pw = new Zotero.ProgressWindow()
-    pw.changeHeadline('Better BibTeX: ' + title)
-    body ||= title
-    body = body.join("\n") if Array.isArray(body)
-    pw.addDescription(body)
-    pw.show()
-    pw.startCloseTimer(8000)
-  catch err
-    Zotero.BetterBibTeX.error('@flash failed:', {title, body}, err)
-
 Zotero.BetterBibTeX.reportErrors = (includeReferences) ->
-  data = {}
+  items = null
 
   pane = Zotero.getActiveZoteroPane()
 
@@ -415,25 +217,30 @@ Zotero.BetterBibTeX.reportErrors = (includeReferences) ->
       itemGroup = collectionsView?._getItemAtRow(collectionsView.selection?.currentIndex)
       switch itemGroup?.type
         when 'collection'
-          data = {data: true, collection: collectionsView.getSelectedCollection() }
+          items = {collection: collectionsView.getSelectedCollection() }
         when 'library'
-          data = { data: true }
+          items = { }
         when 'group'
-          data = { data: true, collection: Zotero.Groups.get(collectionsView.getSelectedLibraryID()) }
+          items = { collection: Zotero.Groups.get(collectionsView.getSelectedLibraryID()) }
 
     when 'items'
-      data = { data: true, items: pane.getSelectedItems() }
+      items = { items: pane.getSelectedItems() }
 
-  if data.data
-    @translate(@translators.BetterBibTeXJSON.translatorID, data, { exportNotes: true, exportFileData: false }, (err, references) ->
-      params = {wrappedJSObject: {references: (if err then null else references)}}
-      ww = Components.classes['@mozilla.org/embedcomp/window-watcher;1'].getService(Components.interfaces.nsIWindowWatcher)
-      ww.openWindow(null, 'chrome://zotero-better-bibtex/content/errorReport.xul', 'zotero-error-report', 'chrome,centerscreen,modal', params)
+  items = null if items && items.items && items.items.length == 0
+
+  params = {wrappedJSObject: {}}
+
+  if items
+    getReferences = @Translators.translate(@Translators.BetterBibTeXJSON.translatorID, items, { exportNotes: true, exportFileData: false }).then((references) ->
+      params.wrappedJSObject.references = references.trim()
     )
   else
-    params = {wrappedJSObject: {}}
+    getReferences = Promise.resolve()
+
+  getReferences.then(->
     ww = Components.classes['@mozilla.org/embedcomp/window-watcher;1'].getService(Components.interfaces.nsIWindowWatcher)
-    ww.openWindow(null, 'chrome://zotero-better-bibtex/content/errorReport.xul', 'zotero-error-report', 'chrome,centerscreen,modal', params)
+    ww.openWindow(null, 'chrome://zotero-better-bibtex/content/xul/errorReport.xul', 'zotero-error-report', 'chrome,centerscreen,modal', params)
+  )
 
 Zotero.BetterBibTeX.idleService = Components.classes['@mozilla.org/widget/idleservice;1'].getService(Components.interfaces.nsIIdleService)
 Zotero.BetterBibTeX.idleObserver = observe: (subject, topic, data) ->
@@ -446,29 +253,22 @@ Zotero.BetterBibTeX.idleObserver = observe: (subject, topic, data) ->
     when 'back', 'active'
       Zotero.BetterBibTeX.auto.idle = false
 
-Zotero.BetterBibTeX.version = (version) ->
-  return '' unless version
-  v = version.split('.').slice(0, 2).join('.')
-  @debug("full version: #{version}, canonical version: #{v}")
-  return v
-
 Zotero.BetterBibTeX.init = ->
-  return if @initialized
+  return if @initialized || @disabled
   @initialized = true
 
   @testing = (@Pref.get('tests') != '')
 
   try
-    BetterBibTeXPatternFormatter::skipWords = @Pref.get('skipWords').split(',')
-    Zotero.BetterBibTeX.debug('skipwords:', BetterBibTeXPatternFormatter::skipWords)
+    Zotero.BetterBibTeX.PatternFormatter::skipWords = @Pref.get('skipWords').split(',')
+    Zotero.BetterBibTeX.debug('skipwords:', Zotero.BetterBibTeX.PatternFormatter::skipWords)
   catch err
     Zotero.BetterBibTeX.error('could not read skipwords:', err)
-    BetterBibTeXPatternFormatter::skipWords = []
+    Zotero.BetterBibTeX.PatternFormatter::skipWords = []
   @keymanager.setFormatter(true)
 
   @debugMode()
 
-  @translators = Object.create(null)
   @threadManager = Components.classes['@mozilla.org/thread-manager;1'].getService()
   @windowMediator = Components.classes['@mozilla.org/appshell/window-mediator;1'].getService(Components.interfaces.nsIWindowMediator)
 
@@ -479,8 +279,12 @@ Zotero.BetterBibTeX.init = ->
     for itemID in changed
       @cache.remove({itemID})
     @DB.purge()
-    setTimeout((-> Zotero.BetterBibTeX.auto.markIDs(changed, 'scanCiteKeys')), 5000) if changed.length != 0
+    setTimeout((-> Zotero.BetterBibTeX.auto.markIDs(changed, 'scanCiteKeys')), 5000) if !Zotero.BetterBibTeX.DB.cacheReset && changed.length != 0
     @flash("Citation key rescan finished")
+
+  if Zotero.BetterBibTeX.DB.cacheReset
+    for ae in Zotero.BetterBibTeX.auto.db.autoexport.data
+      Zotero.BetterBibTeX.auto.mark(ae, 'pending', 'cache reset')
 
   Zotero.Translate.Export::Sandbox.BetterBibTeX = {
     journalAbbrev:  (sandbox, params...) => @JournalAbbrev.get.apply(@JournalAbbrev, params)
@@ -498,6 +302,22 @@ Zotero.BetterBibTeX.init = ->
       stats:  (sandbox)            -> Zotero.BetterBibTeX.cacheHistory
     }
     CSL: {
+      state: {
+        opt: {
+          lang: 'en'
+        },
+        locale: {
+          en: {
+            opts: {
+              'skip-words': Zotero.BetterBibTeX.CSL.SKIP_WORDS,
+              'skip-words-regexp': new RegExp( '(?:(?:[?!:]*\\s+|-|^)(?:' + Zotero.BetterBibTeX.CSL.SKIP_WORDS.map((term) -> term.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]\s*/g, '\\$&')).join('|') + ')(?=[!?:]*\\s+|-|$))', 'g')
+            }
+          }
+        }
+      },
+      titleCase: (sandbox, text) ->
+        return Zotero.BetterBibTeX.CSL.Output.Formatters.title(Zotero.Translate.Export::Sandbox.BetterBibTeX.CSL.state, text)
+
       parseParticles: (sandbox, name) ->
         ### twice to work around https://bitbucket.org/fbennett/citeproc-js/issues/183/particle-parser-returning-non-dropping ###
         Zotero.BetterBibTeX.CSL.parseParticles(name)
@@ -518,11 +338,31 @@ Zotero.BetterBibTeX.init = ->
     ep = Zotero.Server.Endpoints[url] = ->
     ep:: = endpoint
 
-  @loadTranslators()
-  @extensionConflicts()
+  @Translators.install()
 
+  Zotero.BetterBibTeX.debug('CSL Loaded:', ("#{typeof m}: #{m}" for m of Zotero.BetterBibTeX.CSL.DateParser))
   for k, months of Zotero.BetterBibTeX.Locales.months
     Zotero.BetterBibTeX.CSL.DateParser.addDateParserMonths(months)
+
+  ### monkey-patch Zotero.Search::search to allow searching for citekey ###
+  Zotero.Search::search = ((original) ->
+    return (asTempTable) ->
+      searchText = null
+      for c in @_conditions
+        continue unless c && c.condition == 'field'
+        searchText = c.value.toLowerCase() if c.value
+      return original.apply(@, arguments) unless searchText
+
+      ids = original.call(@, false) || []
+
+      Zotero.BetterBibTeX.debug('search: looking for', searchText, 'to add to', ids)
+      for key in Zotero.BetterBibTeX.keymanager.db.keys.where((k) -> k.citekey.toLowerCase().indexOf(searchText) >= 0)
+        ids.push('' + key.itemID) unless ids.indexOf('' + key.itemID) >= 0
+
+      return false if ids.length == 0
+      return Zotero.Search.idsToTempTable(ids) if asTempTable
+      return ids
+    )(Zotero.Search::search)
 
   ### monkey-patch unwieldy BBT db logging ###
   Zotero.DBConnection::_debug = ((original) ->
@@ -566,47 +406,6 @@ Zotero.BetterBibTeX.init = ->
 
       return original.call(@, libraryKey)
     )(Zotero.Items.parseLibraryKeyHash)
-
-  ### monkey-patch Zotero.Server.DataListener.prototype._generateResponse for async handling ###
-  Zotero.Server.DataListener::_generateResponse = ((original) ->
-    return (status, contentType, promise) ->
-      try
-        if typeof promise?.then == 'function'
-          return promise.then((body) =>
-            throw new Error("Zotero.Server.DataListener::_generateResponse: circular promise!") if typeof body?.then == 'function'
-            original.apply(@, [status, contentType, body])
-          ).catch((e) =>
-            original.apply(@, [500, 'text/plain', e.message || e.name])
-          )
-
-      return original.apply(@, arguments)
-    )(Zotero.Server.DataListener::_generateResponse)
-
-  ### monkey-patch Zotero.Server.DataListener.prototype._requestFinished for async handling of web api translation requests ###
-  Zotero.Server.DataListener::_requestFinished = ((original) ->
-    return (promise) ->
-      try
-        if typeof promise?.then == 'function'
-          promise.then((response) =>
-            throw new Error("Zotero.Server.DataListener::_requestFinished: circular promise!") if typeof response?.then == 'function'
-            original.apply(@, [response])
-          ).catch((e) =>
-            original.apply(@, e.message || e.name)
-          )
-          return
-      catch err
-        Zotero.debug("Zotero.Server.DataListener::_requestFinished: error handling promise: #{err.message || err.name}")
-
-      return original.apply(@, arguments)
-    )(Zotero.Server.DataListener::_requestFinished)
-
-  ### monkey-patch Zotero.Search.prototype.save to trigger auto-exports ###
-  Zotero.Search::save = ((original) ->
-    return (fixGaps) ->
-      id = original.apply(@, arguments)
-      Zotero.BetterBibTeX.auto.markSearch(id, 'search updated')
-      return id
-    )(Zotero.Search::save)
 
   ###
     monkey-patch Zotero.ItemTreeView::getCellText to replace the 'extra' column with the citekey
@@ -656,7 +455,7 @@ Zotero.BetterBibTeX.init = ->
         throw new Error('Cannot export empty search') unless @_export.items
 
       ### regular behavior for non-BBT translators, or if translating to string ###
-      header = Zotero.BetterBibTeX.translators[translatorID]
+      header = Zotero.BetterBibTeX.Translators[translatorID]
       return original.apply(@, arguments) unless header && @location?.path
 
       if @_displayOptions
@@ -720,7 +519,8 @@ Zotero.BetterBibTeX.init = ->
       translatorID = @translator?[0]
       translatorID = translatorID.translatorID if translatorID.translatorID
 
-      @_itemGetter._BetterBibTeX = Zotero.BetterBibTeX.translators[translatorID]
+      Zotero.BetterBibTeX.debug('Zotero.Translate.Export::_prepareTranslation:', {translatorID})
+      @_itemGetter._BetterBibTeX = Zotero.BetterBibTeX.Translators[translatorID]
       @_itemGetter._exportFileData = @_displayOptions.exportFileData
 
       return r
@@ -729,6 +529,7 @@ Zotero.BetterBibTeX.init = ->
   ### monkey-patch Zotero.Translate.ItemGetter::nextItem to fetch from pre-serialization cache. ###
   ### object serialization is approx 80% of the work being done while translating! Seriously! ###
   Zotero.Translate.ItemGetter::nextItem = ((original) ->
+    Zotero.BetterBibTeX.debug('monkey-patching Zotero.Translate.ItemGetter::nextItem', typeof original)
     return ->
       ### don't mess with this unless I know it's in BBT ###
       return original.apply(@, arguments) if @legacy || !@_BetterBibTeX
@@ -764,7 +565,7 @@ Zotero.BetterBibTeX.init = ->
 
   @schomd.init()
 
-  @Pref.observer.register()
+  @Pref.register()
   Zotero.addShutdownListener(->
     Zotero.BetterBibTeX.log('shutting down')
     Zotero.BetterBibTeX.DB.save('force')
@@ -790,16 +591,17 @@ Zotero.BetterBibTeX.init = ->
     Zotero.BetterBibTeX.DB.save('all') if Zotero.BetterBibTeX.DB && mode != 'connector'
   )
 
+  Zotero.BetterBibTeX.debug("Scheduling auto-export on idle on a #{@Pref.get('autoExportIdleWait')} second delay")
   @idleService.addIdleObserver(@idleObserver, @Pref.get('autoExportIdleWait'))
 
   uninstaller = {
     onUninstalling: (addon, needsRestart) ->
       return unless addon.id == 'better-bibtex@iris-advies.com'
-      Zotero.BetterBibTeX.removeTranslators()
+      Zotero.BetterBibTeX.Translators.uninstall()
 
     onOperationCancelled: (addon, needsRestart) ->
       return unless addon.id == 'better-bibtex@iris-advies.com'
-      Zotero.BetterBibTeX.loadTranslators() unless addon.pendingOperations & AddonManager.PENDING_UNINSTALL
+      Zotero.BetterBibTeX.Translators.install() unless addon.pendingOperations & AddonManager.PENDING_UNINSTALL
   }
   AddonManager.addAddonListener(uninstaller)
 
@@ -824,80 +626,6 @@ Zotero.BetterBibTeX.createFile = (paths...) ->
     f.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, 0o777) unless f.exists()
   f.append(leaf)
   return f
-
-Zotero.BetterBibTeX.postscript = """
-Translator.initialize = (function(original) {
-  return function() {
-    if (this.initialized) {
-      return;
-    }
-    original.apply(this, arguments);
-    try {
-      return Reference.prototype.postscript = new Function(Translator.postscript);
-    } catch (err) {
-      return Translator.debug('postscript failed to compile:', err, Translator.postscript);
-    }
-  };
-})(Translator.initialize);
-"""
-
-Zotero.BetterBibTeX.loadTranslators = ->
-  for label, translatorID of {
-    'LaTeX Citation': 'b4a5ab19-c3a2-42de-9961-07ae484b8cb0',
-    'Pandoc Citation': '4c52eb69-e778-4a78-8ca2-4edf024a5074',
-    'Pandoc JSON': 'f4b52ab0-f878-4556-85a0-c7aeedd09dfc',
-    'Better CSL-JSON': 'f4b52ab0-f878-4556-85a0-c7aeedd09dfc',
-    'BibTeX AUX Scanner': '0af8f14d-9af7-43d9-a016-3c5df3426c98'
-  }
-    try
-      Zotero.BetterBibTeX.debug('loadTranslators: removing', {label, translatorID})
-      @removeTranslator({label, translatorID})
-    catch err
-      Zotero.BetterBibTeX.debug('loadTranslators: removing', {label, translatorID}, ':', err)
-
-  try
-    if Zotero.BetterBibTeX.Pref.get('removeStock')
-      @removeTranslator({translatorID: 'b6e39b57-8942-4d11-8259-342c46ce395f', label: 'BibLaTeX'})
-      @removeTranslator({translatorID: '9cb70025-a888-4a29-a210-93ec52da40d4', label: 'BibTeX'})
-
-  try
-    switch Zotero.Prefs.get('extensions.zotero.export.quickCopy.setting')
-      when 'export=b4a5ab19-c3a2-42de-9961-07ae484b8cb0'
-        Zotero.Prefs.set('extensions.zotero.export.quickCopy.setting', 'export=9b85ff96-ceb3-4ca2-87a9-154c18ab38b1')
-        Zotero.BetterBibTeX.Pref.set('quickCopyMode', 'latex')
-
-      when 'export=4c52eb69-e778-4a78-8ca2-4edf024a5074'
-        Zotero.Prefs.set('extensions.zotero.export.quickCopy.setting', 'export=9b85ff96-ceb3-4ca2-87a9-154c18ab38b1')
-        Zotero.BetterBibTeX.Pref.set('quickCopyMode', 'pandoc')
-
-  for translator in @Translators
-    @load(translator)
-
-  ### clean up junk ###
-  try
-    @removeTranslator({label: 'BibTeX Citation Keys', translatorID: '0a3d926d-467c-4162-acb6-45bded77edbb'})
-  try
-    @removeTranslator({label: 'Zotero TestCase', translatorID: '82512813-9edb-471c-aebc-eeaaf40c6cf9'})
-
-  Zotero.Translators.init()
-
-Zotero.BetterBibTeX.removeTranslators = ->
-  for translator in @Translators
-    @removeTranslator(translator)
-  @translators = {}
-  Zotero.Translators.init()
-
-Zotero.BetterBibTeX.removeTranslator = (header) ->
-  try
-    fileName = Zotero.Translators.getFileNameFromLabel(header.label, header.translatorID)
-    destFile = Zotero.getTranslatorsDirectory()
-    destFile.append(fileName)
-    destFile.remove(false) if destFile.exists()
-
-    delete @translators[header.translatorID]
-    delete @translators[header.label.replace(/\s/, '')]
-  catch err
-    @debug("failed to remove #{header.label}:", err)
 
 Zotero.BetterBibTeX.itemAdded = notify: ((event, type, collection_items) ->
   Zotero.BetterBibTeX.debug('itemAdded:', {event, type, collection_items})
@@ -992,8 +720,6 @@ Zotero.BetterBibTeX.itemChanged = notify: ((event, type, ids, extraData) ->
       continue if parseInt(item.id) in pinned
       @keymanager.get(item, 'on-change')
 
-  Zotero.BetterBibTeX.debug("itemChanged items:", {ids, pinned, event, keys: @DB.keys.data})
-
   for itemID in ids
     @serialized.remove(itemID)
     @cache.remove({itemID})
@@ -1015,80 +741,11 @@ Zotero.BetterBibTeX.displayOptions = (url) ->
   return params if hasParams
   return null
 
-Zotero.BetterBibTeX.translate = (translator, items, displayOptions, callback) ->
-  throw 'null translator' unless translator
-
-  translation = new Zotero.Translate.Export()
-
-  for own key, value of items
-    switch key
-      when 'library' then translation.setLibraryID(value)
-      when 'items' then translation.setItems(value)
-      when 'collection' then translation.setCollection(value)
-
-  translation.setTranslator(translator)
-  translation.setDisplayOptions(displayOptions) if displayOptions && Object.keys(displayOptions).length != 0
-
-  translation.setHandler('done', (obj, success) -> callback(!success, if success then obj?.string else null))
-  translation.translate()
-
 Zotero.BetterBibTeX.getContentsFromURL = (url) ->
   try
     return Zotero.File.getContentsFromURL(url)
   catch err
     throw new Error("Failed to load #{url}: #{err.message || err.name}")
-
-Zotero.BetterBibTeX.load = (translator) ->
-  throw new Error('not a translator') unless translator.label
-  @removeTranslator(translator)
-
-  try
-    code = Zotero.BetterBibTeX.getContentsFromURL("resource://zotero-better-bibtex/translators/#{translator.label}.translator")
-  catch err
-    @debug('translator.load: ', translator, 'could not be loaded:', err)
-    throw err
-  code += "\n\n#{@postscript}" if translator.BetterBibTeX?.postscript
-
-  @debug('Translator.load header:', translator)
-  try
-    fileName = Zotero.Translators.getFileNameFromLabel(translator.label, translator.translatorID)
-    destFile = Zotero.getTranslatorsDirectory()
-    destFile.append(fileName)
-
-    existing = Zotero.Translators.get(translator.translatorID)
-    if existing and destFile.equals(existing.file) and destFile.exists()
-      msg = "Overwriting translator with same filename '#{fileName}'"
-      Zotero.BetterBibTeX.warn(msg, translator)
-      Components.utils.reportError(msg + ' in Zotero.BetterBibTeX.load()')
-
-    existing.file.remove(false) if existing and existing.file.exists()
-
-    Zotero.BetterBibTeX.log("Saving translator '#{translator.label}'")
-
-    Zotero.File.putContents(destFile, code)
-
-    @debug('translator.load', translator, 'succeeded')
-
-    @translators[translator.translatorID] = @translators[translator.label.replace(/\s/g, '')] = translator
-  catch err
-    @debug('translator.load', translator, 'failed:', err)
-
-Zotero.BetterBibTeX.getTranslator = (name) ->
-  return @translators[name.replace(/\s/g, '')].translatorID if @translators[name.replace(/\s/g, '')]
-
-  name = name.toLowerCase().replace(/[^a-z]/g, '')
-  translators = {}
-  for id, header of @translators
-    label = header.label.toLowerCase().replace(/[^a-z]/g, '')
-    translators[label] = header.translatorID
-    translators[label.replace(/^zotero/, '')] = header.translatorID
-    translators[label.replace(/^better/, '')] = header.translatorID
-  return translators[name] if translators[name]
-  throw "No translator #{name}; available: #{JSON.stringify(translators)} from #{JSON.stringify(@translators)}"
-
-Zotero.BetterBibTeX.translatorName = (id) ->
-  Zotero.BetterBibTeX.debug('translatorName:', id, 'from', Object.keys(@translators))
-  return @translators[id]?.label || "translator:#{id}"
 
 Zotero.BetterBibTeX.safeGetAll = ->
   try
@@ -1106,21 +763,6 @@ Zotero.BetterBibTeX.safeGet = (ids) ->
   return all
 
 Zotero.BetterBibTeX.allowAutoPin = -> Zotero.Prefs.get('sync.autoSync') or not Zotero.Sync.Server.enabled
-
-Zotero.BetterBibTeX.exportGroup = ->
-  zoteroPane = Zotero.getActiveZoteroPane()
-  itemGroup = zoteroPane.collectionsView._getItemAtRow(zoteroPane.collectionsView.selection.currentIndex)
-  return unless itemGroup.isGroup()
-
-  group = Zotero.Groups.get(itemGroup.ref.id)
-  if !Zotero.Items.getAll(false, group.libraryID)
-    @flash('Cannot export empty group')
-    return
-
-  exporter = new Zotero_File_Exporter()
-  exporter.collection = group
-  exporter.name = group.name
-  exporter.save()
 
 class Zotero.BetterBibTeX.XmlNode
   constructor: (@namespace, @root, @doc) ->
@@ -1242,3 +884,189 @@ class Zotero.BetterBibTeX.AUXScanner
       item.setNote(report.serialize())
       item.save()
       collection.addItem(item.id)
+
+class Zotero.BetterBibTeX.DateParser
+  parseDateToObject: (date, options) -> (new Zotero.BetterBibTeX.DateParser(date, options)).date
+  parseDateToArray: (date, options) -> (new Zotero.BetterBibTeX.DateParser(date, options)).array()
+
+  toArray: (suffix = '') ->
+    date = {}
+    for d in ['year', 'month', 'day', 'empty']
+      date[d] = @date["#{d}#{suffix}"]
+
+    ### [ 0 ] instead if [0, 0]; see https://github.com/retorquere/zotero-better-bibtex/issues/360#issuecomment-143540469 ###
+    return [ 0 ] if date.empty
+
+    return null unless date.year
+
+    arr = [ date.year ]
+    if date.month
+      arr.push(date.month)
+      arr.push(date.day) if date.day
+    return arr
+
+  array: ->
+    date1 = @toArray()
+    return {literal: @source} unless date1
+
+    date2 = @toArray('_end')
+
+    array = {'date-parts': (if date2 then [date1, date2] else [date1])}
+    array.circa = true if @date.circa || @date.circa_end
+    return array
+
+  constructor: (@source, options = {}) ->
+    @source = @source.trim() if @source
+    @zoteroLocale ?= Zotero.locale.toLowerCase()
+
+    return unless @source
+
+    if options.verbatimDetection && @source.indexOf('[') >= 0
+      @date = {literal: @source}
+      return
+
+    if options.locale
+      locale = options.locale.toLowerCase()
+      @dateorder = Zotero.BetterBibTeX.Locales.dateorder[locale]
+      if @dateorder
+        found = locale
+      else
+        for k, v of Zotero.BetterBibTeX.Locales.dateorder
+          if k == locale || k.slice(0, locale.length) == locale
+            found = k
+            @dateorder = Zotero.BetterBibTeX.Locales.dateorder[options.locale] = v
+            break
+
+    if !@dateorder
+      fallback = Zotero.BetterBibTeX.Pref.get('defaultDateParserLocale')
+      @dateorder = Zotero.BetterBibTeX.Locales.dateorder[fallback]
+      if !@dateorder
+        @dateorder = Zotero.BetterBibTeX.Locales.dateorder[fallback] = Zotero.BetterBibTeX.Locales.dateorder[fallback.trim().toLowerCase()]
+
+    @dateorder ||= Zotero.BetterBibTeX.Locales.dateorder[@zoteroLocale]
+
+    @date = @parse()
+
+  swapMonth: (date, dateorder) ->
+    return unless date.day && date.month
+
+    switch
+      when @dateorder && @dateorder == dateorder && date.day <= 12 then
+      when date.month > 12 then
+      else return
+    [date.month, date.day] = [date.day, date.month]
+
+  cruft: new Zotero.Utilities.XRegExp("[^\\p{Letter}\\p{Number}]+", 'g')
+  parsedate: (date) ->
+    date = date.trim()
+    return {empty: true} if date == ''
+
+    ### TODO: https://bitbucket.org/fbennett/citeproc-js/issues/189/8-juli-2011-parsed-as-literal ###
+    date = date.replace(/^([0-9]+)\.\s+([a-z])/i, '$1 $2')
+
+    ### https://github.com/retorquere/zotero-better-bibtex/issues/515 ###
+    if m = date.match(/^(-?[0-9]{3,4}-[0-9]{1,2}-[0-9]{1,2})T[0-9]{2}:[0-9]{2}:[0-9]{2}(\+[0-9]+|\s*[A-Z]+)?(.*)/)
+      date = m[1] + m[3]
+
+    if m = date.match(/^(-?[0-9]{3,4})(\?)?(~)?$/)
+      return {
+        year: @year(m[1])
+        uncertain: (if m[2] == '?' then true else undefined)
+        circa: (if m[3] == '~' then true else undefined)
+      }
+
+    ### CSL dateparser doesn't recognize d?/m/y ###
+    if m = date.match(/^(([0-9]{1,2})[-\.\s\/])?([0-9]{1,2})[-\.\s\/]([0-9]{3,4})(\?)?(~)?$/)
+      parsed = {
+        year: parseInt(m[4])
+        month: parseInt(m[3])
+        day: parseInt(m[1]) || undefined
+        uncertain: (if m[5] == '?' then true else undefined)
+        circa: (if m[6] == '~' then true else undefined)
+      }
+      @swapMonth(parsed, 'mdy')
+      return parsed
+
+    if m = date.match(/^(-?[0-9]{3,4})[-\.\s\/]([0-9]{1,2})([-\.\s\/]([0-9]{1,2}))?(\?)?(~)?$/)
+      parsed = {
+        year: @year(m[1])
+        month: parseInt(m[2])
+        day: parseInt(m[4]) || undefined
+        uncertain: (if m[5] == '?' then true else undefined)
+        circa: (if m[6] == '~' then true else undefined)
+      }
+      ### only swap to repair -- assume yyyy-nn-nn == EDTF-0 ###
+      @swapMonth(parsed)
+      return parsed
+
+    parsed = Zotero.BetterBibTeX.CSL.DateParser.parseDateToObject(date)
+    for k, v of parsed
+      switch
+        when v == 'NaN' then  parsed[k] = undefined
+        when typeof v == 'string' && v.match(/^-?[0-9]+$/) then parsed[k] = parseInt(v)
+
+    return null if parsed.literal
+
+    ### there's a season in there somewhere ###
+    return null if parsed.month && parsed.month > 12
+
+    shape = date
+    shape = shape.slice(1) if shape[0] == '-'
+    shape = Zotero.Utilities.XRegExp.replace(shape.trim(), @cruft, ' ', 'all')
+    shape = shape.split(' ')
+
+    fields = (if parsed.year then 1 else 0) + (if parsed.month then 1 else 0) + (if parsed.day then 1 else 0)
+
+    return parsed if fields == 3 || shape.length == fields
+
+    return null
+
+  parserange: (separators) ->
+    for sep in separators
+      continue if @source == sep
+      ### too hard to distinguish from negative year ###
+      continue if sep == '-' && @source.match(/^-[0-9]{3,4}$/)
+
+      range = @source.split(sep)
+      continue unless range.length == 2
+
+      range = [
+        @parsedate(range[0])
+        @parsedate(range[1])
+      ]
+
+      continue unless range[0] && range[1]
+
+      return {
+        empty: range[0].empty
+        year: range[0].year
+        month: range[0].month
+        day: range[0].day
+        circa: range[0].circa
+
+        empty_end: range[1].empty
+        year_end: range[1].year
+        month_end: range[1].month
+        day_end: range[1].day
+        circa_end: range[1].circa
+      }
+
+    return null
+
+  year: (y) ->
+    y = parseInt(y)
+    y -= 1 if y <= 0
+    return y
+
+  parse: ->
+    return {} if !@source || @source in ['--', '/', '_']
+
+    candidate = @parserange(['--', '_', '/', '-'])
+
+    ### if no range was found, try to parse the whole input as a single date ###
+    candidate ||= @parsedate(@source)
+
+    ### if that didn't yield anything, assume literal ###
+    candidate ||= {literal: @source}
+
+    return candidate
