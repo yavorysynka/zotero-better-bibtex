@@ -7,7 +7,7 @@ title: Scripting
 
 You got customized. If you go into the Advanced tab of the Better BibTeX preferences you will find a text box (empty by default) where you can edit a javascript snippet which will be executed for each reference
 generated in the Bib(La)TeX exporter. In this code, you have access to the reference just before it will be written out
-and cached. You can have a look at the [Scripting API](Scripting-API) documentation(ish) for the API(ish), but usually you can just open a new issue and ask me to write it, and I'll add it here (it's how the examples got here).
+and cached. There is an API to do this, and it's fairly stable, but usually you can just open a new issue and ask me to write it, and I'll add it here (it's how the examples got here).
 
 ## Add accessdate, url for BibTeX
 

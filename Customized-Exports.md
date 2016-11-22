@@ -95,8 +95,8 @@ and
 
 You got customized. If you go into the Advanced preferences of BBT, find an edit field labeled `Postscript`, empty by default. In this, you can paste a JavaScript snippet which will be executed for each reference
 generated in the Bib(La)TeX exporter. In this code, you have access to the reference just before it will be written out
-and cached. The documentation-in-progress for the script environment can be found
-[here](Scripting-API); there are also [examples on the wiki](Scripting-examples); feel free to add your own.
+and cached. Examples and the documentation-in-progress for the script environment can be found
+[here](Scripting); feel free to add your own examples.
 
 
 <script type = 'text/javascript'>

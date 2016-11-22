@@ -5,6 +5,64 @@ title: Changelog
 
 # Change Log
 
+## [1.6.79](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.79) (2016-10-25)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.78...1.6.79)
+
+**Implemented enhancements:**
+
+- Setting the item type via the “cheater syntax” [\#587](https://github.com/retorquere/zotero-better-bibtex/issues/587)
+
+**Fixed bugs:**
+
+- "null translator" in webserver export [\#586](https://github.com/retorquere/zotero-better-bibtex/issues/586)
+- Error in automatic export [\#585](https://github.com/retorquere/zotero-better-bibtex/issues/585)
+- Missing items in right-click menu [\#584](https://github.com/retorquere/zotero-better-bibtex/issues/584)
+- \[JavaScript Error: "TypeError: collection.getChildItems is not a function" {file: "chrome://zotero/content/xpcom/translation/translate\_item.js" line: 763}\] [\#579](https://github.com/retorquere/zotero-better-bibtex/issues/579)
+- Error exporting [\#576](https://github.com/retorquere/zotero-better-bibtex/issues/576)
+
+**Closed issues:**
+
+- Fields do not "refresh" in Zotero 5.0-beta.r67+3f5ead \(only "Citation Key" field\) [\#588](https://github.com/retorquere/zotero-better-bibtex/issues/588)
+- Better BibTeX silently updates within a version of Juris-M it no longer supports? [\#582](https://github.com/retorquere/zotero-better-bibtex/issues/582)
+
+## [1.6.78](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.78) (2016-10-20)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.77...1.6.78)
+
+**Fixed bugs:**
+
+- Problem exporting Library [\#578](https://github.com/retorquere/zotero-better-bibtex/issues/578)
+- better bibtex disabled on ZSA [\#575](https://github.com/retorquere/zotero-better-bibtex/issues/575)
+
+## [1.6.77](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.77) (2016-10-17)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.76...1.6.77)
+
+## [1.6.76](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.76) (2016-10-17)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.75...1.6.76)
+
+**Implemented enhancements:**
+
+- Add a Quick Copy Gitbook mode [\#574](https://github.com/retorquere/zotero-better-bibtex/issues/574)
+- Support asciidoctor-bibtex format [\#567](https://github.com/retorquere/zotero-better-bibtex/issues/567)
+- Biblatex extended name format [\#566](https://github.com/retorquere/zotero-better-bibtex/issues/566)
+- titles are title-cased in .bib file; titleCase pref not present [\#558](https://github.com/retorquere/zotero-better-bibtex/issues/558)
+- veryshorttitle and compound words [\#551](https://github.com/retorquere/zotero-better-bibtex/issues/551)
+
+**Fixed bugs:**
+
+- Braces around author last name when exporting BibTeX [\#565](https://github.com/retorquere/zotero-better-bibtex/issues/565)
+- Title case of latex greek text on biblatex export [\#564](https://github.com/retorquere/zotero-better-bibtex/issues/564)
+
+**Closed issues:**
+
+- CSL status → biblatex pubstate [\#573](https://github.com/retorquere/zotero-better-bibtex/issues/573)
+- Default-language assumption for references that have no language set [\#571](https://github.com/retorquere/zotero-better-bibtex/issues/571)
+
+**Merged pull requests:**
+
+- Update Do not caps-protect name fields \#384.noopsort.bibtex [\#570](https://github.com/retorquere/zotero-better-bibtex/pull/570) ([nickbart1980](https://github.com/nickbart1980))
+- Update Do not caps-protect name fields \#384.bibtex [\#569](https://github.com/retorquere/zotero-better-bibtex/pull/569) ([nickbart1980](https://github.com/nickbart1980))
+- Update Do not caps-protect name fields \#384.noopsort.bibtex [\#568](https://github.com/retorquere/zotero-better-bibtex/pull/568) ([nickbart1980](https://github.com/nickbart1980))
+
 ## [1.6.75](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.75) (2016-09-13)
 [Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.74...1.6.75)
 
@@ -256,13 +314,13 @@ title: Changelog
 - Zotero Better Bib\(La\)Tex is not compatible with Iceweasel 38.7.1 [\#468](https://github.com/retorquere/zotero-better-bibtex/issues/468)
 
 ## [1.6.39](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.39) (2016-03-29)
-[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.41...1.6.39)
-
-## [1.6.41](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.41) (2016-03-28)
-[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.40...1.6.41)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.40...1.6.39)
 
 ## [1.6.40](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.40) (2016-03-28)
-[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.38...1.6.40)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.41...1.6.40)
+
+## [1.6.41](https://github.com/retorquere/zotero-better-bibtex/tree/1.6.41) (2016-03-28)
+[Full Changelog](https://github.com/retorquere/zotero-better-bibtex/compare/1.6.38...1.6.41)
 
 **Fixed bugs:**
 
