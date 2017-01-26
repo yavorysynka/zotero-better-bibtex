@@ -96,7 +96,7 @@ Bib(La)TeX provides a never-ending stream of edge cases, which BBT tries to deci
 
 Bib(La)TeX be crazy.
 
-## You are a hardcore LaTeX user!
+## You are a hardcore LaTeX user
 
 If you'd really just rather hand-code your LaTeX constructs, BBT makes that possible:
 

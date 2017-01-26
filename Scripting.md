@@ -9,6 +9,24 @@ You got customized. If you go into the Advanced tab of the Better BibTeX prefere
 generated in the Bib(La)TeX exporter. In this code, you have access to the reference just before it will be written out
 and cached. There is an API to do this, and it's fairly stable, but usually you can just open a new issue and ask me to write it, and I'll add it here (it's how the examples got here).
 
+## The API
+
+The postscript should be a `javascript` snippet. You can access the data with following objects or functions.
+
+- `this` is the BibTeX reference you are building, and the reference has a number of fields.
+- `this.fields`
+- `this.item` is the Zotero item that's the source of the reference. 
+
+  e.g. access the date in zotero item `this.item.date`.
+
+- `this.has` is a dictionary of fields for output.
+
+  e.g. access the year in output `this.has.year`
+
+- `this.add` is the function to add or modify keys in `this.has`. It will check check for unintentional duplicates (unless you specify explicitly with `replace: true`). 
+
+  e.g. change the value of year in output `this.add({name: 'year', replace: true, value: your_year_value})`
+
 ## Add accessdate, url for BibTeX
 
 Since BibTeX doesn't really have well-defined behavior across styles the way BibLaTeX does, BBT can't generate URL data which is compatible with all BibTeX styles. If you know the style you use yourself, you can add the data in the format you want using a postscript. The script below will add a note for the last accessed date, and a `\url` tag within the `howpublished` field, but only for BibTeX, not for BibLaTeX, and only for `webpage` entries:
