@@ -139,6 +139,10 @@ or bibtex will error out).
 ### Use BibLaTeX extended name format (requires biblatex 3.5)
 *default: false*
 
+In the latest release, biblatex has a new (less ambiguous) way to store creator names. It's technically
+superior, but the LaTeX world moves slowly, so many people won't have it yet. But if you're an early adapter,
+you can enable it here
+
 Use the extended biber 2.7 format for names with particles - ony works in BibLaTeX 3.5 or later
 
 ## Journal abbreviations
@@ -274,9 +278,10 @@ list of words to skip in title when generating citation keys
 Unit tests to run
 
 ### extensions.zotero.translators.better-bibtex.jabrefGroups
-*default: true*
+*default: 4*
 
-Export JabRef groups for collections.
+Export JabRef groups for collections. zero means disable, "3" means format 3, which is (IMO) opinion better
+but depracated (but JabRef will read it for the foreseeable future), "4" means the new format.
 
 ### extensions.zotero.translators.better-bibtex.defaultDateParserLocale
 *default: `empty`*
@@ -297,11 +302,23 @@ When language alternates are present in Juris-M, this is the language BBT will p
 
 Generate quality reports for exported references.
 
+### extensions.zotero.translators.better-bibtex.biblatexExtendedDateFormat
+*default: false*
+
+Support for ambiguous dates
+
 ### extensions.zotero.translators.better-bibtex.suppressTitleCase
 *default: false*
 
 If you're dead-set on ignoring both BibTeX/BibLaTeX best practice and the Zotero recommendations on title/sentence
 casing, set this preference to "true" to suppress [title casing for English references](Unnecessarily-complicated-BibTeX-output%3F#mapping-fields).
+
+### extensions.zotero.translators.better-bibtex.itemObserverDelay
+*default: 100*
+
+I've had reports where Zotero notifies extensions that references have changed, but if BBT then actually
+retrieves those same references, Zotero complains they "haven't been saved yet". Super. This preference sets
+the number of microseconds BBT should wait after being notified before acting on the changed references.
 
 
 

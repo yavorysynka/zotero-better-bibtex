@@ -17,7 +17,7 @@ BBT will convert from/to HTML/LaTeX; Currently supports &lt;i&gt;&#8660;\emph &a
 &lt;sub&gt;&#8660;\_{...}, &lt;sup&gt;&#8660;^{...} and &lt;sc&gt;&#8660;\\textsc{...}; more can be added on request.
 BBT contains a comprehensive list of LaTeX constructs, so stuff like `\"{o}` or `\"o` will be converted to their unicode
 equivalents on import, and their unicode equivalents back to `\"{o}` if you have that option enabled (but you don't
-have to if yo uuse BibLaTeX, which has fairly good Unicode support.
+have to if you use BibLaTeX, which has fairly good Unicode support).
 
 ## Gotchas
 
