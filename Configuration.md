@@ -143,7 +143,7 @@ In the latest release, biblatex has a new (less ambiguous) way to store creator 
 superior, but the LaTeX world moves slowly, so many people won't have it yet. But if you're an early adapter,
 you can enable it here
 
-Use the extended biber 2.7 format for names with particles - ony works in BibLaTeX 3.5 or later
+Use the extended biber 2.7 format for names with particles - only works in BibLaTeX 3.5 or later
 
 ## Journal abbreviations
 
@@ -178,7 +178,7 @@ trying to diagnose a problem in Better BibTeX.
 ### Retain LaTeX markup on BibTeX import
 *default: false*
 
-Enables [hardcore](From-Unicode-to-LaTeX-and-Back-Again#you-are-a-hardcore-latex-user) mode. You like
+Enables [hardcore](Unnecessarily-complicated-BibTeX-output%3F#you-are-a-hardcore-latex-user) mode. You like
 Zotero in some ways, but really just want it to be a BibTeX manager. If
 you enable this, any BibTeX files you import will retain all the LaTeX commands they have, and marks the
 entry to be exported without any translation.
