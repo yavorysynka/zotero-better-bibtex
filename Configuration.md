@@ -178,7 +178,7 @@ trying to diagnose a problem in Better BibTeX.
 ### Retain LaTeX markup on BibTeX import
 *default: false*
 
-Enables [hardcore](Unnecessarily-complicated-BibTeX-output%3F#you-are-a-hardcore-latex-user) mode. You like
+Enables [hardcore](Unnecessarily-complicated-BibTeX-output#you-are-a-hardcore-latex-user) mode. You like
 Zotero in some ways, but really just want it to be a BibTeX manager. If
 you enable this, any BibTeX files you import will retain all the LaTeX commands they have, and marks the
 entry to be exported without any translation.

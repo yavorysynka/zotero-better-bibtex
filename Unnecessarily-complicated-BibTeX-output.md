@@ -1,13 +1,14 @@
 ---
-title: Unnecessarily complicated BibTeX output?
+title: Unnecessarily complicated BibTeX output
 redirect_from:
 - Unicode-and-Markup.html
 - unicode.html
 - Going-hardcore.html
 - hardcore.html
 - From-Unicode-to-LaTeX-and-Back-Again.html
+- Unnecessarily-complicated-BibTeX-output?.html
 ---
-# Unnecessarily complicated BibTeX output?
+# Unnecessarily complicated BibTeX output
 
 Zotero does all its work in UTF-8 Unicode, which is absolutely the right thing to do. Unfortunately, for those shackled
 to BibTeX and who cannot (yet) move to BibLaTeX, unicode is a major PITA. Also, Zotero supports some simple HTML markup
@@ -108,7 +109,7 @@ If you'd really just rather hand-code your LaTeX constructs, BBT makes that poss
 
 
 <script type = 'text/javascript'>
-          var redir = 'https://github.com/retorquere/zotero-better-bibtex/wiki/Unnecessarily-complicated-BibTeX-output?';
+          var redir = 'https://github.com/retorquere/zotero-better-bibtex/wiki/Unnecessarily-complicated-BibTeX-output';
           if (m = document.referrer.match(/libguides\.mit\.edu\/c\.php\?(.+)/)) {
             var q = m[1].replace(/#.*/, '').split('&').sort().join('&');
             if (q == 'g=176000&p=1159208') {
