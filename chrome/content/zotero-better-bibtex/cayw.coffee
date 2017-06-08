@@ -24,9 +24,13 @@ Zotero.BetterBibTeX.CAYW =
     volume: "vol."
 
   getStyle: (id = 'apa') ->
+    Zotero.BetterBibTeX.debug('CAYW.getStyle:', id)
     style = Zotero.Styles.get("http://www.zotero.org/styles/#{id}")
+    Zotero.BetterBibTeX.debug('CAYW.getStyle (zotero URL):', style)
     style ||= Zotero.Styles.get("http://juris-m.github.io/styles/#{id}")
+    Zotero.BetterBibTeX.debug('CAYW.getStyle (Juris-M URL):', style)
     style ||= Zotero.Styles.get(id)
+    Zotero.BetterBibTeX.debug('CAYW.getStyle (bare ID):', style)
     return style
 
   Formatter:
