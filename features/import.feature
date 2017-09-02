@@ -6,7 +6,7 @@ Background:
   And I set preference .jabrefGroups to 0
   And I set preference .defaultDateParserLocale to en-GB
 
-@i1
+@schomd
 Scenario: Better BibTeX Import 2
   When I import 2 references from "import/Better BibTeX.002.bib"
   Then a library export using "BetterBibTeX JSON" should match "import/Better BibTeX.002.json"
@@ -15,7 +15,7 @@ Scenario: Better BibTeX Import 2
 #  And the markdown citation for orre2008 should be ''
 #  And the markdown bibliography for orre2008 should be ''
 
-#@i2
+#@raw -- raw imports no longer supported
 #Scenario: option to mantain the braces and special commands in titles or all fields #100
 #  When I set preference .rawImports to true
 #  And I import 1 reference from "import/Better BibTeX.007.bib"

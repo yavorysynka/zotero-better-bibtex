@@ -70,6 +70,51 @@ def execute(options)
   end
 end
 
+class JSONRPCClient
+  def initialize(url)
+    #@address    = Addressable::URI.parse(url)
+    @url = url
+  end
+
+  def request(method, params=nil)
+    response = HTTParty.post(@url, {
+      headers: {"Content-Type" => "application/json"}
+      body: {
+        method: method.to_s,
+        params: params
+      }.to_json
+    })
+
+    case response.code
+      when 200, 201
+        raise JSONRPCError, error["message"] if error = response.parsed_response["error"]
+        return response.parsed_response['result']
+      when 500
+        raise HTTPInternalError.new(response.body)
+      when 404
+        raise HTTPNotFoundError.new
+      else
+        raise "Unexpected response code #{response.code.inspect}"
+    end
+  end
+
+#  def getAll
+#    all = request('getAll')['result']
+#    #all = all.sort{|a, b| Integer(a['id']) <=> Integer(b['id']) }
+#    all.each{|item|
+#      item.each_pair{|k, v|
+#        item.delete(k) if v == [] || v == '' || v.nil?
+#      }
+#    }
+#    return all
+#  end
+
+  def method_missing(method, *args, &block)
+    return request(method.to_s, args)
+  end
+end
+SCHOMD = JSONRPCClient.new('http://localhost:23119/better-bibtex/schomd')
+
 def normalize_library(library, collections=false)
   library.delete('keymanager')
   library.delete('cache')
@@ -248,20 +293,20 @@ module BBT
   else
     raise OS.report
   end
-  
+
   FileUtils.mkdir_p(profiles)
   profiles_ini = File.join(profiles, 'profiles.ini')
   File.open(profiles_ini, "w") {} unless File.file?(profiles_ini)
   profiles_ini = IniFile.load(profiles_ini)
-  
+
   if !profiles_ini.has_section?('General')
     profiles_ini['General'] = { 'StartWithLastProfile' => 1 }
   end
-  
+
   profile_name = 'BBTZ5TEST'
   profile_tgt = File.expand_path("~/.#{profile_name}.profile")
   data_tgt = File.expand_path("~/.#{profile_name}.data")
-  
+
   profile_id = nil
   profiles_ini.each{|section, param, val|
     profile_id = section if param == 'Name' && val ==  profile_name
@@ -273,24 +318,24 @@ module BBT
       break unless profiles_ini.has_section?(profile_id)
       free += 1
     end
-  
+
     profiles_ini[profile_id]['Name'] = profile_name
   end
   profiles_ini[profile_id]['IsRelative'] = 0
   profiles_ini[profile_id]['Path'] = profile_tgt
   profiles_ini[profile_id]['Default'] = nil
   profiles_ini.write_compact
-  
+
   fixtures = File.expand_path(File.join(File.dirname(__FILE__), '../../test/fixtures'))
   profile = Selenium::WebDriver::Firefox::Profile.new(File.join(fixtures, 'profile/profile'))
   #profile.log_file = File.expand_path(File.join(File.dirname(__FILE__), "#{ENV['LOGS'] || '.'}/firefox-console.log"))
-  
+
   plugins = Dir[File.expand_path(File.join(File.dirname(__FILE__), '../../xpi/*.xpi'))]
   plugins.each{|plugin|
     STDOUT.puts "Installing #{plugin}"
     profile.add_extension(plugin)
   }
-  
+
   profile['extensions.checkCompatibility.5.0'] = false
   profile['extensions.zotero.dataDir'] = data_tgt
   profile['extensions.zotero.debug.log'] = true
@@ -307,7 +352,7 @@ module BBT
   profile['extensions.zotero.automaticScraperUpdates'] = false
 
   profile['devtools.source-map.locations.enabled'] = true
-  
+
   FileUtils.rm_rf(profile_tgt)
   FileUtils.cp_r(profile.layout_on_disk, profile_tgt)
   FileUtils.rm_rf(data_tgt)
@@ -338,7 +383,7 @@ module BBT
     }
     Process.kill("HUP", pid) unless stopped
   } unless ENV['KEEP_ZOTERO_RUNNING'] == 'true'
-  
+
   puts Benchmark.measure {
     print "Starting Zotero."
     attempts = 0
